@@ -11,12 +11,9 @@
 
 
 
-<title>CE001 - Bioestatística</title>
+<title>Histórico das aulas do curso</title>
 
 <script src="libs/jquery-1.11.3/jquery.min.js"></script>
-<script src="libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="libs/tocify-1.9.1/jquery.tocify.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -175,100 +172,6 @@ $(document).ready(function () {
 
 
 
-<script>
-$(document).ready(function ()  {
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3,h4",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: "h1.title, .toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = false;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.9em;
-  padding-left: 5px;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-.tocify-subheader {
-  display: inline;
-}
-.tocify-subheader .tocify-item {
-  font-size: 0.95em;
-  padding-left: 10px;
-}
-
-</style>
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -315,80 +218,20 @@ div.tocify {
 </ul>
 </div>
 
-<h1 class="title">CE001 - Bioestatística</h1>
+<h1 class="title">Histórico das aulas do curso</h1>
 
 </div>
 
 
-<p><a href="https://travis-ci.org/fernandomayer/ce001n-2016-01.svg"><img src="https://travis-ci.org/fernandomayer/ce001n-2016-01.svg" alt="Build Status" /></a></p>
-<div id="detalhes-da-oferta-da-disciplina" class="section level1">
-<h1>Detalhes da oferta da disciplina</h1>
+<p>Abaixo o histórico de atividades realizadas em classe e atividades extra classe aplicadas.</p>
 <ul>
-<li><strong>Curso:</strong> Biologia (N)</li>
-<li><strong>Período:</strong> primeiro semestre de 2016</li>
-<li><strong>Professor Responsável:</strong> <a href="http://www.leg.ufpr.br/~fernandomayer">Fernando de Pol Mayer</a>, (<a href="http://www.leg.ufpr.br">LEG</a>: Laboratório de Estatística e Geoinformação)</li>
-<li><strong>Horários e Locais:</strong>
-<ul>
-<li>Terça, 18:30 - 20:10h, <strong>Anf. 14</strong> (Setor de Ciências Biológicas)</li>
-<li>Quinta, 18:30 - 20:10h, <strong>Anf. 14</strong> (Setor de Ciências Biológicas)</li>
-</ul></li>
-<li><strong>Horários de atendimento do professor:</strong>
-<ul>
-<li>Terças e quintas, 14:00-18:00 (preferenciais). Outros horários podem ser agendados previamente por email.</li>
-</ul></li>
-<li><strong>Monitores de CE-001 do Depto. de Estatística:</strong>
-<ul>
-<li>Local: <strong>LABEST</strong> (Laboratório de Estatística)</li>
-<li>Horários de atendimento aos alunos: verificar no LABEST</li>
-</ul></li>
-<li><strong>Frequência</strong>: de acordo com as normas da Universidade, mínimo de 75%</li>
-<li><strong>Avaliação</strong>: sabatinas, aplicadas ao final de um módulo da disciplina
-<ul>
-<li>As sabatinas são provas menores, e com conteúdo específico</li>
-<li>O número de sabatinas em um semestre pode variar conforme o andamento da disciplina (geralmente entre 6 e 10)</li>
-<li>As datas das sabtinas serão definidas durante o semestre, e sempre será avisado com antecedência</li>
-<li>A média final será a média das 75% maiores notas (as 25% menores notas serão descartadas)</li>
-<li><strong>Importante</strong>: nas sabatinas não há segunda chamada. Ao perder uma sabatina, a nota é 0, e automaticamente estará dentro das 25% menores notas que serão excluídas para o cálculo da média final</li>
-</ul></li>
-<li><strong>Datas importantes:</strong> De acordo com a <a href="http://www.ufpr.br/soc/descarregar_arquivo.php?cod=1064">Resolução 49/15 - CEPE</a>:</li>
+<li><strong>04/03</strong>: Apresentação da disciplina.</li>
+<li><strong>09/03</strong>: Conceitos de amostragem.</li>
+<li><strong>11/03</strong>: Classificação de variáveis. Análise exploratória de dados.</li>
 </ul>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Data</th>
-<th align="left">Evento</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">29/02</td>
-<td align="left">Início do semestre letivo</td>
-</tr>
-<tr class="even">
-<td align="left">02/07</td>
-<td align="left">Final do semestre letivo</td>
-</tr>
-<tr class="odd">
-<td align="left">11/07-16/07</td>
-<td align="left">Período de exames</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="programaobjetivos-da-disciplina" class="section level1">
-<h1>Programa/objetivos da disciplina</h1>
-<p>O objetivo desta disciplina é capacitar os alunos em conceitos básicos de estatística que permitam a interpretação de resultados de análises e procedimentos estatísticos, bem como a execução de procedimentos e análises estatística básicas. O curso compreende três grandes tópicos:</p>
-<ul>
-<li>Análise descritiva e exploratória de dados</li>
-<li>Noções de probabilidades e distribuições de probabilidades</li>
-<li>Introdução à procedimentos de inferência estatística</li>
-</ul>
-</div>
 
 
 
-</div>
-</div>
 
 </div>
 

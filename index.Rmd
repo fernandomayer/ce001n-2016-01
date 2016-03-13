@@ -4,11 +4,58 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+source("knitr_setup.R")
 ```
 
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)
 
 # Detalhes da oferta da disciplina
 
-- Curso: Biologia (N)
+- **Curso:** Biologia (N)
+- **Período:** primeiro semestre de 2016
+- **Professor Responsável:** [Fernando de Pol Mayer][], ([LEG][]:
+  Laboratório de Estatística e Geoinformação)
+- **Horários e Locais:**
+    - Terça, 18:30 - 20:10h, **Anf. 14** (Setor de Ciências Biológicas)
+    - Quinta, 18:30 - 20:10h, **Anf. 14** (Setor de Ciências Biológicas)
+- **Horários de atendimento do professor:**
+    - Terças e quintas, 14:00-18:00 (preferenciais). Outros horários
+      podem ser agendados previamente por email.
+- **Monitores de CE-001 do Depto. de Estatística:**
+    - Local: **LABEST** (Laboratório de Estatística)
+    - Horários de atendimento aos alunos: verificar no LABEST
+- **Frequência**: de acordo com as normas da Universidade, mínimo de 75%
+- **Avaliação**: sabatinas, aplicadas ao final de um módulo da disciplina
+    - As sabatinas são provas menores, e com conteúdo específico
+    - O número de sabatinas em um semestre pode variar conforme o
+      andamento da disciplina (geralmente entre 6 e 10)
+    - As datas das sabtinas serão definidas durante o semestre, e sempre
+      será avisado com antecedência
+    - A média final será a média das 75% maiores notas (as 25% menores
+      notas serão descartadas)
+    - **Importante**: nas sabatinas não há segunda chamada. Ao perder
+      uma sabatina, a nota é 0, e automaticamente estará dentro das 25%
+      menores notas que serão excluídas para o cálculo da média final
+- **Datas importantes:** De acordo com a [Resolução 49/15 - CEPE][]:
+
+|  Data  |  Evento  |
+|--------|----------|
+| 29/02 | Início do semestre letivo |
+| 02/07 | Final do semestre letivo |
+| 11/07-16/07 | Período de exames |
+
+# Programa/objetivos da disciplina
+
+O objetivo desta disciplina é capacitar os alunos em conceitos básicos
+de estatística que permitam a interpretação de resultados de análises e
+procedimentos estatísticos, bem como a execução de procedimentos e
+análises estatística básicas. O curso compreende três grandes tópicos:
+
+- Análise descritiva e exploratória de dados
+- Noções de probabilidades e distribuições de probabilidades
+- Introdução à procedimentos de inferência estatística
+
+
+[Fernando de Pol Mayer]: http://www.leg.ufpr.br/~fernandomayer
+[LEG]: http://www.leg.ufpr.br
+[Resolução 49/15 - CEPE]: http://www.ufpr.br/soc/descarregar_arquivo.php?cod=1064

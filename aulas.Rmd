@@ -1,0 +1,17 @@
+---
+title: "Histórico das aulas do curso"
+output:
+  html_document:
+    toc: false
+---
+
+```{r setup, include=FALSE}
+source("knitr_setup.R")
+```
+
+Abaixo o histórico de atividades realizadas em classe e atividades extra
+classe aplicadas.
+
+- **04/03**: Apresentação da disciplina.
+- **09/03**: Conceitos de amostragem.
+- **11/03**: Classificação de variáveis. Análise exploratória de dados.

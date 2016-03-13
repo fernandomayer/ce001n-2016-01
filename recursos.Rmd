@@ -1,0 +1,45 @@
+---
+title: "Recursos computacionais"
+output: html_document
+---
+
+O curso não prevê conteúdo computacional. Entretanto todo o conteúdo
+abordado pode ser tratado computacionalmente por planilhas eletrônicas
+(como por exemplo o LibreOffice), linguagens ou programas estatísticos.
+
+Nas páginas do curso, você verá um botão escrito `Code` acima de algumas
+tabelas e gráficos. Ao clicar nesse botão, é revelado o código que foi
+utilizado para gerar aquele resultado, em linguagem R.
+
+O uso de programas computacionais pode auxiliar o entendimento do
+conteúdo do curso, e os códigos em R servem como ilustração para os
+alunos interessados, mas não será parte da avaliação.
+
+## Programa para estatística
+
+- [The R project for Statistical Computing](http://www.r-project.org):
+  página do programa **R**
+      - [Curso sobre o uso do R](sofware:material-r) no LEG
+      - [R-rautu](http://git.leg.ufpr.br/fernandomayer/R-rautu) uma
+        introdução ao uso do R
+      - [R-Studio](http://www.rstudio.org) um ambiente para facilitar
+        uso do R
+      - [R-br](https://listas.inf.ufpr.br/cgi-bin/mailman/listinfo/r-br)
+        é a lista de discussão em português sobre o uso do R
+
+## Programas para matemática simbólica
+
+- [Wolfram alpha](http://www.wolframalpha.com)
+- [Maxima](http://maxima.sourceforge.net) (e interface
+  [wxmaxima](http://andrejv.github.com/wxmaxima/))
+- [Yacas](http://yacas.sourceforge.net)
+
+## Outros recursos
+
+- [LibreOffice](https://pt-br.libreoffice.org) suíte de programas
+  semelhante ao MS-Office (editor de texto, banco de dados, apresentação
+  e planilha) gratuito
+- [Google sheets](https://www.google.com/sheets/about). Para instalar o
+  *add-on* de estatística:
+        - Add-Ons -> Get Add-Ons -> Procure por "Statistics" -> Procure
+          o add-on de "Google Statisticians and Engineers"

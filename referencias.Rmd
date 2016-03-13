@@ -1,0 +1,60 @@
+---
+title: "Referências Bibliográficas"
+output: html_document
+---
+
+## Referências básicas
+
+- Andrade, DF; Ogliari, PJ.
+  [Estatística para as ciências agrárias e biológicas, com noções de experimentação](http://www.editora.ufsc.br/publicacao/detalhe/id/537).
+  Florianópolis: Editora da UFSC, 2013.
+- Bussab, WO; [Morettin, PA](http://www.ime.usp.br/~pam).
+  [Estatística Básica](http://www.editorasaraiva.com.br/produtos/show/isbn:9788502207998/titulo:estatistica-basica/).
+  São Paulo: [Editora Saraiva](http://www.saraivauni.com.br), 2006 (5ª
+  Edição).
+- [Magalhães, MN](http://www.ime.usp.br/~marcos);
+      [Lima, ACP](http://www.ime.usp.br/~acarlos).
+      [Noções de Probabilidade e Estatística](http://www.ime.usp.br/~noproest).
+      São Paulo: EDUSP, 2008 (6ª edição).
+
+## Referências complementares
+
+- Dantas, CAB.
+  [Probabilidade: um curso introdutório](http://www.edusp.com.br/detlivro.asp?id=41384).
+  São Paulo: EDUSP, 2008.
+- Montgomery, DC; Runger, GC.
+  [Estatística aplicada e probabilidade para engenheiros](http://www.grupogen.com.br/estatistica-aplicada-e-probabilidade-para-engenheiros).
+  Rio de Janeiro: LTC Editora, 2012 (5ª Edição).
+- Morettin, LG.
+  [Estatística básica: probabilidade e inferência](http://loja.pearson.com.br/estatistica-basica-probabilidade-e-inferencia-9788576053705/p).
+  São Paulo: Pearson, 2010.
+- Navidi, W.
+  [Probabilidade e estatística para ciências exatas](http://www.grupoa.com.br/livros/matematica-e-estatistica/probabilidade-e-estatistica-para-ciencias-exatas/9788580550733).
+  Porto Alegre: Bookman, 2012.
+- Spiegel, MR; Schiller, J; Srinivasan, A.
+  [Probabilidade e estatística](http://www.grupoa.com.br/livros/matematica-e-estatistica/probabilidade-e-estatistica/9788565837187).
+  Porto Alegre: Bookman, 2013.
+- **Nota:** existem diversos textos de estatística compatíveis com o
+      programa do curso. Consulte o professor sobre a adequação de
+      qualquer outra referência bibliográfica.
+
+## Referências *online*
+
+- [Coursera](https://pt.coursera.org)
+- [Kahn Academy](http://www.khanacademy.org) vídeos sobre diversos
+      assuntos, incluindo sessões especificas de estatística e
+      probabilidade.
+- [Udacity Online courses](http://www.udacity.com). Ver em particular:
+    - [Introduction to Statistics](https://www.udacity.com/course/st101)
+
+## Leituras complementares
+
+- Hilborn, R; Mangel, M.
+  [The ecological detective: confronting models with data](http://press.princeton.edu/titles/5987.html).
+  Princeton University Press, 1997.
+- Mlodinow, L.
+  [O andar do bêbado. Como o acaso determina nossas vidas](http://zahar.com.br/livro/o-andar-do-b%C3%AAbado).
+  Rio de Janeiro: Zahar, 2009.
+- Salsburg, D.
+  [Uma senhora toma chá. Como a estatística revolucionou a ciência no século XX](http://www.zahar.com.br/livro/uma-senhora-toma-cha).
+  Rio de Janeiro: Zahar, 2009.
