@@ -5,10 +5,6 @@ output:
     toc: false
 ---
 
-```{r setup, include=FALSE}
-source("knitr_setup.R")
-```
-
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)
 
 # Detalhes da oferta da disciplina

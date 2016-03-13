@@ -13,5 +13,5 @@ Abaixo o histórico de atividades realizadas em classe e atividades extra
 classe aplicadas.
 
 - **04/03**: Apresentação da disciplina.
-- **09/03**: Conceitos de amostragem.
-- **11/03**: Classificação de variáveis. Análise exploratória de dados.
+- **09/03**: Conceitos de amostragem. [Slides](01_introducao_e_amostragem/01_Introducao_a_Estatistica_e_amostragem.pdf)
+- **11/03**: Classificação de variáveis. Análise exploratória de dados. [Material](02_Analise_Exploratoria_de_Dados.html)

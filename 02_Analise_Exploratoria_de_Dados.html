@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Análise exploratória de dados</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="libs/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38898840-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<script src="libs/navigation-1.0/codefolding.js"></script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: "h1.title, .toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CE001</a>
+      <!-- <a class="navbar-brand" href="#"> -->
+      <!--   <img alt="LEG" src="img/leg.png"> -->
+      <!-- </a> -->
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">Informações</a></li>
+        <li><a href="aulas.html">Histórico de aulas</a></li>
+        <li><a href="referencias.html">Referências</a></li>
+        <li><a href="recursos.html">Recursos computacionais</a></li>
+        <li class="dropdown">
+          <a href="authoring" class="dropdown-toggle"
+          data-toggle="dropdown" role="button"
+          aria-expanded="false">Materiais de aula <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Introdução</li>
+             <li><a href="01_introducao_e_amostragem/01_Introducao_a_Estatistica_e_amostragem.pdf">Introducao
+             à Estatistica e amostragem [PDF]</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Estatística Descritiva</li>
+             <li><a href="02_Analise_Exploratoria_de_Dados.html">Análise Exploratória de dados</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="text-muted">Code</span> <span class="text-muted caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All</a></li>
+</ul>
+</div>
+
+<h1 class="title">Análise exploratória de dados</h1>
+
+</div>
+
+
+<div id="introducao" class="section level1">
+<h1>Introdução</h1>
+<p>Nesta sessão vamos ver alguns (mas não todos!) métodos para fazer uma análise exploratória descritiva de um conjunto de dados.</p>
+<p>Uma boa forma de iniciar uma análise descritiva adequada é verificar os tipos de de variáveis disponíveis.</p>
+<div id="variaveis" class="section level2">
+<h2>Variáveis</h2>
+<p>Quando fazemos uma <strong>amostragem</strong>, coletamos não apenas a informação sobre a característica de interesse, mas <em>diversas outras informações</em> que auxiliarão no entendimento desta característica.</p>
+<p>Cada uma das características da população amostrada, como peso, altura, sexo ou idade, é denominada de uma <strong>variável</strong>.</p>
+<p>As <em>variáveis</em> podem assumir diferentes valores, que basicamente podem ser separados em</p>
+<ul>
+<li><strong>Quantitativos</strong> ou numéricos</li>
+<li><strong>Qualitativos</strong> ou não numéricos, ou <em>categóricos</em></li>
+</ul>
+</div>
+<div id="classificacao-de-variaveis" class="section level2">
+<h2>Classificação de variáveis</h2>
+<p>As <em>variáveis quantitativas</em> ou numéricas podem ser</p>
+<ul>
+<li><strong>Discretas</strong>: assumem apenas valores inteiros. Ex.: número de irmãos, número de passageiros</li>
+<li><strong>Contínuas</strong>: assume qualquer valor no intervalo dos números reais. Ex.: peso, altura</li>
+</ul>
+<p>As <em>variáveis qualitativas</em> ou categóricas podem ser</p>
+<ul>
+<li><strong>Nominais</strong>: quando as categorias não possuem uma ordem natural. Ex.: nomes, cores, sexo.</li>
+<li><strong>Ordinais</strong>: quando as categorias podem ser ordenadas. Ex.: tamanho (pequeno, médio, grande), classe social (baixa, média, alta), grau de instrução (básico, médio, graduação, pós-graduação)</li>
+</ul>
+<p><img src="img/classificacao_variaveis.png" alt="" /></p>
+</div>
+</div>
+<div id="apresentacao-e-organizacao-de-dados" class="section level1">
+<h1>Apresentação e organização de dados</h1>
+<p>A <strong>organização</strong> dos dados coletados é fundamental para que não hajam erros de processamento e perda de informações. Deve ser feito em um programa apropriado. Exemplo: planilhas eletrônicas e bancos de dados.</p>
+<p>A <strong>apresentação</strong> dos dados depende do tipo de variável e daquilo que se quer mostrar.</p>
+<p><strong>Tabelas</strong> e <strong>gráficos</strong> podem mostrar a mesma informação, mas alguns são mais apropriados dependendo do objetivo.</p>
+<p>Existe um número considerável de <strong>pacotes estatísticos</strong>, alguns específicos para algumas áreas e outros mais gerais. Qualquer que seja o programa a ser utilizado, existem três etapas que envolvem seu uso:</p>
+<ol style="list-style-type: decimal">
+<li>Entrada de dados</li>
+<li>Execução da análise estatística</li>
+<li>Interpretação de resultados</li>
+</ol>
+<p>A entrada de dados deve assumir certas convenções:</p>
+<ul>
+<li>Os dados devem estar no formato de <strong>matriz</strong></li>
+<li>Cada linha da matriz corresponde a uma <strong>unidade experimental</strong>
+<ul>
+<li>Elemento da população ou amostra no qual observamos as variáveis</li>
+</ul></li>
+<li>Cada coluna da matriz corresponde a uma <strong>variável</strong></li>
+</ul>
+</div>
+<div id="dados-brutos" class="section level1">
+<h1>Dados brutos</h1>
+<p>Quando fazemos uma coleta de dados, e armazenamos de forma correta, temos em mãos o que se chama de <strong>dados brutos</strong>, pois consiste das observações “puras”, sem nenhum tipo de processamento ou resumo.</p>
+<p>Uma análise de dados sempre deve começar com uma planilha de dados brutos, pois será a partir deles que iremos resumir e visualizar as informações de interesse.</p>
+<div id="o-conjunto-de-dados-milsa" class="section level2">
+<h2>O conjunto de dados <code>milsa</code></h2>
+<p>O livro “Estatística Básica” de W. O. Bussab e P. A. Morettin traz no segundo capítulo um conjunto de dados hipotético de atributos de 36 funcionários da companhia “Milsa”. Os dados estão reproduzidos na tabela abaixo.</p>
+<pre class="r"><code>## Importando os dados para o R
+milsa &lt;- read.csv(&quot;dados/milsa.csv&quot;)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Funcionario</th>
+<th align="left">Est.civil</th>
+<th align="left">Inst</th>
+<th align="right">Filhos</th>
+<th align="right">Salario</th>
+<th align="right">Anos</th>
+<th align="right">Meses</th>
+<th align="left">Regiao</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">4.00</td>
+<td align="right">26</td>
+<td align="right">3</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">casado</td>
+<td align="left">1o Grau</td>
+<td align="right">1</td>
+<td align="right">4.56</td>
+<td align="right">32</td>
+<td align="right">10</td>
+<td align="left">capital</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">casado</td>
+<td align="left">1o Grau</td>
+<td align="right">2</td>
+<td align="right">5.25</td>
+<td align="right">36</td>
+<td align="right">5</td>
+<td align="left">capital</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">solteiro</td>
+<td align="left">2o Grau</td>
+<td align="right">NA</td>
+<td align="right">5.73</td>
+<td align="right">20</td>
+<td align="right">10</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">6.26</td>
+<td align="right">40</td>
+<td align="right">7</td>
+<td align="left">outro</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">casado</td>
+<td align="left">1o Grau</td>
+<td align="right">0</td>
+<td align="right">6.66</td>
+<td align="right">28</td>
+<td align="right">0</td>
+<td align="left">interior</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">6.86</td>
+<td align="right">41</td>
+<td align="right">0</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">7.39</td>
+<td align="right">43</td>
+<td align="right">4</td>
+<td align="left">capital</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">1</td>
+<td align="right">7.59</td>
+<td align="right">34</td>
+<td align="right">10</td>
+<td align="left">capital</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">solteiro</td>
+<td align="left">2o Grau</td>
+<td align="right">NA</td>
+<td align="right">7.44</td>
+<td align="right">23</td>
+<td align="right">6</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">2</td>
+<td align="right">8.12</td>
+<td align="right">33</td>
+<td align="right">6</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">8.46</td>
+<td align="right">27</td>
+<td align="right">11</td>
+<td align="left">capital</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">solteiro</td>
+<td align="left">2o Grau</td>
+<td align="right">NA</td>
+<td align="right">8.74</td>
+<td align="right">37</td>
+<td align="right">5</td>
+<td align="left">outro</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left">casado</td>
+<td align="left">1o Grau</td>
+<td align="right">3</td>
+<td align="right">8.95</td>
+<td align="right">44</td>
+<td align="right">2</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">0</td>
+<td align="right">9.13</td>
+<td align="right">30</td>
+<td align="right">5</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="left">solteiro</td>
+<td align="left">2o Grau</td>
+<td align="right">NA</td>
+<td align="right">9.35</td>
+<td align="right">38</td>
+<td align="right">8</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">1</td>
+<td align="right">9.77</td>
+<td align="right">31</td>
+<td align="right">7</td>
+<td align="left">capital</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">casado</td>
+<td align="left">1o Grau</td>
+<td align="right">2</td>
+<td align="right">9.80</td>
+<td align="right">39</td>
+<td align="right">7</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="left">solteiro</td>
+<td align="left">Superior</td>
+<td align="right">NA</td>
+<td align="right">10.53</td>
+<td align="right">25</td>
+<td align="right">8</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="left">solteiro</td>
+<td align="left">2o Grau</td>
+<td align="right">NA</td>
+<td align="right">10.76</td>
+<td align="right">37</td>
+<td align="right">4</td>
+<td align="left">interior</td>
+</tr>
+<tr class="odd">
+<td align="right">21</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">1</td>
+<td align="right">11.06</td>
+<td align="right">30</td>
+<td align="right">9</td>
+<td align="left">outro</td>
+</tr>
+<tr class="even">
+<td align="right">22</td>
+<td align="left">solteiro</td>
+<td align="left">2o Grau</td>
+<td align="right">NA</td>
+<td align="right">11.59</td>
+<td align="right">34</td>
+<td align="right">2</td>
+<td align="left">capital</td>
+</tr>
+<tr class="odd">
+<td align="right">23</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">12.00</td>
+<td align="right">41</td>
+<td align="right">0</td>
+<td align="left">outro</td>
+</tr>
+<tr class="even">
+<td align="right">24</td>
+<td align="left">casado</td>
+<td align="left">Superior</td>
+<td align="right">0</td>
+<td align="right">12.79</td>
+<td align="right">26</td>
+<td align="right">1</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">25</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">2</td>
+<td align="right">13.23</td>
+<td align="right">32</td>
+<td align="right">5</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">26</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">2</td>
+<td align="right">13.60</td>
+<td align="right">35</td>
+<td align="right">0</td>
+<td align="left">outro</td>
+</tr>
+<tr class="odd">
+<td align="right">27</td>
+<td align="left">solteiro</td>
+<td align="left">1o Grau</td>
+<td align="right">NA</td>
+<td align="right">13.85</td>
+<td align="right">46</td>
+<td align="right">7</td>
+<td align="left">outro</td>
+</tr>
+<tr class="even">
+<td align="right">28</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">0</td>
+<td align="right">14.69</td>
+<td align="right">29</td>
+<td align="right">8</td>
+<td align="left">interior</td>
+</tr>
+<tr class="odd">
+<td align="right">29</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">5</td>
+<td align="right">14.71</td>
+<td align="right">40</td>
+<td align="right">6</td>
+<td align="left">interior</td>
+</tr>
+<tr class="even">
+<td align="right">30</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">2</td>
+<td align="right">15.99</td>
+<td align="right">35</td>
+<td align="right">10</td>
+<td align="left">capital</td>
+</tr>
+<tr class="odd">
+<td align="right">31</td>
+<td align="left">solteiro</td>
+<td align="left">Superior</td>
+<td align="right">NA</td>
+<td align="right">16.22</td>
+<td align="right">31</td>
+<td align="right">5</td>
+<td align="left">outro</td>
+</tr>
+<tr class="even">
+<td align="right">32</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">1</td>
+<td align="right">16.61</td>
+<td align="right">36</td>
+<td align="right">4</td>
+<td align="left">interior</td>
+</tr>
+<tr class="odd">
+<td align="right">33</td>
+<td align="left">casado</td>
+<td align="left">Superior</td>
+<td align="right">3</td>
+<td align="right">17.26</td>
+<td align="right">43</td>
+<td align="right">7</td>
+<td align="left">capital</td>
+</tr>
+<tr class="even">
+<td align="right">34</td>
+<td align="left">solteiro</td>
+<td align="left">Superior</td>
+<td align="right">NA</td>
+<td align="right">18.75</td>
+<td align="right">33</td>
+<td align="right">7</td>
+<td align="left">capital</td>
+</tr>
+<tr class="odd">
+<td align="right">35</td>
+<td align="left">casado</td>
+<td align="left">2o Grau</td>
+<td align="right">2</td>
+<td align="right">19.40</td>
+<td align="right">48</td>
+<td align="right">11</td>
+<td align="left">capital</td>
+</tr>
+<tr class="even">
+<td align="right">36</td>
+<td align="left">casado</td>
+<td align="left">Superior</td>
+<td align="right">3</td>
+<td align="right">23.30</td>
+<td align="right">42</td>
+<td align="right">2</td>
+<td align="left">interior</td>
+</tr>
+</tbody>
+</table>
+<p>Estes dados estão disponíveis em um arquivo <code>csv</code> no endereço <a href="http://www.leg.ufpr.br/~fernandomayer/dados/milsa.csv" class="uri">http://www.leg.ufpr.br/~fernandomayer/dados/milsa.csv</a>.</p>
+<p>O nosso objetivo agora é então fazer uma análise descritiva destes dados, com a intenção de se identificar padrões e relações (se houverem).</p>
+<p>Portanto, o primeiro passo é classificar todas as variáveis desse conjunto de dados:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variável</th>
+<th align="left">Classificação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>Funcionario</code></td>
+<td align="left">Quantitativa discreta</td>
+</tr>
+<tr class="even">
+<td align="left"><code>Est.civil</code></td>
+<td align="left">Qualitativa nominal</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>Inst</code></td>
+<td align="left">Qualitativa ordinal</td>
+</tr>
+<tr class="even">
+<td align="left"><code>Filhos</code></td>
+<td align="left">Quantitativa discreta</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>Salario</code></td>
+<td align="left">Quantitativa contínua</td>
+</tr>
+<tr class="even">
+<td align="left"><code>Anos</code></td>
+<td align="left">Quantitativa discreta</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>Meses</code></td>
+<td align="left">Quantitativa discreta</td>
+</tr>
+<tr class="even">
+<td align="left"><code>Regiao</code></td>
+<td align="left">Qualitativa nominal</td>
+</tr>
+</tbody>
+</table>
+<p>Estes são dados no “estilo planilha”, com variáveis de diferentes tipos: categóricas e numéricas (qualitativas e quantitativas). Portanto segue as normas que estabelecemos anteriormente:</p>
+<ul>
+<li>Cada linha corresponde a uma unidade amostral, nesse caso à uma pessoa</li>
+<li>Cada coluna corresponde a uma variável diferente</li>
+</ul>
+<p>NOTE algumas coisas importantes:</p>
+<ul>
+<li>Cada variável possui um tipo de resposta, e estas respostas seguem sempre o mesmo padrão. Por exemplo, na variável <code>Est.civil</code> as possíveis respostas são: <code>solteiro</code> e <code>casado</code>. Se por acaso houvesse o termo <code>Casado</code>, poderia haver confusão na maioria dos pacotes estatísticos, e este termo poderia ser (erroneamente) uma terceira categoria de resposta.</li>
+<li>Quando a informação de uma (ou mais) variáveis não estiver disponível (por exemplo: falta de resposta, rasura na marcação da resposta, ou simplesmente não foi possível coletar aquela informação para aquele indivíduo), esta informação deve ser marcada (ou indicada) com algum símbolo especial. Em planilhas eletrônicas, normalmente a célula fica em branco, mas na maioria dos pacotes estatísticos é necessário preencher estas células com um símbolo (que varia entre os pacotes). Aqui, por exemplo, usamos o símbolo <code>NA</code> (de <code>N</code>ot <code>A</code>vailable) para indicar estas observações. <strong>Importante: não preencha estes casos com 0 (zero), pois o zero não significa falta de informação, e sim uma quantidade que foi medida, mas foi verificada como nula.</strong></li>
+</ul>
+<p>Agora que os dados estão prontos podemos começar a análise descritiva. A seguir mostramos como fazer análises descritivas uni e bi-variadas. Sugiro ainda que você use algum programa ou pacote estatístico para reproduzir os resultados mostrados aqui.</p>
+</div>
+</div>
+<div id="analise-univariada" class="section level1">
+<h1>Análise univariada</h1>
+<p>A análise univariada consiste basicamente em, para cada uma das variáveis individualmente:</p>
+<ul>
+<li>Classificar a variável quanto a seu tipo: qualitativa (nominal ou ordinal) ou quantitativa (discreta ou contínua)</li>
+<li>Obter tabelas, gráficos e/ou medidas que resumam a variável</li>
+</ul>
+<p>A partir destes resultados pode-se montar um resumo geral dos dados. Quando se estuda uma variável, o maior intersse do pesquisador é conhecer o <em>comportamento</em> dessa variável, analisando a ocorrência de suas possíveis realizações. Nesse sentido, as <strong>distribuições de frequência</strong> serão o principal recurso que utilizaremos para resumir uma única variável.</p>
+<p>A seguir vamos mostrar como obter tabelas e gráficos simples. Para isto vamos selecionar uma variável de cada tipo para que o leitor possa, por analogia, obter resultados para as demais.</p>
+<div id="variavel-qualitativa-nominal" class="section level2">
+<h2>Variável Qualitativa Nominal</h2>
+<p>A variável <code>Est.civil</code> é uma qualitativa nominal. Desta forma podemos obter:</p>
+<ol style="list-style-type: decimal">
+<li>Uma tabela de frequências (absolutas e/ou relativas)</li>
+<li>Um gráfico de barras ou de setores</li>
+<li>A “moda”, <em>i.e.</em> o valor que ocorre com maior frequência</li>
+</ol>
+<p>Por ser uma variável qualitativa, para obter a distribuição de frequência desta variável, basta contarmos quantas vezes ocorre cada categoria (ou nível), e organizar em uma tabela.</p>
+<pre class="r"><code>civil.tb &lt;- table(milsa$Est.civil)
+civil.tb</code></pre>
+<pre><code>
+  casado solteiro 
+      20       16 </code></pre>
+<p>Esta simples contagem é chamada de <strong>frequência absoluta</strong>. Podemos também incluir nessa tabela a soma total de observações de todas as categorias.</p>
+<pre class="r"><code>addmargins(civil.tb)</code></pre>
+<pre><code>
+  casado solteiro      Sum 
+      20       16       36 </code></pre>
+<p>Com essa informação adicional, podemos agora calcular a <strong>frequência relativa</strong>, ou seja, a frequência absoluta de cada categoria, dividida pelo total.</p>
+<pre class="r"><code>prop.table(civil.tb)</code></pre>
+<pre><code>
+   casado  solteiro 
+0.5555556 0.4444444 </code></pre>
+<p>Note que, nesse caso, a soma das categorias deve somar 1 (ou 100%)</p>
+<pre class="r"><code>addmargins(prop.table(civil.tb))</code></pre>
+<pre><code>
+   casado  solteiro       Sum 
+0.5555556 0.4444444 1.0000000 </code></pre>
+<p>Os gráficos de barras e de setores são adequados para representar esta variável. O <strong>gráfico de barras</strong> é formado pelas categorias no eixo X, e pela frequência no eixo Y. A frequência utilizada pode ser tanto a absoluta quanto a relativa, conforme for o caso.</p>
+<pre class="r"><code>par(mfrow = c(1, 2))
+barplot(civil.tb, ylab = &quot;Frequência absoluta&quot;)
+barplot(prop.table(civil.tb), ylab = &quot;Frequência relativa&quot;,
+        ylim = c(0, .6))</code></pre>
+<p><img src="figures/unnamed-chunk-7-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1,1))</code></pre>
+<p>O <strong>gráfico de setores</strong> (ou de pizza, ou torta, ou diagrama circular) também pode ser utilizado, mas apresenta uma maior limitação. Independente da frequência utilizada, cada setor terá a mesma área. Além disso, quando existem muitas categorias, e/ou as categorias possuem frequências semelhantes, a diferenciação dos setores é dificultada.</p>
+<pre class="r"><code>pie(civil.tb)</code></pre>
+<p><img src="figures/unnamed-chunk-8-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p>A <strong>moda</strong> de qualquer variável é definida como o valor mais frequente encontrado na amostra. No caso de variáveis qualitativas, a moda é a categoria que apresenta maior frequência. Nesse exemplo, a moda seria então</p>
+<pre class="r"><code>names(civil.tb)[which.max(civil.tb)]</code></pre>
+<pre><code>[1] &quot;casado&quot;</code></pre>
+</div>
+<div id="variavel-qualitativa-ordinal" class="section level2">
+<h2>Variável Qualitativa Ordinal</h2>
+<p>Para exemplificar como obter análises para uma variável qualitativa ordinal vamos selecionar a variável <code>Inst</code>, que verificou o grau de instrução dos funcionários.</p>
+<p>As tabelas de frequências são obtidas de forma semelhante à mostrada anteriormente. A frequência absoluta é a contagem do número de vezes que cada categoria foi observada. Note que aqui, a ordem tem importância, portanto, a tabela também deve seguir a ordem natural das categorias. Abaixo, mostramos a tabela de frequência absoluta já com o somatório de todas as classes.</p>
+<pre class="r"><code>inst.tb &lt;- table(milsa$Inst)
+addmargins(inst.tb)</code></pre>
+<pre><code>
+ 1o Grau  2o Grau Superior      Sum 
+      12       18        6       36 </code></pre>
+<p>As frequências relativas também são obtidas através da divisão da frequência absoluta de cada classe pelo total, ou seja,</p>
+<pre class="r"><code>addmargins(prop.table(inst.tb))</code></pre>
+<pre><code>
+  1o Grau   2o Grau  Superior       Sum 
+0.3333333 0.5000000 0.1666667 1.0000000 </code></pre>
+<p>O gráfico de setores não é adequado para este tipo de variável por não expressar a ordem dos possíveis valores. Usamos então apenas um gráfico de barras conforme mostrado abaixo</p>
+<pre class="r"><code>barplot(inst.tb)</code></pre>
+<p><img src="figures/unnamed-chunk-12-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p>Em alguns casos podemos querer mostrar o gráfico de barras com as barras classificadas da menor para a maior, ou vice-versa, independente da ordem dos níveis. O importante é sempre deixar claro as categorias de cada barra.</p>
+<pre class="r"><code>par(mfrow = c(1,2))
+## Menor para maior
+barplot(sort(inst.tb))
+## Maior para menor
+barplot(sort(inst.tb, decreasing = TRUE))</code></pre>
+<p><img src="figures/unnamed-chunk-13-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1,1))</code></pre>
+<p>Para uma variável ordinal, a moda também é especificada como a categoria de maior frequência, ou seja,</p>
+<pre class="r"><code>names(inst.tb)[which.max(inst.tb)]</code></pre>
+<pre><code>[1] &quot;2o Grau&quot;</code></pre>
+</div>
+<div id="variavel-quantitativa-discreta" class="section level2">
+<h2>Variável quantitativa discreta</h2>
+<p>Vamos agora usar a variável <code>Filhos</code> (número de filhos) para ilustrar algumas análises que podem ser feitas com uma quantitativa discreta.</p>
+<p>Frequências absolutas e relativas são obtidas como anteriormente. Nesse caso, assumimos que cada valor numérico é uma categoria, e construímos as tabelas de frequência como se a variável fosse qualitativa ordinal. Note, no entanto, que quando existem poucos valores numéricos, essa abordagem é viável. Mas contagens podem assumir muitos valores diferentes, e nesses casos, fazer uma tabela de frequência pode não ajudar a resumir aquela variável. Quando esse for o caso, adotaremos a mesma técnica que usamos para resumir variáveis quantitativas contínuas, como veremos na próxima sessão.</p>
+<p>Abaixo, temos a frequência absoluta, com o total de observações</p>
+<pre class="r"><code>filhos.tb &lt;- table(milsa$Filhos)
+addmargins(filhos.tb)</code></pre>
+<pre><code>
+  0   1   2   3   5 Sum 
+  4   5   7   3   1  20 </code></pre>
+<p>Note que a soma foi 33, ao invés das 36 observações totais da planilha original. Como você deve imaginar ao ter inspecionado a tabela, isso ocorre pelo fato de que existem algumas observações <em>perdidas</em> para essa variável. Mais especificamente, existem 3 observações faltantes, aquelas marcadas comm <code>NA</code>. Se for desejável, pode-se incluir a contagem de observações faltantes na tabela de frequência.</p>
+<pre class="r"><code>addmargins(table(milsa$Filhos, useNA = &quot;always&quot;))</code></pre>
+<pre><code>
+   0    1    2    3    5 &lt;NA&gt;  Sum 
+   4    5    7    3    1   16   36 </code></pre>
+<p>Por ora, vamos usar a tabela de frequência sem a contagem destes valores perdidos.</p>
+<p>Para variáveis cujos valores possuem ordenação natural (qualitativas ordinais e quantitativas em geral), faz sentido calcularmos também as <strong>frequências acumuladas</strong>. A frequência acumulada até um certo valor é obtida pela soma das frequências de todos os valores da variável, <em>menores ou iguais ao valor considerado</em>.</p>
+<pre class="r"><code>filhos.tba &lt;- as.table(cumsum(filhos.tb))
+rbind(filhos.tb, filhos.tba)</code></pre>
+<pre><code>           0 1  2  3  5
+filhos.tb  4 5  7  3  1
+filhos.tba 4 9 16 19 20</code></pre>
+<p>O gráfico adequado para frequências absolutas, relativas, ou acumuladas de uma variável discreta é parecido com um gráfico de barras, mas nesse caso, as frequências são indicadas por linhas.</p>
+<pre class="r"><code>plot(filhos.tb)</code></pre>
+<p><img src="figures/unnamed-chunk-18-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p>Outra possibilidade seria fazer gráficos de frequências absoluta e de frequências acumuladas conforme mostrado na</p>
+<pre class="r"><code>## Frequência relativa
+plot(filhos.tb)
+## Frequência relativa acumulada
+plot(filhos.tba, type = &quot;S&quot;) # tipo step (escada)</code></pre>
+<p><img src="figures/unnamed-chunk-19-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
