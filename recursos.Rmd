@@ -1,6 +1,8 @@
 ---
 title: "Recursos computacionais"
-output: html_document
+output:
+  html_document:
+    toc: false
 ---
 
 O curso não prevê conteúdo computacional. Entretanto todo o conteúdo

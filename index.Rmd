@@ -1,6 +1,8 @@
 ---
 title: "CE001 - Bioestatística"
-output: html_document
+output:
+  html_document:
+    toc: false
 ---
 
 ```{r setup, include=FALSE}
@@ -37,12 +39,9 @@ source("knitr_setup.R")
       uma sabatina, a nota é 0, e automaticamente estará dentro das 25%
       menores notas que serão excluídas para o cálculo da média final
 - **Datas importantes:** De acordo com a [Resolução 49/15 - CEPE][]:
-
-|  Data  |  Evento  |
-|--------|----------|
-| 29/02 | Início do semestre letivo |
-| 02/07 | Final do semestre letivo |
-| 11/07-16/07 | Período de exames |
+    - **29/02**: Início do semestre letivo
+    - **02/07**: Final do semestre letivo
+    - **11/07-16/07**: Período de exames
 
 # Programa/objetivos da disciplina
 
