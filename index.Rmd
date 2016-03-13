@@ -1,0 +1,14 @@
+---
+title: "CE001 - Bioestatística"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)
+
+# Detalhes da oferta da disciplina
+
+- Curso: Biologia (N)

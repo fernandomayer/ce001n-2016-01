@@ -1,0 +1,14 @@
+html_document:
+  self_contained: false
+  lib_dir: libs
+  includes:
+    in_header: analytics.html
+  theme: flatly
+  highlight: default
+  code_folding: hide
+  number_sections: false
+  toc: true
+  toc_depth: 4
+  toc_float:
+    collapsed: false
+    smooth_scroll: false
