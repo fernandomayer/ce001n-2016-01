@@ -7,6 +7,9 @@ output:
 
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)
 
+<div class="alert alert-danger" role="alert"> **ATENÇÃO!** As aulas serão no
+**Anfieatro 14** do Setor de Ciências Biológicas </div>
+
 # Detalhes da oferta da disciplina
 
 - **Curso:** Biologia (N)
