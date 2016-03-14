@@ -1,6 +1,6 @@
 # CE001N - 2016-01
 
-[![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)
+[![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01)
 
 ## CE001 - Bioestatística
 
