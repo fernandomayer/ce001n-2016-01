@@ -105,6 +105,17 @@ kable(milsa)
 Estes dados estão disponíveis em um arquivo `csv` no endereço
 <http://www.leg.ufpr.br/~fernandomayer/dados/milsa.csv>.
 
+<div class="panel panel-success">
+  <div class="panel-heading">Observação</div>
+  <div class="panel-body">
+  Um arquivo `csv` é um arquivo de texto (assim como um
+  `txt`), mas as colunas de um conjunto de dados são separados por
+  vírgula (*csv* = *comma separated values*). Arquivos de texto como
+  esse podem ser abertos em qualquer editor de texto, e também em
+  planilhas eletrônicas.
+  </div>
+</div>
+
 O nosso objetivo agora é então fazer uma análise descritiva destes
 dados, com a intenção de se identificar padrões e relações (se
 houverem).
@@ -122,6 +133,21 @@ conjunto de dados:
 |`Anos`       | Quantitativa discreta
 |`Meses`      | Quantitativa discreta
 |`Regiao`     | Qualitativa nominal
+
+Naturalmente as variáveis `Anos` e `Meses`, por se tratarem de tempo,
+são contínuas. No entanto, da maneira como foram coletadas, nós podemos
+classificá-las como discretas, sem muita perda de informação. Esse
+processo é denominado de **discretização** de uma variável contínua, e
+pode ser utilzado em pelo menos dois casos:
+
+1. Quando não há perda de informação ao discretizar a variável (como
+   nesse caso), ou quando o detalhamento não é fundamental para o
+   entendimento da característica.
+2. Quando uma variável contínua é medida por um equipamento que não é
+   capaz de mensurar com uma determinada precisão. Por exemplo, se o
+   peso de uma pessoa for medido por uma balança que só mede em escala
+   de 1 em 1 kg, o peso seria considerado como variável discreta mesmo
+   que saibamos que de fato é contínua.
 
 Estes são dados no "estilo planilha", com variáveis de diferentes tipos:
 categóricas e numéricas (qualitativas e quantitativas). Portanto segue
@@ -146,9 +172,16 @@ NOTE algumas coisas importantes:
   em branco, mas na maioria dos pacotes estatísticos é necessário
   preencher estas células com um símbolo (que varia entre os pacotes).
   Aqui, por exemplo, usamos o símbolo `NA` (de `N`ot `A`vailable) para
-  indicar estas observações. **Importante: não preencha estes casos com
-  0 (zero), pois o zero não significa falta de informação, e sim uma
-  quantidade que foi medida, mas foi verificada como nula.**
+  indicar estas observações.
+
+<div class="panel panel-info">
+  <div class="panel-heading">Importante!</div>
+  <div class="panel-body">
+  Não preencha casos perdidos com 0 (zero), pois o zero não significa
+  falta de informação, e sim uma quantidade que foi medida, mas foi
+  verificada como nula.
+  </div>
+</div>
 
 Agora que os dados estão prontos podemos começar a análise descritiva.
 A seguir mostramos como fazer análises descritivas uni e bi-variadas.
@@ -190,7 +223,7 @@ categoria (ou nível), e organizar em uma tabela.
 
 ```{r}
 civil.tb <- table(milsa$Est.civil)
-civil.tb
+cbind("f" = civil.tb)
 ```
 
 Esta simples contagem é chamada de **frequência absoluta**. Podemos
@@ -198,7 +231,7 @@ também incluir nessa tabela a soma total de observações de todas as
 categorias.
 
 ```{r}
-addmargins(civil.tb)
+cbind("f" = addmargins(civil.tb))
 ```
 
 Com essa informação adicional, podemos agora calcular a **frequência
@@ -206,21 +239,39 @@ relativa**, ou seja, a frequência absoluta de cada categoria, dividida
 pelo total.
 
 ```{r}
-prop.table(civil.tb)
+cbind("fr" = prop.table(civil.tb))
 ```
 
 Note que, nesse caso, a soma das categorias deve somar 1 (ou 100%)
 
 ```{r}
-addmargins(prop.table(civil.tb))
+cbind("fr" = addmargins(prop.table(civil.tb)))
 ```
+
+Com isso, podemos definir alguns tipos de frequência.
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Tipos de frequência</div>
+  <div class="panel-body">
+- Frequência absoluta ($f_i$): número total de elementos em cada classe
+- Frequência relativa ($fr_i$): razão entre cada valor da frequência
+  absoluta e o total de observações
+  $$
+  fr_i = \frac{f_i}{\sum f_i}
+  $$
+- Frequência percentual ($fp_i$): frequência relativa em porcentagem
+  $$
+  fp_i = fr_i \times 100
+  $$
+  </div>
+</div>
 
 Os gráficos de barras e de setores são adequados para representar esta
 variável. O **gráfico de barras** é formado pelas categorias no eixo X,
 e pela frequência no eixo Y. A frequência utilizada pode ser tanto a
 absoluta quanto a relativa, conforme for o caso.
 
-```{r}
+```{r bar-quali-nom, fig.show='hold'}
 par(mfrow = c(1, 2))
 barplot(civil.tb, ylab = "Frequência absoluta")
 barplot(prop.table(civil.tb), ylab = "Frequência relativa",
@@ -234,7 +285,7 @@ Independente da frequência utilizada, cada setor terá a mesma área. Além
 disso, quando existem muitas categorias, e/ou as categorias possuem
 frequências semelhantes, a diferenciação dos setores é dificultada.
 
-```{r}
+```{r pie-quali-nom}
 pie(civil.tb)
 ```
 
@@ -262,21 +313,22 @@ todas as classes.
 
 ```{r}
 inst.tb <- table(milsa$Inst)
-addmargins(inst.tb)
+cbind("f" = addmargins(inst.tb))
 ```
 
 As frequências relativas também são obtidas através da divisão da
 frequência absoluta de cada classe pelo total, ou seja,
 
 ```{r}
-addmargins(prop.table(inst.tb))
+cbind("f" = addmargins(inst.tb),
+      "fr" = addmargins(prop.table(inst.tb)))
 ```
 
 O gráfico de setores não é adequado para este tipo de variável por não
 expressar a ordem dos possíveis valores. Usamos então apenas um gráfico
 de barras conforme mostrado abaixo
 
-```{r}
+```{r bar-quali-ord1}
 barplot(inst.tb)
 ```
 
@@ -285,7 +337,7 @@ classificadas da menor para a maior, ou vice-versa, independente da
 ordem dos níveis. O importante é sempre deixar claro as categorias de
 cada barra.
 
-```{r}
+```{r bar-quali-ord2, fig.show='hold'}
 par(mfrow = c(1,2))
 ## Menor para maior
 barplot(sort(inst.tb))
@@ -321,24 +373,32 @@ Abaixo, temos a frequência absoluta, com o total de observações
 
 ```{r}
 filhos.tb <- table(milsa$Filhos)
-addmargins(filhos.tb)
+cbind("f" = addmargins(filhos.tb))
 ```
 
-Note que a soma foi `r sum(milsa$Filhos, na.rm = TRUE)`, ao invés das
-`r nrow(milsa)` observações totais da planilha original. Como você deve
-imaginar ao ter inspecionado a tabela, isso ocorre pelo fato de que
+Note que a soma foi `r sum(milsa$Filhos >= 0, na.rm = TRUE)`, ao invés
+das `r nrow(milsa)` observações totais da planilha original. Como você
+deve imaginar ao ter inspecionado a tabela, isso ocorre pelo fato de que
 existem algumas observações *perdidas* para essa variável. Mais
-especificamente, existem `r nrow(milsa) - sum(milsa$Filhos, na.rm = TRUE)`
-observações faltantes, aquelas marcadas comm `NA`. Se for desejável,
-pode-se incluir a contagem de observações faltantes na tabela de
-frequência.
+especificamente, existem `r nrow(milsa) - sum(milsa$Filhos >= 0, na.rm =
+TRUE)` observações faltantes, aquelas marcadas com `NA`. Se for
+desejável, pode-se incluir a contagem de observações faltantes na tabela
+de frequência.
 
 ```{r}
-addmargins(table(milsa$Filhos, useNA = "always"))
+cbind("f" = addmargins(table(milsa$Filhos, useNA = "always")))
 ```
 
 Por ora, vamos usar a tabela de frequência sem a contagem destes valores
-perdidos.
+perdidos. Nestes casos, é importante ter cuidado com as frequências
+relativas, que devem ser calculadas com o total da tabela, e não com o
+total de observações. Portanto, para esse exemplo, as frequências
+relativas seriam
+
+```{r}
+cbind("f" = addmargins(filhos.tb),
+      "fr" = addmargins(prop.table(filhos.tb)))
+```
 
 Para variáveis cujos valores possuem ordenação natural (qualitativas
 ordinais e quantitativas em geral), faz sentido calcularmos também as
@@ -348,25 +408,184 @@ obtida pela soma das frequências de todos os valores da variável,
 
 ```{r}
 filhos.tba <- as.table(cumsum(filhos.tb))
-rbind(filhos.tb, filhos.tba)
+cbind("f" = addmargins(filhos.tb),
+      "fr" = addmargins(prop.table(filhos.tb)),
+      "F" = c(filhos.tba, NA))
 ```
+
+Também podemos definir a **frequência acumulada relativa**, que é o
+resultado da divisão das frequências acumuladas pelo total de
+observações, ou seja
+
+```{r}
+filhos.tba <- as.table(cumsum(filhos.tb))
+cbind("f" = addmargins(filhos.tb),
+      "fr" = addmargins(prop.table(filhos.tb)),
+      "F" = c(filhos.tba, NA),
+      "Fr" = c(filhos.tba/20, NA))
+```
+
+Com isso, definimos também as frequências acumuladas.
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Tipos de frequência acumulada</div>
+  <div class="panel-body">
+- Frequência acumulada ($F_i$): soma das frequências simples de uma
+  classe com a frequência simples da classe anterior
+- Frequência acumulada relativa ($Fr_i$): frequência acumulada
+  da classe dividida pelo total de observações
+  $$
+  Fr_i = \frac{F_i}{\sum f_i}
+  $$
+- Frequência acumulada percentual ($Fp_i$): frequência acumulada
+  relativa em porcentagem
+  $$
+  Fp_i = Fr_i \times 100
+  $$
+  </div>
+</div>
 
 O gráfico adequado para frequências absolutas, relativas, ou acumuladas
 de uma variável discreta é parecido com um gráfico de barras, mas nesse
 caso, as frequências são indicadas por linhas.
 
-```{r}
-plot(filhos.tb)
+```{r, bar-quant-discr1}
+plot(filhos.tb, xlab = "Número de filhos",
+     ylab = "Frequência absoluta")
 ```
 
-Outra possibilidade seria fazer gráficos de frequências absoluta e de
-frequências acumuladas conforme mostrado na
+Outra possibilidade seria fazer gráficos de frequências relativa e de
+frequências relativas acumuladas conforme mostrado nas figuras abaixo.
 
-```{r, echo=2:5}
+```{r bar-quant-discr2, fig.show='hold'}
 par(mfrow = c(1,2))
 ## Frequência relativa
-plot(filhos.tb)
+plot(prop.table(filhos.tb), xlab = "Número de filhos",
+     ylab = "Frequência relativa")
 ## Frequência relativa acumulada
-plot(filhos.tba, type = "S") # tipo step (escada)
+plot(filhos.tba/20, type = "S", # tipo step (escada)
+     xlab = "Número de filhos",
+     ylab = "Frequência acumulada relativa")
 par(mfrow = c(1,1))
 ```
+
+## Variável quantitativa contínua
+
+Para concluir os exemplos para análise univariada vamos considerar a
+variável quantitativa contínua `Salario`.
+
+Para se fazer uma tabela de frequências de uma variável contínua, é
+preciso primeiro agrupar os dados em classes pré-estabelecidas. A
+escolha dos **intervalos de classe** geralmente é arbitrária, e a
+familiaridade do pesquisador com os dados é que lhe indicará quantas e
+quais classes devem ser utilizadas. No entanto, algumas regras simples
+podem ser úteis para auxiliar na construção das classes. Uma forma seria
+calcular a **amplitude de classe** ($h$) através da relação
+
+$$
+h = \frac{AT}{k}
+$$
+
+onde $AT = \max{\mathbf{x}} - \min{\mathbf{x}}$ é a **amplitude total**
+dos dados, e $k = \sqrt{n}$ é um número *estimado* de intervalos de
+classes para um conjunto de dados com $n$ observações ($k$ pode ser
+calculado por outras definições, como a regra de Sturges, por exemplo).
+
+Note que, para facilitar o cálculo da amplitude de classe e
+posteriormente para montar a tabela de distribuição de frequência,
+podemos **ordenar** o vetor de dados brutos. Por exemplo, os valores
+ordenados (em ordem crescente) de `Salario` são
+
+```{r}
+sort(milsa$Salario)
+```
+
+Com isso, naturalmente já visualizamos os valores máximo e mínimo, e
+sabemos que a amplitude total é
+
+$$
+AT = `r max(milsa$Salario)` - `r min(milsa$Salario)` =
+    `r max(milsa$Salario) - min(milsa$Salario)`
+$$
+
+Como temos `r nrow(milsa)` observações, o número estimado de classes é
+$k = \sqrt{n} = \sqrt{`r nrow(milsa)`} = `r sqrt(nrow(milsa))`$.
+Portanto, a amplitude de classe é
+
+$$
+h = \frac{AT}{k} = \frac{`r max(milsa$Salario) - min(milsa$Salario)`}
+    {`r sqrt(nrow(milsa))`} =
+    `r (max(milsa$Salario) - min(milsa$Salario))/sqrt(nrow(milsa))`
+$$
+
+O valor de amplitude de classe pode ser arredondado para um número
+inteiro, geralmente para facilitar a interpretação da tabela. Nesse
+caso, poderíamos arredondar a amplitude para 3 ou para 4 (inteiros mais
+próximos). Como o valor mínimo é 4 e o máximo está próximo de 24, é
+natural arredondarmos a amplitude para 4.
+
+Dessa forma, as classes seriam formadas pela sequência, ou "quebra de
+classes" definida por
+
+```{r}
+(quebra <- seq(4, 24, 4))
+```
+
+Portanto, ficamos com um total de `r length(quebra) - 1` classes. A
+última etapa é definir os extremos de classe que serão abertos (permitem
+incluir aquele valor exato) ou fechados (não incluem aquele valor). Para
+isso, usaremos a notação a seguir
+
+
+  Classe  Notação        Denominação                 Resultado
+  ------- -------------- --------------------------- ------------------------
+    [a,b)   $a \vdash b$  Aberto em a, fechado em b  Inclui a, não inclui b
+    (a,b]   $a \dashv b$  Fechado em a, aberto em b  Não inclui a, inclui b
+
+
+Nesse exemplo, vamos usar intervalos do tipo
+`[a, b)`, pois o primeiro valor de quebra de classe é o igual ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos os valores pertençam a alguma das classes.
+
+Portanto, as classes completas com suas respectivas frequências absolutas estão na tabela abaixo.
+
+```{r}
+classes <- cut(milsa$Salario, breaks = quebra, right = FALSE)
+classes.tab <- table(classes)
+cbind("f" = addmargins(classes.tab))
+```
+
+Para completar esta tabela, podemos obter os demais tipos de frequência, conforme visto anteriormente: $f_r$ (frequência relativa), $F$ (frequência acumulada), e $F_r$ (frequência acumulada relativa).
+
+```{r}
+cbind("f" = addmargins(classes.tab),
+      "fr" = addmargins(prop.table(classes.tab)),
+      "F" = c(cumsum(classes.tab), NA),
+      "Fr" = c(cumsum(classes.tab), NA)/36)
+```
+
+# Exercícios
+
+1. Em um questionário aplicado aos estudantes que frequentavam a livraria
+   do campus, foi perguntado como classificariam o serviço prestado. As
+   respostas foram:
+```{r}
+ex <- c("ótimo", "bom", "bom", "péssimo", "bom", "bom", "ótimo",
+  "ótimo", "bom", "ótimo", "bom", "ótimo", "bom", "bom", "ótimo", "bom",
+  "péssimo", "bom", "péssimo", "bom", "péssimo", "bom", "bom", "bom",
+  "bom", "ótimo", "bom", "péssimo", "ótimo", "ótimo", "bom", "péssimo")
+ex
+```
+a. Como você classificaria estas respostas?
+b. Crie uma tabela e um gráfico para representar e resumir esta
+   informação.
+
+2. Considere os dados abaixo
+```{r}
+ex1 <- c(11,13,10,9,0,16,28,15,14,1,2,17,
+         18,12,18,8,9,22,16,20,34,15,21,13,
+         12,14,13,19,0,2,17,11,18,16,13,6,
+         19,8,8,12,13,21,11,19,1,14,4,16)
+sort(ex1)
+```
+a. Monte uma tabela construindo as classes conforme os critérios apresentados
+b. Calcule as frequências: absoluta, relativa, percentual, acumulada, acumulada relativa, acumulada percentual

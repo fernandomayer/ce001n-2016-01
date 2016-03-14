@@ -771,6 +771,14 @@ milsa &lt;- read.csv(&quot;dados/milsa.csv&quot;)</code></pre>
 </tbody>
 </table>
 <p>Estes dados estão disponíveis em um arquivo <code>csv</code> no endereço <a href="http://www.leg.ufpr.br/~fernandomayer/dados/milsa.csv" class="uri">http://www.leg.ufpr.br/~fernandomayer/dados/milsa.csv</a>.</p>
+<div class="panel panel-success">
+<div class="panel-heading">
+Observação
+</div>
+<div class="panel-body">
+Um arquivo <code>csv</code> é um arquivo de texto (assim como um <code>txt</code>), mas as colunas de um conjunto de dados são separados por vírgula (<em>csv</em> = <em>comma separated values</em>). Arquivos de texto como esse podem ser abertos em qualquer editor de texto, e também em planilhas eletrônicas.
+</div>
+</div>
 <p>O nosso objetivo agora é então fazer uma análise descritiva destes dados, com a intenção de se identificar padrões e relações (se houverem).</p>
 <p>Portanto, o primeiro passo é classificar todas as variáveis desse conjunto de dados:</p>
 <table>
@@ -815,6 +823,11 @@ milsa &lt;- read.csv(&quot;dados/milsa.csv&quot;)</code></pre>
 </tr>
 </tbody>
 </table>
+<p>Naturalmente as variáveis <code>Anos</code> e <code>Meses</code>, por se tratarem de tempo, são contínuas. No entanto, da maneira como foram coletadas, nós podemos classificá-las como discretas, sem muita perda de informação. Esse processo é denominado de <strong>discretização</strong> de uma variável contínua, e pode ser utilzado em pelo menos dois casos:</p>
+<ol style="list-style-type: decimal">
+<li>Quando não há perda de informação ao discretizar a variável (como nesse caso), ou quando o detalhamento não é fundamental para o entendimento da característica.</li>
+<li>Quando uma variável contínua é medida por um equipamento que não é capaz de mensurar com uma determinada precisão. Por exemplo, se o peso de uma pessoa for medido por uma balança que só mede em escala de 1 em 1 kg, o peso seria considerado como variável discreta mesmo que saibamos que de fato é contínua.</li>
+</ol>
 <p>Estes são dados no “estilo planilha”, com variáveis de diferentes tipos: categóricas e numéricas (qualitativas e quantitativas). Portanto segue as normas que estabelecemos anteriormente:</p>
 <ul>
 <li>Cada linha corresponde a uma unidade amostral, nesse caso à uma pessoa</li>
@@ -823,8 +836,16 @@ milsa &lt;- read.csv(&quot;dados/milsa.csv&quot;)</code></pre>
 <p>NOTE algumas coisas importantes:</p>
 <ul>
 <li>Cada variável possui um tipo de resposta, e estas respostas seguem sempre o mesmo padrão. Por exemplo, na variável <code>Est.civil</code> as possíveis respostas são: <code>solteiro</code> e <code>casado</code>. Se por acaso houvesse o termo <code>Casado</code>, poderia haver confusão na maioria dos pacotes estatísticos, e este termo poderia ser (erroneamente) uma terceira categoria de resposta.</li>
-<li>Quando a informação de uma (ou mais) variáveis não estiver disponível (por exemplo: falta de resposta, rasura na marcação da resposta, ou simplesmente não foi possível coletar aquela informação para aquele indivíduo), esta informação deve ser marcada (ou indicada) com algum símbolo especial. Em planilhas eletrônicas, normalmente a célula fica em branco, mas na maioria dos pacotes estatísticos é necessário preencher estas células com um símbolo (que varia entre os pacotes). Aqui, por exemplo, usamos o símbolo <code>NA</code> (de <code>N</code>ot <code>A</code>vailable) para indicar estas observações. <strong>Importante: não preencha estes casos com 0 (zero), pois o zero não significa falta de informação, e sim uma quantidade que foi medida, mas foi verificada como nula.</strong></li>
+<li>Quando a informação de uma (ou mais) variáveis não estiver disponível (por exemplo: falta de resposta, rasura na marcação da resposta, ou simplesmente não foi possível coletar aquela informação para aquele indivíduo), esta informação deve ser marcada (ou indicada) com algum símbolo especial. Em planilhas eletrônicas, normalmente a célula fica em branco, mas na maioria dos pacotes estatísticos é necessário preencher estas células com um símbolo (que varia entre os pacotes). Aqui, por exemplo, usamos o símbolo <code>NA</code> (de <code>N</code>ot <code>A</code>vailable) para indicar estas observações.</li>
 </ul>
+<div class="panel panel-info">
+<div class="panel-heading">
+Importante!
+</div>
+<div class="panel-body">
+Não preencha casos perdidos com 0 (zero), pois o zero não significa falta de informação, e sim uma quantidade que foi medida, mas foi verificada como nula.
+</div>
+</div>
 <p>Agora que os dados estão prontos podemos começar a análise descritiva. A seguir mostramos como fazer análises descritivas uni e bi-variadas. Sugiro ainda que você use algum programa ou pacote estatístico para reproduzir os resultados mostrados aqui.</p>
 </div>
 </div>
@@ -847,35 +868,54 @@ milsa &lt;- read.csv(&quot;dados/milsa.csv&quot;)</code></pre>
 </ol>
 <p>Por ser uma variável qualitativa, para obter a distribuição de frequência desta variável, basta contarmos quantas vezes ocorre cada categoria (ou nível), e organizar em uma tabela.</p>
 <pre class="r"><code>civil.tb &lt;- table(milsa$Est.civil)
-civil.tb</code></pre>
-<pre><code>
-  casado solteiro 
-      20       16 </code></pre>
+cbind(&quot;f&quot; = civil.tb)</code></pre>
+<pre><code>          f
+casado   20
+solteiro 16</code></pre>
 <p>Esta simples contagem é chamada de <strong>frequência absoluta</strong>. Podemos também incluir nessa tabela a soma total de observações de todas as categorias.</p>
-<pre class="r"><code>addmargins(civil.tb)</code></pre>
-<pre><code>
-  casado solteiro      Sum 
-      20       16       36 </code></pre>
+<pre class="r"><code>cbind(&quot;f&quot; = addmargins(civil.tb))</code></pre>
+<pre><code>          f
+casado   20
+solteiro 16
+Sum      36</code></pre>
 <p>Com essa informação adicional, podemos agora calcular a <strong>frequência relativa</strong>, ou seja, a frequência absoluta de cada categoria, dividida pelo total.</p>
-<pre class="r"><code>prop.table(civil.tb)</code></pre>
-<pre><code>
-   casado  solteiro 
-0.5555556 0.4444444 </code></pre>
+<pre class="r"><code>cbind(&quot;fr&quot; = prop.table(civil.tb))</code></pre>
+<pre><code>                fr
+casado   0.5555556
+solteiro 0.4444444</code></pre>
 <p>Note que, nesse caso, a soma das categorias deve somar 1 (ou 100%)</p>
-<pre class="r"><code>addmargins(prop.table(civil.tb))</code></pre>
-<pre><code>
-   casado  solteiro       Sum 
-0.5555556 0.4444444 1.0000000 </code></pre>
+<pre class="r"><code>cbind(&quot;fr&quot; = addmargins(prop.table(civil.tb)))</code></pre>
+<pre><code>                fr
+casado   0.5555556
+solteiro 0.4444444
+Sum      1.0000000</code></pre>
+<p>Com isso, podemos definir alguns tipos de frequência.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Tipos de frequência
+</div>
+<div class="panel-body">
+<ul>
+<li>Frequência absoluta (<span class="math inline">\(f_i\)</span>): número total de elementos em cada classe</li>
+<li>Frequência relativa (<span class="math inline">\(fr_i\)</span>): razão entre cada valor da frequência absoluta e o total de observações <span class="math display">\[
+  fr_i = \frac{f_i}{\sum f_i}
+  \]</span></li>
+<li>Frequência percentual (<span class="math inline">\(fp_i\)</span>): frequência relativa em porcentagem <span class="math display">\[
+  fp_i = fr_i \times 100
+  \]</span>
+</div></li>
+</ul>
+</div>
 <p>Os gráficos de barras e de setores são adequados para representar esta variável. O <strong>gráfico de barras</strong> é formado pelas categorias no eixo X, e pela frequência no eixo Y. A frequência utilizada pode ser tanto a absoluta quanto a relativa, conforme for o caso.</p>
 <pre class="r"><code>par(mfrow = c(1, 2))
 barplot(civil.tb, ylab = &quot;Frequência absoluta&quot;)
 barplot(prop.table(civil.tb), ylab = &quot;Frequência relativa&quot;,
-        ylim = c(0, .6))</code></pre>
-<p><img src="figures/unnamed-chunk-7-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(mfrow = c(1,1))</code></pre>
+        ylim = c(0, .6))
+par(mfrow = c(1,1))</code></pre>
+<p><img src="figures/bar-quali-nom-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
 <p>O <strong>gráfico de setores</strong> (ou de pizza, ou torta, ou diagrama circular) também pode ser utilizado, mas apresenta uma maior limitação. Independente da frequência utilizada, cada setor terá a mesma área. Além disso, quando existem muitas categorias, e/ou as categorias possuem frequências semelhantes, a diferenciação dos setores é dificultada.</p>
 <pre class="r"><code>pie(civil.tb)</code></pre>
-<p><img src="figures/unnamed-chunk-8-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p><img src="figures/pie-quali-nom-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
 <p>A <strong>moda</strong> de qualquer variável é definida como o valor mais frequente encontrado na amostra. No caso de variáveis qualitativas, a moda é a categoria que apresenta maior frequência. Nesse exemplo, a moda seria então</p>
 <pre class="r"><code>names(civil.tb)[which.max(civil.tb)]</code></pre>
 <pre><code>[1] &quot;casado&quot;</code></pre>
@@ -885,26 +925,31 @@ barplot(prop.table(civil.tb), ylab = &quot;Frequência relativa&quot;,
 <p>Para exemplificar como obter análises para uma variável qualitativa ordinal vamos selecionar a variável <code>Inst</code>, que verificou o grau de instrução dos funcionários.</p>
 <p>As tabelas de frequências são obtidas de forma semelhante à mostrada anteriormente. A frequência absoluta é a contagem do número de vezes que cada categoria foi observada. Note que aqui, a ordem tem importância, portanto, a tabela também deve seguir a ordem natural das categorias. Abaixo, mostramos a tabela de frequência absoluta já com o somatório de todas as classes.</p>
 <pre class="r"><code>inst.tb &lt;- table(milsa$Inst)
-addmargins(inst.tb)</code></pre>
-<pre><code>
- 1o Grau  2o Grau Superior      Sum 
-      12       18        6       36 </code></pre>
+cbind(&quot;f&quot; = addmargins(inst.tb))</code></pre>
+<pre><code>          f
+1o Grau  12
+2o Grau  18
+Superior  6
+Sum      36</code></pre>
 <p>As frequências relativas também são obtidas através da divisão da frequência absoluta de cada classe pelo total, ou seja,</p>
-<pre class="r"><code>addmargins(prop.table(inst.tb))</code></pre>
-<pre><code>
-  1o Grau   2o Grau  Superior       Sum 
-0.3333333 0.5000000 0.1666667 1.0000000 </code></pre>
+<pre class="r"><code>cbind(&quot;f&quot; = addmargins(inst.tb),
+      &quot;fr&quot; = addmargins(prop.table(inst.tb)))</code></pre>
+<pre><code>          f        fr
+1o Grau  12 0.3333333
+2o Grau  18 0.5000000
+Superior  6 0.1666667
+Sum      36 1.0000000</code></pre>
 <p>O gráfico de setores não é adequado para este tipo de variável por não expressar a ordem dos possíveis valores. Usamos então apenas um gráfico de barras conforme mostrado abaixo</p>
 <pre class="r"><code>barplot(inst.tb)</code></pre>
-<p><img src="figures/unnamed-chunk-12-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p><img src="figures/bar-quali-ord1-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
 <p>Em alguns casos podemos querer mostrar o gráfico de barras com as barras classificadas da menor para a maior, ou vice-versa, independente da ordem dos níveis. O importante é sempre deixar claro as categorias de cada barra.</p>
 <pre class="r"><code>par(mfrow = c(1,2))
 ## Menor para maior
 barplot(sort(inst.tb))
 ## Maior para menor
-barplot(sort(inst.tb, decreasing = TRUE))</code></pre>
-<p><img src="figures/unnamed-chunk-13-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(mfrow = c(1,1))</code></pre>
+barplot(sort(inst.tb, decreasing = TRUE))
+par(mfrow = c(1,1))</code></pre>
+<p><img src="figures/bar-quali-ord2-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
 <p>Para uma variável ordinal, a moda também é especificada como a categoria de maior frequência, ou seja,</p>
 <pre class="r"><code>names(inst.tb)[which.max(inst.tb)]</code></pre>
 <pre><code>[1] &quot;2o Grau&quot;</code></pre>
@@ -915,32 +960,206 @@ barplot(sort(inst.tb, decreasing = TRUE))</code></pre>
 <p>Frequências absolutas e relativas são obtidas como anteriormente. Nesse caso, assumimos que cada valor numérico é uma categoria, e construímos as tabelas de frequência como se a variável fosse qualitativa ordinal. Note, no entanto, que quando existem poucos valores numéricos, essa abordagem é viável. Mas contagens podem assumir muitos valores diferentes, e nesses casos, fazer uma tabela de frequência pode não ajudar a resumir aquela variável. Quando esse for o caso, adotaremos a mesma técnica que usamos para resumir variáveis quantitativas contínuas, como veremos na próxima sessão.</p>
 <p>Abaixo, temos a frequência absoluta, com o total de observações</p>
 <pre class="r"><code>filhos.tb &lt;- table(milsa$Filhos)
-addmargins(filhos.tb)</code></pre>
-<pre><code>
-  0   1   2   3   5 Sum 
-  4   5   7   3   1  20 </code></pre>
-<p>Note que a soma foi 33, ao invés das 36 observações totais da planilha original. Como você deve imaginar ao ter inspecionado a tabela, isso ocorre pelo fato de que existem algumas observações <em>perdidas</em> para essa variável. Mais especificamente, existem 3 observações faltantes, aquelas marcadas comm <code>NA</code>. Se for desejável, pode-se incluir a contagem de observações faltantes na tabela de frequência.</p>
-<pre class="r"><code>addmargins(table(milsa$Filhos, useNA = &quot;always&quot;))</code></pre>
-<pre><code>
-   0    1    2    3    5 &lt;NA&gt;  Sum 
-   4    5    7    3    1   16   36 </code></pre>
-<p>Por ora, vamos usar a tabela de frequência sem a contagem destes valores perdidos.</p>
+cbind(&quot;f&quot; = addmargins(filhos.tb))</code></pre>
+<pre><code>     f
+0    4
+1    5
+2    7
+3    3
+5    1
+Sum 20</code></pre>
+<p>Note que a soma foi 20, ao invés das 36 observações totais da planilha original. Como você deve imaginar ao ter inspecionado a tabela, isso ocorre pelo fato de que existem algumas observações <em>perdidas</em> para essa variável. Mais especificamente, existem 16 observações faltantes, aquelas marcadas com <code>NA</code>. Se for desejável, pode-se incluir a contagem de observações faltantes na tabela de frequência.</p>
+<pre class="r"><code>cbind(&quot;f&quot; = addmargins(table(milsa$Filhos, useNA = &quot;always&quot;)))</code></pre>
+<pre><code>      f
+0     4
+1     5
+2     7
+3     3
+5     1
+&lt;NA&gt; 16
+Sum  36</code></pre>
+<p>Por ora, vamos usar a tabela de frequência sem a contagem destes valores perdidos. Nestes casos, é importante ter cuidado com as frequências relativas, que devem ser calculadas com o total da tabela, e não com o total de observações. Portanto, para esse exemplo, as frequências relativas seriam</p>
+<pre class="r"><code>cbind(&quot;f&quot; = addmargins(filhos.tb),
+      &quot;fr&quot; = addmargins(prop.table(filhos.tb)))</code></pre>
+<pre><code>     f   fr
+0    4 0.20
+1    5 0.25
+2    7 0.35
+3    3 0.15
+5    1 0.05
+Sum 20 1.00</code></pre>
 <p>Para variáveis cujos valores possuem ordenação natural (qualitativas ordinais e quantitativas em geral), faz sentido calcularmos também as <strong>frequências acumuladas</strong>. A frequência acumulada até um certo valor é obtida pela soma das frequências de todos os valores da variável, <em>menores ou iguais ao valor considerado</em>.</p>
 <pre class="r"><code>filhos.tba &lt;- as.table(cumsum(filhos.tb))
-rbind(filhos.tb, filhos.tba)</code></pre>
-<pre><code>           0 1  2  3  5
-filhos.tb  4 5  7  3  1
-filhos.tba 4 9 16 19 20</code></pre>
-<p>O gráfico adequado para frequências absolutas, relativas, ou acumuladas de uma variável discreta é parecido com um gráfico de barras, mas nesse caso, as frequências são indicadas por linhas.</p>
-<pre class="r"><code>plot(filhos.tb)</code></pre>
-<p><img src="figures/unnamed-chunk-18-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
-<p>Outra possibilidade seria fazer gráficos de frequências absoluta e de frequências acumuladas conforme mostrado na</p>
-<pre class="r"><code>## Frequência relativa
-plot(filhos.tb)
-## Frequência relativa acumulada
-plot(filhos.tba, type = &quot;S&quot;) # tipo step (escada)</code></pre>
-<p><img src="figures/unnamed-chunk-19-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+cbind(&quot;f&quot; = addmargins(filhos.tb),
+      &quot;fr&quot; = addmargins(prop.table(filhos.tb)),
+      &quot;F&quot; = c(filhos.tba, NA))</code></pre>
+<pre><code>     f   fr  F
+0    4 0.20  4
+1    5 0.25  9
+2    7 0.35 16
+3    3 0.15 19
+5    1 0.05 20
+Sum 20 1.00 NA</code></pre>
+<p>Também podemos definir a <strong>frequência acumulada relativa</strong>, que é o resultado da divisão das frequências acumuladas pelo total de observações, ou seja</p>
+<pre class="r"><code>filhos.tba &lt;- as.table(cumsum(filhos.tb))
+cbind(&quot;f&quot; = addmargins(filhos.tb),
+      &quot;fr&quot; = addmargins(prop.table(filhos.tb)),
+      &quot;F&quot; = c(filhos.tba, NA),
+      &quot;Fr&quot; = c(filhos.tba/20, NA))</code></pre>
+<pre><code>     f   fr  F   Fr
+0    4 0.20  4 0.20
+1    5 0.25  9 0.45
+2    7 0.35 16 0.80
+3    3 0.15 19 0.95
+5    1 0.05 20 1.00
+Sum 20 1.00 NA   NA</code></pre>
+<p>Com isso, definimos também as frequências acumuladas.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Tipos de frequência acumulada
 </div>
+<div class="panel-body">
+<ul>
+<li>Frequência acumulada (<span class="math inline">\(F_i\)</span>): soma das frequências simples de uma classe com a frequência simples da classe anterior</li>
+<li>Frequência acumulada relativa (<span class="math inline">\(Fr_i\)</span>): frequência acumulada da classe dividida pelo total de observações <span class="math display">\[
+  Fr_i = \frac{F_i}{\sum f_i}
+  \]</span></li>
+<li>Frequência acumulada percentual (<span class="math inline">\(Fp_i\)</span>): frequência acumulada relativa em porcentagem <span class="math display">\[
+  Fp_i = Fr_i \times 100
+  \]</span>
+</div></li>
+</ul>
+</div>
+<p>O gráfico adequado para frequências absolutas, relativas, ou acumuladas de uma variável discreta é parecido com um gráfico de barras, mas nesse caso, as frequências são indicadas por linhas.</p>
+<pre class="r"><code>plot(filhos.tb, xlab = &quot;Número de filhos&quot;,
+     ylab = &quot;Frequência absoluta&quot;)</code></pre>
+<p><img src="figures/bar-quant-discr1-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p>Outra possibilidade seria fazer gráficos de frequências relativa e de frequências relativas acumuladas conforme mostrado nas figuras abaixo.</p>
+<pre class="r"><code>par(mfrow = c(1,2))
+## Frequência relativa
+plot(prop.table(filhos.tb), xlab = &quot;Número de filhos&quot;,
+     ylab = &quot;Frequência relativa&quot;)
+## Frequência relativa acumulada
+plot(filhos.tba/20, type = &quot;S&quot;, # tipo step (escada)
+     xlab = &quot;Número de filhos&quot;,
+     ylab = &quot;Frequência acumulada relativa&quot;)
+par(mfrow = c(1,1))</code></pre>
+<p><img src="figures/bar-quant-discr2-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+</div>
+<div id="variavel-quantitativa-continua" class="section level2">
+<h2>Variável quantitativa contínua</h2>
+<p>Para concluir os exemplos para análise univariada vamos considerar a variável quantitativa contínua <code>Salario</code>.</p>
+<p>Para se fazer uma tabela de frequências de uma variável contínua, é preciso primeiro agrupar os dados em classes pré-estabelecidas. A escolha dos <strong>intervalos de classe</strong> geralmente é arbitrária, e a familiaridade do pesquisador com os dados é que lhe indicará quantas e quais classes devem ser utilizadas. No entanto, algumas regras simples podem ser úteis para auxiliar na construção das classes. Uma forma seria calcular a <strong>amplitude de classe</strong> (<span class="math inline">\(h\)</span>) através da relação</p>
+<p><span class="math display">\[
+h = \frac{AT}{k}
+\]</span></p>
+<p>onde <span class="math inline">\(AT = \max{\mathbf{x}} - \min{\mathbf{x}}\)</span> é a <strong>amplitude total</strong> dos dados, e <span class="math inline">\(k = \sqrt{n}\)</span> é um número <em>estimado</em> de intervalos de classes para um conjunto de dados com <span class="math inline">\(n\)</span> observações (<span class="math inline">\(k\)</span> pode ser calculado por outras definições, como a regra de Sturges, por exemplo).</p>
+<p>Note que, para facilitar o cálculo da amplitude de classe e posteriormente para montar a tabela de distribuição de frequência, podemos <strong>ordenar</strong> o vetor de dados brutos. Por exemplo, os valores ordenados (em ordem crescente) de <code>Salario</code> são</p>
+<pre class="r"><code>sort(milsa$Salario)</code></pre>
+<pre><code> [1]  4.00  4.56  5.25  5.73  6.26  6.66  6.86  7.39  7.44  7.59  8.12
+[12]  8.46  8.74  8.95  9.13  9.35  9.77  9.80 10.53 10.76 11.06 11.59
+[23] 12.00 12.79 13.23 13.60 13.85 14.69 14.71 15.99 16.22 16.61 17.26
+[34] 18.75 19.40 23.30</code></pre>
+<p>Com isso, naturalmente já visualizamos os valores máximo e mínimo, e sabemos que a amplitude total é</p>
+<p><span class="math display">\[
+AT = 23.3 - 4 =
+    19.3
+\]</span></p>
+<p>Como temos 36 observações, o número estimado de classes é <span class="math inline">\(k = \sqrt{n} = \sqrt{36} = 6\)</span>. Portanto, a amplitude de classe é</p>
+<p><span class="math display">\[
+h = \frac{AT}{k} = \frac{19.3}
+    {6} =
+    3.2166667
+\]</span></p>
+<p>O valor de amplitude de classe pode ser arredondado para um número inteiro, geralmente para facilitar a interpretação da tabela. Nesse caso, poderíamos arredondar a amplitude para 3 ou para 4 (inteiros mais próximos). Como o valor mínimo é 4 e o máximo está próximo de 24, é natural arredondarmos a amplitude para 4.</p>
+<p>Dessa forma, as classes seriam formadas pela sequência, ou “quebra de classes” definida por</p>
+<pre class="r"><code>(quebra &lt;- seq(4, 24, 4))</code></pre>
+<pre><code>[1]  4  8 12 16 20 24</code></pre>
+<p>Portanto, ficamos com um total de 5 classes. A última etapa é definir os extremos de classe que serão abertos (permitem incluir aquele valor exato) ou fechados (não incluem aquele valor). Para isso, usaremos a notação a seguir</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Classe</th>
+<th align="left">Notação</th>
+<th align="left">Denominação</th>
+<th align="left">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">[a,b)</td>
+<td align="left"><span class="math inline">\(a \vdash b\)</span></td>
+<td align="left">Aberto em a, fechado em b</td>
+<td align="left">Inclui a, não inclui b</td>
+</tr>
+<tr class="even">
+<td align="left">(a,b]</td>
+<td align="left"><span class="math inline">\(a \dashv b\)</span></td>
+<td align="left">Fechado em a, aberto em b</td>
+<td align="left">Não inclui a, inclui b</td>
+</tr>
+</tbody>
+</table>
+<p>Nesse exemplo, vamos usar intervalos do tipo <code>[a, b)</code>, pois o primeiro valor de quebra de classe é o igual ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos os valores pertençam a alguma das classes.</p>
+<p>Portanto, as classes completas com suas respectivas frequências absolutas estão na tabela abaixo.</p>
+<pre class="r"><code>classes &lt;- cut(milsa$Salario, breaks = quebra, right = FALSE)
+classes.tab &lt;- table(classes)
+cbind(&quot;f&quot; = addmargins(classes.tab))</code></pre>
+<pre><code>         f
+[4,8)   10
+[8,12)  12
+[12,16)  8
+[16,20)  5
+[20,24)  1
+Sum     36</code></pre>
+<p>Para completar esta tabela, podemos obter os demais tipos de frequência, conforme visto anteriormente: <span class="math inline">\(f_r\)</span> (frequência relativa), <span class="math inline">\(F\)</span> (frequência acumulada), e <span class="math inline">\(F_r\)</span> (frequência acumulada relativa).</p>
+<pre class="r"><code>cbind(&quot;f&quot; = addmargins(classes.tab),
+      &quot;fr&quot; = addmargins(prop.table(classes.tab)),
+      &quot;F&quot; = c(cumsum(classes.tab), NA),
+      &quot;Fr&quot; = c(cumsum(classes.tab), NA)/36)</code></pre>
+<pre><code>         f         fr  F        Fr
+[4,8)   10 0.27777778 10 0.2777778
+[8,12)  12 0.33333333 22 0.6111111
+[12,16)  8 0.22222222 30 0.8333333
+[16,20)  5 0.13888889 35 0.9722222
+[20,24)  1 0.02777778 36 1.0000000
+Sum     36 1.00000000 NA        NA</code></pre>
+</div>
+</div>
+<div id="exercicios" class="section level1">
+<h1>Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li>Em um questionário aplicado aos estudantes que frequentavam a livraria do campus, foi perguntado como classificariam o serviço prestado. As respostas foram:</li>
+</ol>
+<pre class="r"><code>ex &lt;- c(&quot;ótimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;ótimo&quot;,
+  &quot;ótimo&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;,
+  &quot;péssimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;bom&quot;,
+  &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;ótimo&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;)
+ex</code></pre>
+<pre><code> [1] &quot;ótimo&quot;   &quot;bom&quot;     &quot;bom&quot;     &quot;péssimo&quot; &quot;bom&quot;     &quot;bom&quot;     &quot;ótimo&quot;  
+ [8] &quot;ótimo&quot;   &quot;bom&quot;     &quot;ótimo&quot;   &quot;bom&quot;     &quot;ótimo&quot;   &quot;bom&quot;     &quot;bom&quot;    
+[15] &quot;ótimo&quot;   &quot;bom&quot;     &quot;péssimo&quot; &quot;bom&quot;     &quot;péssimo&quot; &quot;bom&quot;     &quot;péssimo&quot;
+[22] &quot;bom&quot;     &quot;bom&quot;     &quot;bom&quot;     &quot;bom&quot;     &quot;ótimo&quot;   &quot;bom&quot;     &quot;péssimo&quot;
+[29] &quot;ótimo&quot;   &quot;ótimo&quot;   &quot;bom&quot;     &quot;péssimo&quot;</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li>Como você classificaria estas respostas?</li>
+<li>Crie uma tabela e um gráfico para representar e resumir esta informação.</li>
+</ol>
+<ol start="2" style="list-style-type: decimal">
+<li>Considere os dados abaixo</li>
+</ol>
+<pre class="r"><code>ex1 &lt;- c(11,13,10,9,0,16,28,15,14,1,2,17,
+         18,12,18,8,9,22,16,20,34,15,21,13,
+         12,14,13,19,0,2,17,11,18,16,13,6,
+         19,8,8,12,13,21,11,19,1,14,4,16)
+sort(ex1)</code></pre>
+<pre><code> [1]  0  0  1  1  2  2  4  6  8  8  8  9  9 10 11 11 11 12 12 12 13 13 13
+[24] 13 13 14 14 14 15 15 16 16 16 16 17 17 18 18 18 19 19 19 20 21 21 22
+[47] 28 34</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li>Monte uma tabela construindo as classes conforme os critérios apresentados</li>
+<li>Calcule as frequências: absoluta, relativa, percentual, acumulada, acumulada relativa, acumulada percentual</li>
+</ol>
 </div>
 
 <center>
