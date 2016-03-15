@@ -536,12 +536,10 @@ Portanto, ficamos com um total de `r length(quebra) - 1` classes. A
 incluir aquele valor exato) ou fechados (não incluem aquele valor). Para
 isso, usaremos a notação a seguir
 
-
-  Classe  Notação        Denominação                 Resultado
-  ------- -------------- --------------------------- ------------------------
-    [a,b)   $a \vdash b$  Aberto em a, fechado em b  Inclui a, não inclui b
-    (a,b]   $a \dashv b$  Fechado em a, aberto em b  Não inclui a, inclui b
-
+Classe  Notação        Denominação                 Resultado
+------- -------------- --------------------------- ------------------------
+  [a,b)   $a \vdash b$  Fechado em a, aberto em b  Inclui a, não inclui b
+  (a,b]   $a \dashv b$  Aberto em a, fechado em b  Não inclui a, inclui b
 
 Nesse exemplo, vamos usar intervalos do tipo
 `[a, b)`, pois o primeiro valor de quebra de classe é o igual ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos os valores pertençam a alguma das classes.
