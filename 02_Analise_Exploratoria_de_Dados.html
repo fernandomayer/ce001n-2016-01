@@ -1100,7 +1100,7 @@ h = \frac{AT}{k} = \frac{19.3}
 </tr>
 </tbody>
 </table>
-<p>Nesse exemplo, vamos usar intervalos do tipo <code>[a, b)</code>, pois o primeiro valor de quebra de classe é o igual ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos os valores pertençam a alguma das classes.</p>
+<p>Nesse exemplo, vamos usar intervalos do tipo fechados à esquerda (abertos à direita), pois o primeiro valor de quebra de classe é o igual ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos os valores pertençam a alguma das classes.</p>
 <p>Portanto, as classes completas com suas respectivas frequências absolutas estão na tabela abaixo.</p>
 <pre class="r"><code>classes &lt;- cut(milsa$Salario, breaks = quebra, right = FALSE)
 classes.tab &lt;- table(classes)
@@ -1124,6 +1124,87 @@ Sum     36</code></pre>
 [16,20)  5 0.13888889 35 0.9722222
 [20,24)  1 0.02777778 36 1.0000000
 Sum     36 1.00000000 NA        NA</code></pre>
+<p>Na sequência vamos mostrar três possíveis gráficos para variáveis contínuas: o de dispersão, o histograma, e o de ramo-e-folhas.</p>
+<p>O gráfico de dispersão unidimensional consiste da variável de interesse no eixo Y, plotada com seus respectivos índices (entrada) da tabela de dados. Nesse exemplo, o gráfico seria</p>
+<pre class="r"><code>plot(milsa$Salario, xlab = &quot;Índice&quot;, ylab = &quot;Salário&quot;)</code></pre>
+<p><img src="figures/unnamed-chunk-20-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p>Note que, como os dados nesta tabela estão ordenados (em ordem crescente) pelos salários, então vemos esse padrão de cresimento. Mas a ordenação não é um pré-requisito para fazer esse gráfico. A interpretação desse gráfico é limitada pelo fato de que só faz sentido dizer alguma coisa sobre os salários se os índices (nesse caso, os funcionários) tivessem algum tipo de identificação. Por esse motivo, o histograma é uma forma mais eficiente de resumir variáveis contínuas.</p>
+<p>O <strong>histograma</strong> é um gráfico de barras <em>contíguas</em>, com as bases proporcionais aos intervalos de classe, e a área de cada retângulo proporcional à respectiva frequência.</p>
+<p>Pode-se usar tanto a frequêcia absoluta (<span class="math inline">\(f_i\)</span>) quanto a relativa (<span class="math inline">\(fr_i\)</span>). Indicamos a amplitude do <span class="math inline">\(i\)</span>-ésimo intervalo por <span class="math inline">\(\Delta_i\)</span>. Para que a área do retângulo respectivo seja proporcional a <span class="math inline">\(fr_i\)</span>, a sua altura deve ser proporcional a <span class="math inline">\(fr_i/\Delta_i\)</span>, que é chamada <strong>densidade de frequência</strong>, ou simplesmente <strong>densidade</strong> da <span class="math inline">\(i\)</span>-ésima classe. Quando todos os intervalos de classe forem iguais a <span class="math inline">\(\Delta\)</span> (como é o caso nesse exemplo), então a densidade de frequência simplifica para <span class="math inline">\(fr_i/\Delta\)</span>. Com essa convenção, garantimos que a área total do histograma será igual a um, uma propriedade que será importante quando estudarmos probabilidade.</p>
+<p>Abaixo, vemos os histogramas com as frequências absolutas, e com a densidade de frequência.</p>
+<pre class="r"><code>par(mfrow = c(1,2))
+hist(milsa$Salario, breaks = quebra, right = FALSE, main = &quot;&quot;,
+     xlab = &quot;Classes&quot;, ylab = &quot;Frequência absoluta&quot;,
+     xlim = c(4, 24), labels = TRUE, axes = FALSE)
+axis(1, at = quebra, labels = quebra); axis(2)
+h &lt;- hist(milsa$Salario, breaks = quebra, right = FALSE, main = &quot;&quot;,
+          xlab = &quot;Classes&quot;, ylab = &quot;Densidade&quot;,
+          xlim = c(4, 24), ylim = c(0, .09), freq = FALSE, axes = FALSE)
+axis(1, at = quebra, labels = quebra); axis(2)
+text(h$mids, h$density, labels = round(h$density * 4, 2), pos = 3)
+par(mfrow = c(1,1))</code></pre>
+<p><img src="figures/hist-1.png" title="" alt="" width="800" style="display: block; margin: auto;" /></p>
+<p>Note que, para construir o gráfico com as densidades, precisamos então de mais uma coluna na tabela, que seria a densidade <span class="math inline">\(fr_i/\Delta = fr_i/4\)</span>.</p>
+<pre class="r"><code>cbind(&quot;f&quot; = addmargins(classes.tab),
+      &quot;fr&quot; = addmargins(prop.table(classes.tab)),
+      &quot;F&quot; = c(cumsum(classes.tab), NA),
+      &quot;Fr&quot; = c(cumsum(classes.tab), NA)/36,
+      &quot;Dens&quot; = c(prop.table(classes.tab)/4, NA))</code></pre>
+<pre><code>         f         fr  F        Fr        Dens
+[4,8)   10 0.27777778 10 0.2777778 0.069444444
+[8,12)  12 0.33333333 22 0.6111111 0.083333333
+[12,16)  8 0.22222222 30 0.8333333 0.055555556
+[16,20)  5 0.13888889 35 0.9722222 0.034722222
+[20,24)  1 0.02777778 36 1.0000000 0.006944444
+Sum     36 1.00000000 NA        NA          NA</code></pre>
+<p>O que devemos observar em um histograma:</p>
+<ul>
+<li>Amplitude de valores</li>
+<li>Forma da distribuição (assimetria):
+<ul>
+<li>Positiva</li>
+<li>Negativa</li>
+<li>Simétrica</li>
+</ul></li>
+<li>Tendência central</li>
+<li>Valores extremos</li>
+</ul>
+<p>Tanto o histograma quanto os gráficos de barra, dão uma ideia da <strong>forma da distribuição</strong> de uma variável. Existem várias medidas para resumir uma variável, como veremos mais adiante, mas a forma da distribuição é tão importante quanto estas medidas. Por exemplo, saber que a média de salários da empresa “Milsa” é 11.12 é importante, mas saber como os salários se distribuem entre os funcionários da empresa (como vimos pelo histograma) pode ser mais importante.</p>
+<p>Outro método para se resumir uma variável com o objetivo de obter uma ideia da forma de sua distribuição, é através do “gráfico” de <strong>ramo-e-folhas</strong>. Este é um método bem simples, e foi criado na época em que fazer gráficos no computador era uma tarefa difícil. Mas ainda hoje é uma forma de visualização muito efetiva. Uma vantagem sobre o histograma é que não perdemos (ou perdemos muito pouca) informação sobre os dados em si.</p>
+<p>Não existe uma regra fixa para construir o ramo-e-folhas, mas a ideia básica é dividir cada observação em duas partes: a primeira (o <em>ramo</em>) é colocada no lado esquerdo de uma linha vertical, e a segunda (a <em>folha</em>) é colocada à direita. Geralmente, a divisão natural é separar um número contínuo em sua parte inteira à esquerda, e a parte decimal à direita. Dessa forma o ramo-e-folha para a variável <code>Salario</code> está abaixo.</p>
+<pre class="r"><code>stem(milsa$Salario, scale = 2)</code></pre>
+<pre><code>
+  The decimal point is at the |
+
+   4 | 06
+   5 | 37
+   6 | 379
+   7 | 446
+   8 | 157
+   9 | 01488
+  10 | 58
+  11 | 16
+  12 | 08
+  13 | 269
+  14 | 77
+  15 | 
+  16 | 026
+  17 | 3
+  18 | 8
+  19 | 4
+  20 | 
+  21 | 
+  22 | 
+  23 | 3</code></pre>
+<p>Note que, por simplificação, os valores foram arredondados para uma casa decimal, assim, por exemplo, o segundo valor de 4,56 foi arredondado para 4,6, e representado na primeira linha do gráfico, junto com o primeiro valor que é 4,0.</p>
+<p>Algumas informações que podemos obter a partir do ramo-e-folhas:</p>
+<ul>
+<li>Há um destaque para o valor 23,3.</li>
+<li>Os demais valores se concentram mais fortemente entre 4,0 e 14,7.</li>
+<li>Um valor mais ou menos típico para essa variável seria em torno de 9.</li>
+<li>Há uma leve assimetria em direção aos valores grandes.</li>
+</ul>
+<p>Existem diversas variações do gráfico de ramo-e-folhas, mas não entraremos em detalhes.</p>
 </div>
 </div>
 <div id="exercicios" class="section level1">
@@ -1132,9 +1213,10 @@ Sum     36 1.00000000 NA        NA</code></pre>
 <li>Em um questionário aplicado aos estudantes que frequentavam a livraria do campus, foi perguntado como classificariam o serviço prestado. As respostas foram:</li>
 </ol>
 <pre class="r"><code>ex &lt;- c(&quot;ótimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;ótimo&quot;,
-  &quot;ótimo&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;,
-  &quot;péssimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;bom&quot;,
-  &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;ótimo&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;)
+   &quot;ótimo&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;bom&quot;, &quot;ótimo&quot;,
+   &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;bom&quot;, &quot;bom&quot;,
+   &quot;bom&quot;, &quot;bom&quot;, &quot;ótimo&quot;, &quot;bom&quot;, &quot;péssimo&quot;, &quot;ótimo&quot;, &quot;ótimo&quot;, &quot;bom&quot;,
+   &quot;péssimo&quot;)
 ex</code></pre>
 <pre><code> [1] &quot;ótimo&quot;   &quot;bom&quot;     &quot;bom&quot;     &quot;péssimo&quot; &quot;bom&quot;     &quot;bom&quot;     &quot;ótimo&quot;  
  [8] &quot;ótimo&quot;   &quot;bom&quot;     &quot;ótimo&quot;   &quot;bom&quot;     &quot;ótimo&quot;   &quot;bom&quot;     &quot;bom&quot;    
@@ -1157,8 +1239,10 @@ sort(ex1)</code></pre>
 [24] 13 13 14 14 14 15 15 16 16 16 16 17 17 18 18 18 19 19 19 20 21 21 22
 [47] 28 34</code></pre>
 <ol style="list-style-type: lower-alpha">
-<li>Monte uma tabela construindo as classes conforme os critérios apresentados</li>
-<li>Calcule as frequências: absoluta, relativa, percentual, acumulada, acumulada relativa, acumulada percentual</li>
+<li>Monte uma tabela construindo as classes conforme os critérios apresentados.</li>
+<li>Calcule as frequências: absoluta, relativa, percentual, acumulada, acumulada relativa, acumulada percentual.</li>
+<li>Faça um histograma com a <em>densidade</em> das classes.</li>
+<li>Faça um diagrama de ramo-e-folhas.</li>
 </ol>
 </div>
 

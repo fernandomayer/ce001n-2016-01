@@ -541,10 +541,13 @@ Classe  Notação        Denominação                 Resultado
   [a,b)   $a \vdash b$  Fechado em a, aberto em b  Inclui a, não inclui b
   (a,b]   $a \dashv b$  Aberto em a, fechado em b  Não inclui a, inclui b
 
-Nesse exemplo, vamos usar intervalos do tipo
-`[a, b)`, pois o primeiro valor de quebra de classe é o igual ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos os valores pertençam a alguma das classes.
+Nesse exemplo, vamos usar intervalos do tipo fechados à esquerda
+(abertos à direita), pois o primeiro valor de quebra de classe é o igual
+ao valor mínimo do conjunto de dados, e dessa forma garantimos que todos
+os valores pertençam a alguma das classes.
 
-Portanto, as classes completas com suas respectivas frequências absolutas estão na tabela abaixo.
+Portanto, as classes completas com suas respectivas frequências
+absolutas estão na tabela abaixo.
 
 ```{r}
 classes <- cut(milsa$Salario, breaks = quebra, right = FALSE)
@@ -552,7 +555,9 @@ classes.tab <- table(classes)
 cbind("f" = addmargins(classes.tab))
 ```
 
-Para completar esta tabela, podemos obter os demais tipos de frequência, conforme visto anteriormente: $f_r$ (frequência relativa), $F$ (frequência acumulada), e $F_r$ (frequência acumulada relativa).
+Para completar esta tabela, podemos obter os demais tipos de frequência,
+conforme visto anteriormente: $f_r$ (frequência relativa), $F$
+(frequência acumulada), e $F_r$ (frequência acumulada relativa).
 
 ```{r}
 cbind("f" = addmargins(classes.tab),
@@ -561,21 +566,150 @@ cbind("f" = addmargins(classes.tab),
       "Fr" = c(cumsum(classes.tab), NA)/36)
 ```
 
+Na sequência vamos mostrar três possíveis gráficos para variáveis
+contínuas: o de dispersão, o histograma, e o de ramo-e-folhas.
+
+O gráfico de dispersão unidimensional consiste da variável de interesse
+no eixo Y, plotada com seus respectivos índices (entrada) da tabela de
+dados. Nesse exemplo, o gráfico seria
+
+```{r}
+plot(milsa$Salario, xlab = "Índice", ylab = "Salário")
+```
+
+Note que, como os dados nesta tabela estão ordenados (em ordem
+crescente) pelos salários, então vemos esse padrão de cresimento. Mas
+a ordenação não é um pré-requisito para fazer esse gráfico. A
+interpretação desse gráfico é limitada pelo fato de que só faz sentido
+dizer alguma coisa sobre os salários se os índices (nesse caso, os
+funcionários) tivessem algum tipo de identificação. Por esse motivo, o
+histograma é uma forma mais eficiente de resumir variáveis contínuas.
+
+O **histograma** é um gráfico de barras *contíguas*, com as bases
+proporcionais aos intervalos de classe, e a área de cada retângulo
+proporcional à respectiva frequência.
+
+Pode-se usar tanto a frequêcia absoluta ($f_i$) quanto a relativa
+($fr_i$). Indicamos a amplitude do $i$-ésimo intervalo por $\Delta_i$.
+Para que a área do retângulo respectivo seja proporcional a $fr_i$, a
+sua altura deve ser proporcional a $fr_i/\Delta_i$, que é chamada
+**densidade de frequência**, ou simplesmente **densidade** da $i$-ésima
+classe. Quando todos os intervalos de classe forem iguais a $\Delta$
+(como é o caso nesse exemplo), então a densidade de frequência
+simplifica para $fr_i/\Delta$. Com essa convenção, garantimos que a área
+total do histograma será igual a um, uma propriedade que será importante
+quando estudarmos probabilidade.
+
+Abaixo, vemos os histogramas com as frequências absolutas, e com a
+densidade de frequência.
+
+```{r hist, fig.show='hold'}
+par(mfrow = c(1,2))
+hist(milsa$Salario, breaks = quebra, right = FALSE, main = "",
+     xlab = "Classes", ylab = "Frequência absoluta",
+     xlim = c(4, 24), labels = TRUE, axes = FALSE)
+axis(1, at = quebra, labels = quebra); axis(2)
+h <- hist(milsa$Salario, breaks = quebra, right = FALSE, main = "",
+          xlab = "Classes", ylab = "Densidade",
+          xlim = c(4, 24), ylim = c(0, .09), freq = FALSE, axes = FALSE)
+axis(1, at = quebra, labels = quebra); axis(2)
+text(h$mids, h$density, labels = round(h$density * 4, 2), pos = 3)
+par(mfrow = c(1,1))
+```
+
+Note que, para construir o gráfico com as densidades, precisamos então
+de mais uma coluna na tabela, que seria a densidade $fr_i/\Delta =
+fr_i/4$.
+
+```{r}
+cbind("f" = addmargins(classes.tab),
+      "fr" = addmargins(prop.table(classes.tab)),
+      "F" = c(cumsum(classes.tab), NA),
+      "Fr" = c(cumsum(classes.tab), NA)/36,
+      "Dens" = c(prop.table(classes.tab)/4, NA))
+```
+
+O que devemos observar em um histograma:
+
+- Amplitude de valores
+- Forma da distribuição (assimetria):
+    - Positiva
+    - Negativa
+    - Simétrica
+- Tendência central
+- Valores extremos
+
+Tanto o histograma quanto os gráficos de barra, dão uma ideia da **forma
+da distribuição** de uma variável. Existem várias medidas para resumir
+uma variável, como veremos mais adiante, mas a forma da distribuição é
+tão importante quanto estas medidas. Por exemplo, saber que a média de
+salários da empresa "Milsa" é `r round(mean(milsa$Salario), 2)` é
+importante, mas saber como os salários se distribuem entre os
+funcionários da empresa (como vimos pelo histograma) pode ser mais
+importante.
+
+Outro método para se resumir uma variável com o objetivo de obter uma
+ideia da forma de sua distribuição, é através do "gráfico" de
+**ramo-e-folhas**. Este é um método bem simples, e foi criado na época
+em que fazer gráficos no computador era uma tarefa difícil. Mas ainda
+hoje é uma forma de visualização muito efetiva. Uma vantagem sobre o
+histograma é que não perdemos (ou perdemos muito pouca) informação sobre
+os dados em si.
+
+Não existe uma regra fixa para construir o ramo-e-folhas, mas a ideia
+básica é dividir cada observação em duas partes: a primeira (o *ramo*) é
+colocada no lado esquerdo de uma linha vertical, e a segunda (a *folha*)
+é colocada à direita. Geralmente, a divisão natural é separar um número
+contínuo em sua parte inteira à esquerda, e a parte decimal à direita.
+Dessa forma o ramo-e-folha para a variável `Salario` está abaixo.
+
+```{r}
+stem(milsa$Salario, scale = 2)
+```
+
+Note que, por simplificação, os valores foram arredondados para uma casa
+decimal, assim, por exemplo, o segundo valor de 4,56 foi arredondado
+para 4,6, e representado na primeira linha do gráfico, junto com o
+primeiro valor que é 4,0.
+
+Algumas informações que podemos obter a partir do ramo-e-folhas:
+
+- Há um destaque para o valor 23,3.
+- Os demais valores se concentram mais fortemente entre 4,0 e 14,7.
+- Um valor mais ou menos típico para essa variável seria em torno de 9.
+- Há uma leve assimetria em direção aos valores grandes.
+
+Existem diversas variações do gráfico de ramo-e-folhas, mas não
+entraremos em detalhes.
+
 # Exercícios
 
-1. Em um questionário aplicado aos estudantes que frequentavam a livraria
-   do campus, foi perguntado como classificariam o serviço prestado. As
-   respostas foram:
+1. Em um questionário aplicado aos estudantes que frequentavam a
+   livraria do campus, foi perguntado como classificariam o serviço
+   prestado. As respostas foram:
 ```{r}
 ex <- c("ótimo", "bom", "bom", "péssimo", "bom", "bom", "ótimo",
-  "ótimo", "bom", "ótimo", "bom", "ótimo", "bom", "bom", "ótimo", "bom",
-  "péssimo", "bom", "péssimo", "bom", "péssimo", "bom", "bom", "bom",
-  "bom", "ótimo", "bom", "péssimo", "ótimo", "ótimo", "bom", "péssimo")
+   "ótimo", "bom", "ótimo", "bom", "ótimo", "bom", "bom", "ótimo",
+   "bom", "péssimo", "bom", "péssimo", "bom", "péssimo", "bom", "bom",
+   "bom", "bom", "ótimo", "bom", "péssimo", "ótimo", "ótimo", "bom",
+   "péssimo")
 ex
 ```
 a. Como você classificaria estas respostas?
 b. Crie uma tabela e um gráfico para representar e resumir esta
    informação.
+
+```{r, echo=FALSE, include=FALSE}
+## Tabela
+ex <- factor(ex, levels = c("péssimo", "bom", "ótimo"), ordered = TRUE)
+ex.tab <- table(ex)
+cbind("f" = addmargins(ex.tab),
+      "fr" = addmargins(prop.table(ex.tab)),
+      "F" = c(cumsum(ex.tab), NA),
+      "Fr" = c(cumsum(ex.tab), NA)/length(ex))
+## Grafico
+barplot(ex.tab, ylab = "Frequência absoluta")
+```
 
 2. Considere os dados abaixo
 ```{r}
@@ -585,5 +719,24 @@ ex1 <- c(11,13,10,9,0,16,28,15,14,1,2,17,
          19,8,8,12,13,21,11,19,1,14,4,16)
 sort(ex1)
 ```
-a. Monte uma tabela construindo as classes conforme os critérios apresentados
-b. Calcule as frequências: absoluta, relativa, percentual, acumulada, acumulada relativa, acumulada percentual
+a. Monte uma tabela construindo as classes conforme os critérios
+apresentados.
+b. Calcule as frequências: absoluta, relativa, percentual, acumulada,
+acumulada relativa, acumulada percentual.
+c. Faça um histograma com a *densidade* das classes.
+d. Faça um diagrama de ramo-e-folhas.
+
+```{r, echo=FALSE, include=FALSE}
+(amp <- max(ex1) - min(ex1))
+(k <- sqrt(length(ex1)))
+(h <- amp/k)
+quebra <- seq(0, 35, 5)
+ex1.tab <- table(cut(ex1, breaks = quebra, right = FALSE))
+cbind("f" = addmargins(ex1.tab),
+      "fr" = addmargins(prop.table(ex1.tab)),
+      "F" = c(cumsum(ex1.tab), NA),
+      "Fr" = c(cumsum(ex1.tab), NA)/length(ex1),
+      "Dens" = c(prop.table(ex1.tab)/5, NA))
+hist(ex1, freq = FALSE, breaks = quebra, right = FALSE)
+stem(ex1, scale = 2)
+```
