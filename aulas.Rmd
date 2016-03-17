@@ -15,3 +15,12 @@ classe aplicadas.
 - **04/03**: Apresentação da disciplina.
 - **09/03**: Conceitos de amostragem. [Slides](01_introducao_e_amostragem/01_Introducao_a_Estatistica_e_amostragem.pdf)
 - **11/03**: Classificação de variáveis. Análise exploratória de dados. [Material](02_Analise_Exploratoria_de_Dados.html)
+- **16/03**: Análise exploratória de dados: variáveis quantitativas
+  discretas e contínuas. [Material](02_Analise_Exploratoria_de_Dados.html)
+
+
+## Exercícios
+
+- [Lista 1][]: amostragem e análise exploratória de dados
+
+[Lista 1]: exercicios/01_Amostragem_e_Exploratoria.pdf

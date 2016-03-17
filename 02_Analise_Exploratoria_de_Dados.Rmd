@@ -522,7 +522,9 @@ O valor de amplitude de classe pode ser arredondado para um número
 inteiro, geralmente para facilitar a interpretação da tabela. Nesse
 caso, poderíamos arredondar a amplitude para 3 ou para 4 (inteiros mais
 próximos). Como o valor mínimo é 4 e o máximo está próximo de 24, é
-natural arredondarmos a amplitude para 4.
+natural arredondarmos a amplitude para 4. Após esse arredondamento,
+vamos denominar a amplitude de classe definitiva por $\Delta$, apenas
+para diferenciar do valor calculado em $h$.
 
 Dessa forma, as classes seriam formadas pela sequência, ou "quebra de
 classes" definida por

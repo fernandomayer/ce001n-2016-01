@@ -1,0 +1,347 @@
+\documentclass[a4paper,11pt,fleqn]{article}
+
+%%----------------------------------------------------------------------
+%% opções comuns
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+%\usepackage[margin=2cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{fancybox}
+%\usepackage[usenames,dvipsnames]{color}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{lscape}
+\usepackage{natbib}
+\setlength{\bibsep}{0.0pt}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage[final]{pdfpages}
+\usepackage{setspace}
+\usepackage{paralist} % enumitem, compactitem
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% FLOATS: graficos e tabelas
+\usepackage{graphicx}
+\usepackage{float} % fornece a opção [H] para floats
+\usepackage{longtable}
+\usepackage{supertabular}
+%% captions e headings em sans-serif
+\usepackage[font={sf},labelfont={sf,bf}]{caption}
+\usepackage{subcaption}
+\renewcommand{\thesubfigure}{\Alph{subfigure}}
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries\sffamily}
+\titleformat*{\subsection}{\normalsize\bfseries\sffamily}
+\titleformat*{\subsubsection}{\normalsize\bfseries\sffamily}
+\titleformat*{\paragraph}{\normalsize\bfseries\sffamily}
+\titleformat*{\subparagraph}{\normalsize\bfseries\sffamily}
+\theoremstyle{definition}
+\newtheorem*{mydef}{Definição}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% definiçoes de hyperref e xcolor
+\usepackage{hyperref}
+\usepackage{xcolor}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% FONTES
+
+%% micro-tipografia
+\usepackage[protrusion=true,expansion=true]{microtype}
+%% Bitstream Charter with mathdesign
+\usepackage{lmodern} % sans-serif: Latin Modern
+\usepackage[charter]{mathdesign} % serif: Bitstream Charter
+\usepackage[scaled]{beramono} % truetype: Bistream Vera Sans Mono
+\usepackage[scaled]{helvet}
+%\usepackage{inconsolata}
+
+
+%\usepackage[sf]{titlesec}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% hifenização
+\usepackage[htt]{hyphenat} % permite hifenizar texttt. Ao inves disso
+% pode usar \allowbreak no ponto qu quiser quebrar dentro do texttt
+\hyphenation{con-si-de-ra-ção pes-que-i-ros pes-que-i-ra se-gui-do-ras
+  di-fe-ren-tes pla-ni-lha pla-ni-lhão re-fe-ren-te con-ta-gem
+  em-bar-ques qua-li-da-de a-le-a-to-ri-za-dos}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% comandos customizados
+\usepackage{xspace} % lida com os espaços depois dos comandos
+\providecommand{\eg}{\textit{e.g.}\xspace}
+\providecommand{\ie}{\textit{i.e.}\xspace}
+\providecommand{\R}{\textsf{R}\xspace}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\providecommand{\E}{\text{E}}
+\providecommand{\Var}{\text{Var}}
+\providecommand{\logit}{\text{logit}}
+%% Para alterar o titulo do thebibliography
+\addto\captionsbrazilian{%
+  \renewcommand{\refname}{Bibliografia}
+}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% Comandos para deixar o texto mais compacto
+\usepackage{marginnote}
+\usepackage[top=1cm, bottom=1cm, inner=1cm, outer=1cm,nohead, nofoot, heightrounded, marginparsep=.05cm]{geometry}
+\setlength{\parindent}{0pt}
+%%----------------------------------------------------------------------
+
+\begin{document}
+
+\reversemarginpar % para colocar a marginnote a esquerda
+
+<<setup, include=FALSE, cache=FALSE>>=
+## Opcoes globais
+opts_chunk$set(size = "small",
+               prompt = FALSE,
+               comment = NA,
+               tidy = FALSE,
+               cache = TRUE,
+               fig.align = "center",
+               fig.width = 10,
+               fig.height = 8,
+               out.width=".8\\textwidth")
+thm <- knit_theme$get("print")
+knit_theme$set(thm)
+options(width = 80, digits = 7, continue = "  ") # 65
+## Use pdfcrop=TRUE nos chunks para reduzir a area do PDF
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+@
+
+<<pacotes, echo=FALSE>>=
+require(xtable, quietly = TRUE)
+@
+
+\hrule
+\vspace{0.3cm}
+
+\begin{minipage}[c]{.85\textwidth}
+  Bioestatística --- CE001 \\
+  Prof. Fernando de Pol Mayer --- Departamento de Estatística - DEST \\
+  Exercícios: amostragem e análise exploratória de dados \\
+  Nome:  \hfill GRR: \hspace{2cm}
+\end{minipage}\hfill
+\begin{minipage}[c]{.15\textwidth}
+\flushright
+\includegraphics[width=2.2cm]{../img/ufpr-logo.png}
+\end{minipage}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+%%----------------------------------------------------------------------
+
+\begin{compactenum}[1.]
+\item Defina, com suas palavras, o que é população e o que é
+  amostra. Faça a distinção entre parâmetro populacional e estatística
+  amostral. Quais são as duas condições mínimas para que uma amostra
+  possa ser considerada representativa da população?
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[2.]
+\item Nos itens abaixo indique se na situação temos
+  uma estatística (E) ou um parâmetro (P).
+  \begin{compactenum}
+\item Tem-se interesse na altura média dos jogadores de basquete
+  profissional no Brasil. São medidas as alturas de 30\% dos jogadores
+  profissionais dos diversos times nacionais, e então a média é
+  calculada.
+\item O objetivo é obter a biomassa (peso total) de determinada espécie
+  de planta em uma floresta. São pesadas todas as folhas caídas desta
+  espécie, coletados em conglomerados amostrais com 1 m$^2$ cada um
+  distribuídos aleatoriamente de forma a cobrir 1\% da área da
+  floresta.
+\item Tem-se interesse no comprimento médio dos peixes criados em
+  um tanque de cultivo. Na despesca o tanque é esgotado, os
+  peixes são abatidos e medidos, e finalmente se calcula uma média.
+% \item Tem-se interesse no número de raios da $1^a$ nadadeira
+%   dorsal do estoque de ``cavalinha'' (pequeno peixe pelágico)
+%   que habita águas da região sudoeste do Atlântico Sul. Um barco faz
+%   um lance de pesca em um dos cardumes avistados e o           número
+%   de raios de todos os peixes capturados é contado.
+\item Foi perguntado para 100 estudantes, selecionados aleatoriamente, o
+  tempo médio de espera na fila do RU. O resultado foi de 20 minutos.
+\item Em um estudo de todos os 2223 passageiros do Titanic, verificou-se
+  que 706 sobreviveram quando ele afundou.
+\item Há interesse em se estudar a altura de uma espécie de árvore
+  e após medir 10 delas entre várias presentes no local da
+  coleta calculamos que em média uma árvore mede 4,14 metros.
+\item O Senado atual de um país é composto por 87 homens e 13 mulheres.
+  \end{compactenum}
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[3.]
+\item Indique que tipo de amostragem (aleatória simples, sistemática,
+  estratificada ou conglomerado) está sendo
+  utilizada em cada um dos casos descritos abaixo.
+  \begin{compactenum}
+  \item Um bairro com 1000 quadras é dividido em 1000 parcelas com 1
+    quadra cada. São sorteadas 40 parcelas e todos os moradores (maiores
+    de idade) são questionados sobre a eficácia das obras da prefeitura
+    naquele bairro.
+  \item Em uma área arborizada são escolhidas dez árvores ao acaso, e os
+    diâmetros delas são então medidos.
+  \item Em uma indústria de mineração, sedimentos são transportados
+    sobre uma esteira a uma determinada velocidade. Um
+    pesquisador parado ao lado da esteira interrompe seu andamento e
+    coleta uma amostra de 5 em 5 minutos.
+  \item Interessado em estudar os pesos de uma espécie de ave, um
+    pesquisador seleciona ao acaso 30 fêmeas e também 30 machos.
+  \item Uma Universidade fez um estudo sobre o hábito de bebida dos
+    estudantes, selecionando aleatoriamente 10 classes diferentes, e
+    entrevistando todos os alunos de cada uma das classes.
+  \item Um Economista está estudando o efeito da educação sobre o
+    salário, e realiza uma pesquisa com 150 trabalhadores selecionados
+    aleatoriamente de cada uma das seguintes categorias: menos do que o
+    ensino médio, ensino médio, mais do que o ensino médio.
+  % \item Uma área de manguezal é subdividida em 200 parcelas, dentro de
+  %   cada parcela são sorteadas 2 árvores, dessas árvores são sorteadas
+  %   uma quantidade de galhos, os quais são então medidos.
+  \end{compactenum}
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[4.]
+\item Identifique o tipo de cada uma das variáveis aleatórias descritas
+  abaixo como: Qualitativa nominal (N), Qualitativa ordinal
+  (O), Quantitativa discreta (D) e Quantitativa contínua (C).
+  \begin{compactenum}
+   \item Medidas de diâmetro (mm) de um rolamento industrial.
+   \item Número de ações da Petrobrás disponíveis no mercado financeiro
+     em 2013.
+   \item Nomes de empresas de Curitiba com mais de 100 funcionários.
+   \item Número de estudantes que frequentam o RU diariamente
+   \item Temperatura das câmaras frias de uma indústria de pescado.
+   \item Peso de algas coletadas em um determinado banco submerso.
+   \item Avaliação em graus de qualidade (``bom'', ``razoável'',
+     ``ruim'') de um equipamento industrial
+   \item Tempo que você dispenderá estudando para a prova de
+     estatística.
+   \end{compactenum}
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\clearpage
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[5.]
+\item Um professor pergunta a cada um de seus alunos que ramo do
+  conhecimento prefere estudar: Línguas e Literatura (L\&L), Ciências
+  Exatas (CE), Ciências Físicas e Naturais (F\&N), Artes e Música
+  (A\&M). Organize a distribuição das frequências com as respostas
+  abaixo e construa um gráfico de barras.
+  \begin{table}[!h]
+    \centering
+    \begin{tabular}{ccccc}
+      \hline
+      A\&M & L\&L & F\&N & A\&M & F\&N \\
+      L\&L & L\&L & L\&L & L\&L & A\&M\\
+      F\&N & A\&M & CE & F\&N & \\
+      CE & F\&N & F\&N & A\&M & \\
+      CE & F\&N & CE & L\&L \\
+      \hline
+    \end{tabular}
+  \end{table}
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[6.]
+\item A tabela de distribuições de frequência abaixo apresenta o tempo
+  (em minutos) que uma pessoa leva para encontrar um livro na estante
+  de uma biblioteca, após consultar o sistema e saber o número de
+  referência do livro.
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{cr}
+      \hline
+      \textbf{Classes} & \textbf{Frequência} \\
+      \hline
+      $0,5 \vdash 1,0$ & 1 \\
+      $1,0 \vdash 1,5$ & 3 \\
+      $1,5 \vdash 2,0$ & 22 \\
+      $2,0 \vdash 2,5$ & 115 \\
+      $2,5 \vdash 3,0$ & 263 \\
+      $3,0 \vdash 3,5$ & 287 \\
+      $3,5 \vdash 4,0$ & 99 \\
+      $4,0 \vdash 4,5$ & 32 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  \begin{compactenum}
+  \item Complete a tabela com as frequências: relativa, acumulada, e
+    relativa acumulada
+  \item Em quantos minutos (intervalo de minutos) é mais comum as
+    pessoas encontrarem o livro?
+  \item Qual a porcentagem de pessoas que levam menos de 3 minutos para
+    encontrar o livro?
+  \item Quantas pessoas levam menos de 2 minutos para encontrar o livro?
+  \item Qual o percentual de pessoas que levam entre 4 minutos
+    (inclusive) e 4,5 minutos?
+  \item Qual o percentual de pessoas que levam no máximo 1 minuto para
+    encontrar o livro?
+  \end{compactenum}
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[7.]
+\item Construa uma tabela com as distribuições de frequência absoluta,
+  relativa, absoluta acumulada e relativa acumulada usando a amostra do
+  número de páginas de livros infanto-juvenis dada por
+\begin{verbatim}
+46 46 53 30 62 50 69 49 58 65
+62 52 44 38 33 60 50 39 53 50
+64 53 45 38 31 41 56 54 38 42
+31 38 66 29 41 55 43 50 40 45
+\end{verbatim}
+  Construa um histograma com a densidade de frequência, e um gráfico de
+  ramo-e-folhas. O que você pode interpretar destes dados a partir da
+  tabela e dos gráficos?
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\begin{compactenum}[8.]
+\item Qual a diferença entre um gráfico de barras e um histograma?
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\end{document}
