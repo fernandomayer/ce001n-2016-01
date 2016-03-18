@@ -17,10 +17,12 @@ classe aplicadas.
 - **11/03**: Classificação de variáveis. Análise exploratória de dados. [Material](02_Analise_Exploratoria_de_Dados.html)
 - **16/03**: Análise exploratória de dados: variáveis quantitativas
   discretas e contínuas. [Material](02_Analise_Exploratoria_de_Dados.html)
-
+- **18/03**: Gráficos para variáveis quantitativas contínuas. [Material](02_Analise_Exploratoria_de_Dados.html)
+- **23/03**: Sabatina 1
 
 ## Exercícios
 
-- [Lista 1][]: amostragem e análise exploratória de dados
+- [Lista 1][]: amostragem e análise exploratória de dados. [Gabarito 1][].
 
 [Lista 1]: exercicios/01_Amostragem_e_Exploratoria.pdf
+[Gabarito 1]: exercicios/01_Amostragem_e_Exploratoria_GABARITO.pdf
