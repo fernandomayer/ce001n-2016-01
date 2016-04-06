@@ -31,3 +31,24 @@ classe aplicadas.
 [Gabarito 1]: exercicios/01_Amostragem_e_Exploratoria_GABARITO.pdf
 [Lista 2]: exercicios/03_Medidas_resumo.pdf
 [Gabarito 2]: exercicios/03_Medidas_resumo_GABARITO.pdf
+
+## Scripts R
+
+Abaixo estão disponíveis os scripts do R que geraram os resultados
+apresentados nos slides ou nas páginas da disciplina. Os scripts são
+apenas ilustrativos e direcionados para aqueles que querem usar o R para
+fazer as análises, portanto não são parte obrigatória da disciplina.
+
+**Observação**: Os scripts são extraídos automaticamente do código-fonte
+dos slides, portanto deve haver alguns comandos (principalmente no
+início dos scripts) que não fazem parte das análises, servem apenas para
+configurações de código. Sempre rode o código com o acompanhamento dos
+slides ou páginas correspondentes.
+
+- [Script 1][]: Amostragem
+- [Script 2][]: Análise exploratória de dados
+- [Script 3][]: Medidas resumo
+
+[Script 1]: 01_introducao_e_amostragem/script_amostragem.R
+[Script 2]: 02_Analise_Exploratoria_de_Dados.R
+[Script 3]: 03_Medidas_resumo/03_Medidas_resumo.R
