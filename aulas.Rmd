@@ -21,6 +21,11 @@ classe aplicadas.
 - **23/03**: Sabatina 1
 - **30/03**: Medidas resumo: medidas de tendência central.
   [Slides](03_Medidas_resumo/03_Medidas_resumo.pdf)
+- **01/04**: Medidas resumo: medidas de variabilidade.
+  [Slides](03_Medidas_resumo/03_Medidas_resumo.pdf)
+- **06/04**: Medidas resumo: medidas de posição relativa.
+  [Slides](03_Medidas_resumo/03_Medidas_resumo.pdf)
+- **08/04**: Sabatina 2
 
 ## Exercícios
 
