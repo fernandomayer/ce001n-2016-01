@@ -1,0 +1,1282 @@
+\pdfminorversion=4
+\documentclass[10pt]{beamer}
+%% O comando acima foi necessario porque o PDF nao abria no acrobat do
+%% windows, dava o erro 131. Provavelmente devido as figuras em
+%% PDF. Agora ele gera um PDF versao 1.4, ao inves da versao 1.5
+
+\usetheme[compress]{PaloAlto}
+\usecolortheme{sidebartab} % crane
+
+\usepackage[brazilian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[scaled]{beramono} % truetype: Bistream Vera Sans Mono
+%\usepackage{inconsolata}
+\usepackage{xfrac}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{multicol}
+
+\setbeamertemplate{footline}[frame number] % mostra o numero dos slides
+\setbeamertemplate{navigation symbols}{} % retira a barra de navegacao
+
+\usepackage{xspace}
+\providecommand{\eg}{\textit{e.g.}\xspace}
+\providecommand{\ie}{\textit{i.e.}\xspace}
+\providecommand{\R}{\textsf{R}\xspace}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\providecommand{\E}{\text{E}}
+\providecommand{\Var}{\text{Var}}
+\theoremstyle{definition}
+\newtheorem*{mydef}{Definição}
+\newtheorem*{mythm}{Teorema}
+
+\title{Probabilidade}
+\author[]{Fernando de Pol Mayer}
+\institute[UFPR]{Laboratório de Estatística e Geoinformação (LEG) \\
+  Departamento de Estatística (DEST) \\
+  Universidade Federal do Paraná (UFPR)}
+\date{}
+\logo{\includegraphics[width=1.6cm]{../img/ufpr-logo.png}}
+\titlegraphic{\includegraphics[width=1cm]{../img/CC_by-nc-sa_88x31.png}\\
+  \tiny
+  \href{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR}{Este
+    conteúdo está disponível por meio da Licença Creative Commons 4.0
+    (Atribuição/NãoComercial/PartilhaIgual)}}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Plano de aula}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}
+    \frametitle{Plano de aula}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+## Opcoes globais
+opts_chunk$set(size = "footnotesize",
+               prompt = FALSE,
+               comment = NA,
+               tidy = FALSE,
+               cache = TRUE,
+               fig.align = "center",
+               fig.width = 8,
+               fig.height = 6,
+               out.width=".8\\textwidth")
+## thm <- knit_theme$get("beamer3")
+## knit_theme$set(thm)
+options(width = 65, digits = 5, continue = "  ")
+## Use pdfcrop=TRUE nos chunks para reduzir a area do PDF
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+@
+
+<<pacotes, echo=FALSE>>=
+require(xtable, quietly = TRUE)
+@
+
+\begin{frame}
+\maketitle
+%\titlepage
+\end{frame}
+
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+\section[Introdução]{Introdução}
+
+\begin{frame}{Introdução}
+  \begin{quote}
+    ``A razão do número de todos os casos favoráveis à um acontecimento,
+    para o de todos os casos possíveis é a probabilidade buscada, a qual
+    é portanto uma fração [\ldots]''
+  \end{quote}
+  \vspace{1em}
+  \begin{quote}
+    ``A teoria da probabilidade nada mais é do que o senso comum
+    reduzido à cálculo.''
+  \end{quote}
+  \vspace{1em}
+  \begin{flushright}
+    --- Pierre Simon Laplace\\
+    \textbf{Ensaio Filosófico Sobre as Probabilidades (1812)}
+  \end{flushright}
+\end{frame}
+
+\begin{frame}{Introdução}
+A \textbf{Teoria das Probabilidades} é o ramo da Matemática que cria,
+desenvolve e pesquisa \textbf{modelos} que podem ser utilizados para
+estudar \textbf{experimentos ou fenômenos aleatórios} \\~\\
+A \textbf{Inferência Estatística} é totalmente fundamentada na
+\textbf{Teoria das Probabilidades} \\~\\
+O \textbf{modelo} utilizado para estudar um fenômeno aleatório pode variar em
+complexidade, mas todos eles possuem ingredientes básicos comuns.
+\end{frame}
+
+\begin{frame}{Tipos de experimentos}
+  \begin{block}{Experimentos determinísticos}
+    Dizemos que um experimento é determinístico quando repetido inúmeras
+    vezes, \textbf{em condições semelhantes}, conduz a resultados
+    \textit{essencialmente} idênticos. Ex.:
+    \begin{itemize}
+    \item Aceleração da gravidade
+    \item Leis da Física e da Química
+    \end{itemize}
+  \end{block}
+  \begin{block}{Experimentos aleatórios}
+    Os experimentos que \textbf{repetidos sob as mesmas condições} geram
+    resultados diferentes, são chamados de experimentos aleatórios. Ex.:
+    \begin{itemize}
+    \item Lançamento de uma moeda
+    \item Lançamento de um dado
+    \item Tempo de vida de um equipamento eletrônico
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Introdução}
+  O objetivo é construir um modelo matemático para representar
+  \textbf{experimentos aleatórios}. Isso o corre em duas etapas: \\~\\
+  \begin{enumerate}
+  \item Descrever o \textbf{conjunto} de resultados possíveis
+  \item Atribuir \textit{pesos} a cada resultado, refletindo suas
+    chances de ocorrência
+  \end{enumerate}
+\end{frame}
+
+%% \begin{frame}{Exemplo}
+%%   Exemplo do dado do bussab
+%% \end{frame}
+
+\section{Experimentos e eventos}
+
+%% \begin{frame}{Experimentos e eventos}
+%%   \begin{block}{Espaço amostral ($\Omega$)}
+%%     Conjunto de todos os resultados possíveis de um experimento
+%%     aleatório. O $\Omega$ pode conter um número finito ou infinito de
+%%     pontos. Exemplo: \{cara,coroa\},\{1,2,3,4,5,6\}, $\mathbb{N}$,
+%%     $\mathbb{R}$.
+%%   \end{block}
+%%   \begin{block}{Ponto amostral ($\omega$)}
+%%    São elementos de um espaço amotral. Exemplo: $\omega_1=\text{cara}$,
+%%    $\omega_2=\text{coroa}$.
+%%   \end{block}
+%%   \begin{block}{Evento}
+%%     É um subconjunto de pontos do espaço amostral de um experimentos
+%%     aleatório. Exemplo: A = ``sair face par'', B = ``sair face menor que
+%%     3''.
+%%   \end{block}
+%%  \end{frame}
+
+\begin{frame}{Experimentos e eventos}
+Um experimento, que ao ser realizado sob as mesmas condições não
+ produz os mesmos resultados, é denominado um \textbf{experimento
+   aleatório}. Exemplo: lançamento de uma moeda, medir altura, \ldots
+ \\~\\
+ O conjunto de todos os possíveis resultados de um experimento
+ aleatório é denominado \textbf{espaço amostral} ($\Omega$). Pode conter
+ um número finito ou infinito de pontos. Exemplo: \{cara, coroa\},
+ $\mathbb{R}$, \ldots  \\~\\
+ Os elementos do espaço amostral (\textbf{pontos amostrais}) são
+ denotados por $\omega$. Exemplo: $\omega_1 = \text{cara}$, $\omega_2 =
+ \text{coroa}$. \\~\\
+ Todo resultado ou \underline{subconjunto} de resultados de um
+ experimento aleatório, é um \textbf{evento}. Exemplo: A = ``sair
+ cara'', B = ``sair face par''.
+\end{frame}
+
+\begin{frame}{Exemplos}
+  \begin{block}{}
+    \begin{description}
+    \item[Experimento] lançar o dado e observar o resultado da
+      face.
+    \item[Espaço amostral] $\Omega=\{1,2,3,4,5,6\}$.
+    \item[Pontos amostrais] $\omega_1=\text{1}$, $\omega_2=\text{2}$,
+      \ldots, $\omega_6=\text{6}$.
+    \item[Eventos] A = ``sair face par'', B = $\{\omega: \omega\leq
+      4\}$.
+    \end{description}
+  \end{block}
+  \begin{block}{}
+    \begin{description}
+    \item[Experimento] retirar uma carta de um baralho de 54
+      cartas.
+    \item[Espaço amostral] $\Omega=\{\clubsuit A,\clubsuit
+      2,\ldots,\heartsuit A,\ldots,\spadesuit A, \ldots,\diamondsuit J,
+      \diamondsuit Q, \diamondsuit K\}$.
+    \item[Pontos amostrais] $\omega_1=\clubsuit A$, $\omega_2=\clubsuit
+      2$, \ldots, $\omega_{54}=\diamondsuit K$.
+    \item[Eventos] A = ``sair um ás'', B = ``sair uma letra'', C =
+      ``sair carta de $\clubsuit$''.
+    \end{description}
+  \end{block}
+  \begin{block}{}
+    \begin{description}
+    \item[Experimento] pesar um fruto ao acaso
+    \item[Espaço amostral] $\Omega=\mathbb{R}^{+}$.
+    \item[Pontos amostrais] espaço amostral é infinito.
+    \item[Eventos] A = ``peso menor que 50g'', B = $\{x: x\geq100\text{g}\}$.
+    \end{description}
+  \end{block}
+  \normalsize
+\end{frame}
+
+\begin{frame}{Exemplos}
+\begin{small}
+  \textbf{Exemplo 1}: Considere um experimento em que você seleciona
+  uma peça plástica moldada, e mede sua espessura.
+  \begin{enumerate}
+  \item Qual o espaço amostral?
+  \item Se é sabido que as peças só podem variar entre 10 e 11 mm de
+    espessura, qual o espaço amostral?
+  \item Se o objetivo da análise for considerar apenas o fato de uma
+    peça ter espessura baixa, média ou alta, qual o espaço amostral?
+  \item Se o objetivo for considerar o fato de uma peça obedecer ou não
+    às especificações, qual o espaço amostral?
+  \end{enumerate}
+  \textbf{Exemplo 2}: Duas peças plásticas são selecionadas e medidas.
+  \begin{enumerate}
+  \item Se o objetivo é verificar se cada peça obedece ou não às
+    especificações, qual o espaço amostral?
+  \item Se o objetivo for somente o número de peças não conformes na
+    amostra, qual o espaço amostral?
+  \item Considere que a espessura é medida até que se encontre a
+    primeira peça fora das especificações. Qual o espaço amostral?
+  \end{enumerate}
+\end{small}
+\end{frame}
+
+\begin{frame}{Operações com eventos}
+  Usamos a \textbf{Teoria dos conjuntos} para definir operações com
+  eventos
+  \begin{block}{}
+\begin{description}
+ \item[União] é o evento que consiste da união de \textbf{todos} os pontos
+   amostrais dos eventos que a compõem. Denotamos a união do evento A
+   com B por $A\cup B$.\\
+   $A \cup B = \{\omega \in A \text{ ou } \omega \in B\}$
+ \item[Interseção] é o evento composto pelos pontos amostrais
+   \textbf{comuns} aos eventos que a compõem. Denotamos a interseção de
+   A com B por $A\cap B$.\\
+   $A \cap B = \{\omega \in A \text{ e } \omega \in B\}$
+ \item[Complemento] é o conjunto de pontos do espaço amostral que não
+   estão no evento. Denotamos o complemento do evento A por $A^c$.\\
+   $A^c = \{\omega \not\in A \}$
+\end{description}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Tipos de eventos}
+\begin{block}{}
+\begin{description}
+ \item[Disjuntos] (mutuamente exclusivos) são eventos que possuem
+   interseção nula, ou seja, $A\cap B = \{\varnothing\}$.
+ \item[Complementares] são eventos que a união é o espaço amostral, ou
+   seja, $A\cup B = \Omega$.
+ %% \item[Exaustivos] (disjuntos e complementares) são eventos que atendem
+ %%   ambas propriedades.
+\end{description}
+\end{block}
+\end{frame}
+
+%% \begin{frame}[fragile]{Operações com eventos}
+%% \def\firstcircle{(0,0) circle (1cm)}
+%% \def\secondcircle{(0:1.5cm) circle (1cm)}
+
+%% \colorlet{circle edge}{green!80}
+%% \colorlet{circle area}{green!40}
+
+%% \tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
+%%     outline/.style={draw=circle edge, thick}}
+
+%% \begin{center}
+%% %\setlength{\parskip}{5mm}
+%% % A \cup B
+%% \begin{tikzpicture}
+%%     \draw[filled] \firstcircle node {$A$}
+%%                   \secondcircle node {$B$};
+%%     \node[anchor=south] at (current bounding box.north) {$A \cup B$};
+%% \end{tikzpicture}
+%% % A \cap B
+%% \begin{tikzpicture}
+%%     \begin{scope}
+%%         \clip \firstcircle;
+%%         \fill[filled] \secondcircle;
+%%     \end{scope}
+%%     \draw[outline] \firstcircle node {$A$};
+%%     \draw[outline] \secondcircle node {$B$};
+%%     \node[anchor=south] at (current bounding box.north) {$A \cap B$};
+%% \end{tikzpicture}
+%% \end{center}
+%% \end{frame}
+
+\begin{frame}[fragile]{Exemplo}
+  Considere o lancamento de um dado e os eventos $A = \{1,2,3,4\}$, $B =
+  \{\omega:\omega\leq 3\}$, $C = \text{``face par''}$, $D = \text{``face
+    primo''}$.
+  \begin{itemize}
+  \item Uniões
+    \begin{itemize}
+    \item $A\cup B =$ %\{1,2,3,4\}$
+    \item $A\cup C =$ %\{1,2,3,4,6\}$
+    \item $A\cup D =$ %\{1,2,3,4,5\}$
+    \end{itemize}
+  \end{itemize}
+  \begin{itemize}
+  \item Interseções
+    \begin{itemize}
+    \item $A\cap B =$ %\{1,2,3\}$
+    \item $A\cap C =$ %\{2,4\}$
+    \item $A\cap D =$ %\{1,2,3\}$
+    \end{itemize}
+  \end{itemize}
+  \begin{itemize}
+  \item Complementos
+    \begin{itemize}
+    \item $A^c =$ %\{5,6\}$
+    \item $B^c =$ %\{\omega: \omega> 3\}$
+    \item $D^c =$ %\{4,6\}$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo}
+  Considere o lancamento de um dado e os eventos $A = \{1,2,3,4\}$, $B =
+  \{\omega:\omega\leq 3\}$, $C = \text{``face par''}$, $D = \text{``face
+    primo''}$.
+  \begin{itemize}
+  \item Uniões
+    \begin{itemize}
+    \item $A\cup B = \{1,2,3,4\}$
+    \item $A\cup C = \{1,2,3,4,6\}$
+    \item $A\cup D = \{1,2,3,4,5\}$
+    \end{itemize}
+  \end{itemize}
+  \begin{itemize}
+  \item Interseções
+    \begin{itemize}
+    \item $A\cap B = \{1,2,3\}$
+    \item $A\cap C = \{2,4\}$
+    \item $A\cap D = \{2,3\}$
+    \end{itemize}
+  \end{itemize}
+  \begin{itemize}
+  \item Complementos
+    \begin{itemize}
+    \item $A^c = \{5,6\}$
+    \item $B^c = \{\omega: \omega> 3\}$
+    \item $D^c = \{1,4,6\}$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo}
+  Sendo $A$ e $B$ dois eventos em um mesmo espaço amostral, ``traduza''
+  para a linguagem da Teoria dos Conjuntos as seguintes situações: \\~\\
+  \begin{itemize}
+  \item[a)] Pelo menos um dos eventos ocorre
+  \item[b)] O evento $A$ ocorre, mas $B$ não
+  \item[c)] Nenhum deles ocorre
+  \end{itemize}
+\end{frame}
+
+
+\section{Probabilidade}
+
+\subsection{Definições de probabilidade}
+
+\begin{frame}{Definições de probabilidade}
+  As probabilidades podem ser definidas de diferentes maneiras:
+  \begin{itemize}
+  \item Definição \textbf{clássica}
+  \item Definição \textbf{frequentista}
+  \item Definição subjetiva
+  \item Definição axiomática
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Definições de probabilidade}
+  \textbf{Definição Clássica}\\~\\
+  Consideramos um espaço amostral $\Omega$ com $n(\Omega)$ eventos simples,
+  supondo que sejam \textbf{igualmente prováveis}. Seja $A$ um evento de
+  $\Omega$, composto de $n(A)$ eventos simples. A probabilidade de $A$,
+  $P(A)$ será
+  \begin{equation*}
+    P(A) = \frac{n(A)}{n(\Omega)}
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Definições de probabilidade}
+  Exemplo: Lança-se um dados honesto e observa-se a face voltada para
+  cima. Determine a probabilidade de ocorrer a face 4\\~\\ \pause
+  \begin{itemize}
+  \item Experimento: lançar o dado e observar o resultado da
+    face.
+  \item Espaço amostral: $\Omega=\{1,2,3,4,5,6\} \quad \Rightarrow \quad
+    n(\Omega) = 6$
+  \item Pontos amostrais: $\omega_1=\text{1}$, $\omega_2=\text{2}$,
+    \ldots, $\omega_6=\text{6}$.
+  \item Evento: ocorrer face 4. $A = \{4\} \quad \Rightarrow \quad n(A) = 1$.
+  \end{itemize}
+  \begin{equation*}
+    P(A) = \frac{n(A)}{n(\Omega)} = \frac{1}{6} = 0,1667
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Definições de probabilidade}
+  Com base nesse resultado, podemos afirmar que a cada 6 lançamentos de
+  um dado, uma face será sempre 4? \\~\\ \pause
+  \textbf{Não}, pois cada lançamento é aleatório! \\~\\
+  No entanto, se repetissemos o lançamento de um dado \textbf{inúmeras
+    vezes}, a proporção de vezes em que ocorre o 4 seria aproximadamente
+  0,1667 $\Rightarrow$ \textbf{frequência relativa}
+\end{frame}
+
+\begin{frame}{Definições de probabilidade}
+  \textbf{Definição frequentista}\\~\\
+  Podemos então pensar em repetir o experimento aleatório $n$ vezes, e
+  contar quantas vezes o evento $A$ ocorre, $n(A)$. Dessa forma a
+  frequência relativa de $A$ nas $n$ repetições será
+  \begin{equation*}
+    f_{n,A} = \frac{n(A)}{n}
+  \end{equation*}
+  Para $n \rightarrow \infty$ repetições sucessivas e independentes, a
+  frequência relativa de $A$ tende para uma constante $p$
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} \frac{n(A)}{n} = P(A) = p
+  \end{equation*}
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Exemplo: Se um dado fosse lançado \textbf{10} vezes, e contássemos
+  quantas vezes saiu a face 4, qual seria a probabilidade desse evento?
+<<echo=-1>>=
+set.seed(1)
+## Tamanho da amostra
+n <- 10
+## Objeto para armazenar os resultados
+x <- numeric(n)
+## Estrutura de repetição
+# Repetir n vezes
+for(i in 1:n){
+    # Amostra aleatória de tamanho 1 dos números 1 a 6
+    x[i] <- sample(1:6, size = 1)
+}
+## Total de valores igual a 4 => n(A)
+sum(x == 4)
+## Proporção de valores igual a 4 => n(A)/n
+sum(x == 4)/length(x)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Exemplo: Se um dado fosse lançado \textbf{100} vezes, e contássemos
+  quantas vezes saiu a face 4, qual seria a probabilidade desse evento?
+<<echo=-1>>=
+set.seed(1)
+## Tamanho da amostra
+n <- 100
+## Objeto para armazenar os resultados
+x <- numeric(n)
+## Estrutura de repetição
+# Repetir n vezes
+for(i in 1:n){
+    # Amostra aleatória de tamanho 1 dos números 1 a 6
+    x[i] <- sample(1:6, size = 1)
+}
+## Total de valores igual a 4 => n(A)
+sum(x == 4)
+## Proporção de valores igual a 4 => n(A)/n
+sum(x == 4)/length(x)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Exemplo: Se um dado fosse lançado \textbf{1000} vezes, e contássemos
+  quantas vezes saiu a face 4, qual seria a probabilidade desse evento?
+<<echo=-1>>=
+set.seed(1)
+## Tamanho da amostra
+n <- 1000
+## Objeto para armazenar os resultados
+x <- numeric(n)
+## Estrutura de repetição
+# Repetir n vezes
+for(i in 1:n){
+    # Amostra aleatória de tamanho 1 dos números 1 a 6
+    x[i] <- sample(1:6, size = 1)
+}
+## Total de valores igual a 4 => n(A)
+sum(x == 4)
+## Proporção de valores igual a 4 => n(A)/n
+sum(x == 4)/length(x)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Exemplo: Se um dado fosse lançado \textbf{10000} vezes, e contássemos
+  quantas vezes saiu a face 4, qual seria a probabilidade desse evento?
+<<echo=-1>>=
+set.seed(1)
+## Tamanho da amostra
+n <- 10000
+## Objeto para armazenar os resultados
+x <- numeric(n)
+## Estrutura de repetição
+# Repetir n vezes
+for(i in 1:n){
+    # Amostra aleatória de tamanho 1 dos números 1 a 6
+    x[i] <- sample(1:6, size = 1)
+}
+## Total de valores igual a 4 => n(A)
+sum(x == 4)
+## Proporção de valores igual a 4 => n(A)/n
+sum(x == 4)/length(x)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Exemplo: Se um dado fosse lançado \textbf{100000} vezes, e contássemos
+  quantas vezes saiu a face 4, qual seria a probabilidade desse evento?
+<<echo=-1>>=
+set.seed(1)
+## Tamanho da amostra
+n <- 100000
+## Objeto para armazenar os resultados
+x <- numeric(n)
+## Estrutura de repetição
+# Repetir n vezes
+for(i in 1:n){
+    # Amostra aleatória de tamanho 1 dos números 1 a 6
+    x[i] <- sample(1:6, size = 1)
+}
+## Total de valores igual a 4 => n(A)
+sum(x == 4)
+## Proporção de valores igual a 4 => n(A)/n
+sum(x == 4)/length(x)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Exemplo: Se um dado fosse lançado \textbf{1000000} vezes, e contássemos
+  quantas vezes saiu a face 4, qual seria a probabilidade desse evento?
+<<echo=-1>>=
+set.seed(1)
+## Tamanho da amostra
+n <- 1000000
+## Objeto para armazenar os resultados
+x <- numeric(n)
+## Estrutura de repetição
+# Repetir n vezes
+for(i in 1:n){
+    # Amostra aleatória de tamanho 1 dos números 1 a 6
+    x[i] <- sample(1:6, size = 1)
+}
+## Total de valores igual a 4 => n(A)
+sum(x == 4)
+## Proporção de valores igual a 4 => n(A)/n
+sum(x == 4)/length(x)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Definições de probabilidade}
+  Assim,
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} \frac{n(A)}{n} = P(A) \approx 0,1667
+  \end{equation*}
+  \vspace{1em}
+
+  As probabilidades calculadas a partir de frequências relativas, são
+  \textbf{estimativas} da verdadeira probabilidade
+  \vspace{1em}
+  \begin{block}{Lei dos Grandes Números}
+    A Lei dos Grandes Números nos diz que as estimativas dadas pelas
+    frequências relativas tendem a ficar melhores com mais observações.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Probabilidades}
+  \textbf{Axiomas de probabilidade}\\~\\
+  Vamos considerar \textbf{probabilidade} como sendo uma função
+  $P(\cdot)$ que associa valores numéricos à um evento $A$ do espaço
+  amostral, e que satisfaz as seguintes condições \\~\\
+  \begin{itemize}
+  \item[i)] $P(\Omega) = 1$; $P(\varnothing) = 0$
+  \item[ii)] $0 \leq P(A) \leq 1$ %, \quad \forall A \subset \Omega$
+  \item[iii)] $P(A \cup B) = P(A) + P(B) \quad\quad
+    \text{se, e seomente se}\quad A \cap B = \varnothing$
+  \end{itemize}
+  \vspace{1em}
+  Os axiomas asseguram que as probabilidades podem ser interpretadas
+  como \textbf{frequências relativas}.
+\end{frame}
+
+% \begin{frame}[fragile]{Exemplos}
+%   Para cada um dos casos abaixo, escreva o espaço amostral $\Omega$ e
+%   conte seus elementos \\~\\
+%   \begin{itemize}
+%   \item[a)] Uma urna contém 5 bolas brancas e 5 bolas azuis. Duas bolas
+%     são selecionadas ao acaso, \textbf{com reposição}, e as cores são
+%     anotadas.
+%   \item[b)] Dois dados são lançados simultaneamente, e estamos
+%     interessados na soma das faces observadas.
+%   \item[c)] Em uma cidade, famílias com 3 crianças são selecionadas ao
+%     acaso, anotando-se o sexo de cada uma delas, de acordo com a idade.
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}[fragile]{Exemplos}
+  Lançam-se 3 moedas. Determine o espaço amostral. Para cada um dos
+  eventos abaixo, descreva os conjuntos e determine as probabilidades: \\~\\
+  \begin{itemize}
+  \item[a)] Faces iguais
+  \item[b)] Cara na 1$^a$ moeda
+  \item[c)] Coroa na 2$^a$ e 3$^a$ moedas
+  \end{itemize}
+\end{frame}
+
+\subsection{Regra da adição}
+
+\begin{frame}[fragile]{Regra da adição}
+  \textbf{Notação: tabela de dupla entrada ou tabela de contingência}\\~\\
+  \begin{table}
+    \centering
+    \begin{tabular}{c|cc|c}
+      \hline
+      & A & B & Total \\
+      \hline
+      X & $P(A \cap X)$ & $P(B \cap X)$ & $P(X)$ \\
+      Y & $P(A \cap Y)$ & $P(B \cap Y)$ & $P(Y)$ \\
+      \hline
+      Total & $P(A)$ & $P(B)$ & 1 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  \begin{itemize}
+  \item \textbf{Probabilidades marginais}: são as probabilidades
+    individuais nas margens da tabela
+  \item \textbf{Probabilidades conjuntas}: são as probabilidades de
+    ocorrência de dois eventos simultâneos
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  Considere a tabela de dupla entrada abaixo, que mostra o número de
+  estudantes por sexo (F e M) e turma (A e B)
+  \begin{table}
+    \centering
+    \begin{tabular}{c|cc|c}
+      \hline
+      & F & M & Total \\
+      \hline
+      A & 21 & 5 & 26 \\
+      B & 16 & 8 & 24 \\
+      \hline
+      Total & 37 & 13 & 50 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  Determine a probabilidade de um estudante selecionado ao acaso ser:
+  \begin{itemize}
+  \item Do sexo feminino, $P(F)$
+  \item Do sexo masculino, $P(M)$
+  \item Da turma A, $P(A)$
+  \item Da turma B, $P(B)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  Qual seria a probabilidade de escolhermos um estudante do sexo
+  feminino ou da turma B? \\~\\ \pause
+  Queremos então $P(F \cup B)$
+  \begin{align*}
+    P(F \cup B) &= P(F) + P(B) \\
+    &= 0,74 + 0,48 \\
+    &= 1,22
+  \end{align*}
+  o que não é possível pois a soma é superior a 1.
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  Não é difícil ver que estamos somando alguns indivíduos 2 vezes, pois:
+  \\~\\
+  \begin{itemize}
+  \item Ao considerarmos apenas estudantes do sexo feminino, temos
+    estudantes da turma A bem como da turma B
+  \item Ao considerarmos estudantes da turma B, temos estudantes do sexo
+    feminino e masculino
+  \end{itemize}
+  \vspace{1em}
+  Assim, os estudantes do sexo feminino e da turma B, ou seja, o evento
+  $F \cap B$ está incluído no evento $F$ e no evento $B$ \\~\\
+  Logo precisamos subtrair uma vez $P(F \cap B)$ para obter a
+  probabilidade correta.
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  Nesse caso, pela tabela, vemos que a interseção $F \cap B$ resulta na
+  probabilidade
+  \begin{equation*}
+    P(F \cap B) = \frac{16}{50} = 0,32
+  \end{equation*}
+  E o resultado correto para $P(F \cup B)$ é
+  \begin{align*}
+    P(F \cup B) &= P(F) + P(B) - P(F \cap B) \\
+    &= 0,74 + 0,48 - 0,32 \\
+    &= 0,9
+  \end{align*}
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  \begin{block}{Regra da adição}
+    A probabilidade da união entre dois eventos quaisquer, $A$ e $B$, é
+    dada pela \textbf{regra da adição de probabilidades}
+    \begin{equation*}
+      P(A \cup B) = P(A) + P(B) - P(A \cap B)
+    \end{equation*}
+  \end{block}
+  \vspace{1em}
+  % Definition of circles
+\def\firstcircle{(0,0) circle (1.0cm)}
+\def\secondcircle{(0:1.5cm) circle (1.0cm)}
+
+\colorlet{circle edge}{blue!50}
+\colorlet{circle area}{blue!20}
+
+\tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
+    outline/.style={draw=circle edge, thick}}
+
+%\setlength{\parskip}{5mm}
+
+  \begin{columns}[c]
+    \column{.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Set A or B
+      \draw[filled] \firstcircle node {$A$}
+      \secondcircle node {$B$};
+      \node[anchor=south] at (current bounding box.north) {$A \cup B$};
+    \end{tikzpicture}
+    \column{.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Set A and B
+      \begin{scope}
+        \clip \firstcircle;
+        \fill[filled] \secondcircle;
+      \end{scope}
+      \draw[outline] \firstcircle node {$A$};
+      \draw[outline] \secondcircle node {$B$};
+      \node[anchor=south] at (current bounding box.north) {$A \cap B$};
+    \end{tikzpicture}
+  \end{columns}
+
+  %% % Set A or B but not (A and B) also known a A xor B
+  %% \begin{tikzpicture}
+  %%   \draw[filled, even odd rule] \firstcircle node {$A$}
+  %%   \secondcircle node{$B$};
+  %%   \node[anchor=south] at (current bounding box.north) {$\overline{A \cap B}$};
+  %% \end{tikzpicture}
+
+%% % Set A but not B
+%% \begin{tikzpicture}
+%%     \begin{scope}
+%%         \clip \firstcircle;
+%%         \draw[filled, even odd rule] \firstcircle node {$A$}
+%%                                      \secondcircle;
+%%     \end{scope}
+%%     \draw[outline] \firstcircle
+%%                    \secondcircle node {$B$};
+%%     \node[anchor=south] at (current bounding box.north) {$A - B$};
+%% \end{tikzpicture}
+
+%% % Set B but not A
+%% \begin{tikzpicture}
+%%     \begin{scope}
+%%         \clip \secondcircle;
+%%         \draw[filled, even odd rule] \firstcircle
+%%                                      \secondcircle node {$B$};
+%%     \end{scope}
+%%     \draw[outline] \firstcircle node {$A$}
+%%                    \secondcircle;
+%%     \node[anchor=south] at (current bounding box.north) {$B - A$};
+%% \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  Note que a regra da adição pode ser simplificada, \textbf{se e somente
+    se} os eventos $A$ e $B$ forem \textbf{disjuntos} (ou mutuamente
+  exclusivos)
+    \begin{equation*}
+      P(A \cup B) = P(A) + P(B)
+    \end{equation*}
+    pois, neste caso, $A \cap B = \varnothing \quad \Rightarrow \quad
+    P(A \cap B) = P(\varnothing) = 0$
+  \vspace{1em}
+  % Definition of circles
+\def\firstcircle{(0,0) circle (1.0cm)}
+\def\secondcircle{(0:2.25cm) circle (1.0cm)}
+
+\colorlet{circle edge}{blue!50}
+\colorlet{circle area}{blue!20}
+
+\tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
+    outline/.style={draw=circle edge, thick}}
+
+%\setlength{\parskip}{5mm}
+  \begin{columns}[c]
+    \column{.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Set A or B
+      \draw[filled] \firstcircle node {$A$}
+      \secondcircle node {$B$};
+      \node[anchor=south] at (current bounding box.north) {$A \cup B$};
+    \end{tikzpicture}
+    \column{.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Set A and B
+      \begin{scope}
+        \clip \firstcircle;
+        \fill[filled] \secondcircle;
+      \end{scope}
+      \draw[outline] \firstcircle node {$A$};
+      \draw[outline] \secondcircle node {$B$};
+      \node[anchor=south] at (current bounding box.north) {$A \cap B$};
+    \end{tikzpicture}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  \begin{block}{Regra do complementar}
+    Como consequência da regra da adição, obtemos que, para qualquer
+    evento $A$,
+    \begin{equation*}
+      P(A) = 1 - P(A^c)
+    \end{equation*}
+  \end{block}
+  \vspace{1em}
+  Verifique através de $P(A \cup A^c) = P(A) + P(A^c) - P(A \cap A^c)$
+\end{frame}
+
+\begin{frame}[fragile]{Regra da adição}
+  Considerando a tabela abaixo, identifique as probabilidades de um
+  estudante:
+  \begin{table}
+    \centering
+    \begin{tabular}{c|cc|c}
+      \hline
+      & F & M & Total \\
+      \hline
+      A & 21 & 5 & 26 \\
+      B & 16 & 8 & 24 \\
+      \hline
+      Total & 37 & 13 & 50 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  \begin{itemize}
+  \item[a)] ser do sexo feminino ou masculino
+  \item[b)] ser do sexo masculino ou da turma A
+  \item[c)] não ser do turma B
+  \item[d)] ser da turma A ou da turma B
+  \item[e)] não ser do sexo feminino
+  \item[f)] ser da turma B ou do sexo masculino
+  \end{itemize}
+\end{frame}
+
+\subsection{Probabilidade condicional}
+
+\begin{frame}{Probabilidade condicional}
+  Em muitas situações práticas, o fenômeno aleatório com o qual
+  trabalhamos pode ser separado em etapas.\\~\\
+  A informação do que ocorreu em uma determinada etapa pode influenciar
+  nas probabilidades de ocorrências das etapas sucessivas.\\~\\
+  Nestes casos, dizemos que \textbf{ganhamos informação}, e podemos
+  \textsl{recalcular} as probabilidades de interesse. \\~\\
+  Estas probabilidades \textsl{recalculadas} recebem o nome de
+  \textbf{probabilidade condicional}.
+\end{frame}
+
+\begin{frame}{Probabilidade condicional}
+ Para entender a ideia de probabilidade condicional, considere o
+ seguinte exemplo: \\~\\
+ \begin{itemize}
+ \item Um dado foi lançado, qual é a probabilidade de ter ocorrido face
+   4?
+ \item Suponha que o dado foi jogado, e, sem saber o resultado, você
+   recebe a informação de que ocorreu face par. Qual é a probabilidade
+   de ter saido face 4 com essa ``nova'' informação?
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Probabilidade condicional}
+$\Omega = \{1,2,3,4,5,6\}$, $n(\Omega) = 6$ \\~\\
+$A$ = face 4 = $\{4\}$, $n(A) = 1 \quad \Rightarrow \quad P(A) =
+    \frac{n(A)}{n(\Omega)} = \frac{1}{6}$ \\~\\
+$B$ = face par = $\{2,4,6\}$, $n(B) = 3 \quad \Rightarrow \quad
+P(B) = \frac{n(B)}{n(\Omega)} = \frac{3}{6}$ \\~\\
+$C$ = face 4, dado que ocorreu face par = $\{4\}$, $n(C) = 1
+\quad \Rightarrow \quad P(C) = \frac{n(C)}{n(B)} = \frac{1}{3}$
+\begin{alertblock}{}
+  Dado que $B$ tenha ocorrido, o espaço amostral fica \textbf{reduzido}
+  para $B$, pois todos os resultados possíveis passam a ser os aqueles
+  do evento $B$.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Probabilidade condicional}
+  \begin{block}{Definição}
+    Para dois eventos $A$ e $B$ de um mesmo espaço amostral, o
+    termo $P(A|B)$ denota a probabilidade de $A$ ocorrer, dado que $B$
+    ocorreu, e é definido como
+    \begin{equation*}
+      P(A|B) = \frac{P(A \cap B)}{P(B)}
+    \end{equation*}
+    da mesma forma que a probabilidade de $B$ ocorrer, dado que $A$
+    ocorreu é definida como
+    \begin{equation*}
+      P(B|A) = \frac{P(B \cap A)}{P(A)}
+    \end{equation*}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Probabilidade condicional}
+  Voltando ao exemplo e aplicando a definição de probabilidade
+  condicional: \\~\\
+  $P(A \cap B) = \frac{n(A \cap B)}{n(\Omega)} = \frac{1}{6}$ \\~\\
+  $P(B) = \frac{n(B)}{n(\Omega)} = \frac{3}{6}$
+  \vspace{1em}
+  \begin{align*}
+    P(A|B) &= \frac{P(A \cap B)}{P(B)} \\
+     &= \frac{1/6}{3/6} \\
+     &= \frac{1}{3}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Probabilidade condicional}
+  Dessa forma, temos duas maneiras de calcular a probabilidade
+  condicional $P(A|B)$: \\~\\
+  \begin{enumerate}
+  \item Diretamente, pela consideração da probabilidade de $A$ em
+    relação ao espaço amostral reduzido $B$
+  \item Empregando a definição acima, onde $P(A \cap B)$ e $P(B)$ são
+    calculadas em relação ao espaço amostral original $\Omega$
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Probabilidade condicional}
+  Considere a tabela abaixo com o número de estudantes por sexo (F e M)
+  e turma (A e B):
+  \begin{table}
+    \centering
+    \begin{tabular}{c|cc|c}
+      \hline
+      & F & M & Total \\
+      \hline
+      A & 21 & 5 & 26 \\
+      B & 16 & 8 & 24 \\
+      \hline
+      Total & 37 & 13 & 50 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  Qual a probabilidade de que um estudante selecionado ao acaso seja da
+  turma A, dado que é uma mulher? \\~\\
+  Qual a probabilidade de que um estudante selecionado ao acaso seja
+  homem, dado que é da turma B?
+\end{frame}
+
+\begin{frame}{Exemplo}
+  A tabela abaixo fornece um exemplo de 400 itens classificados por
+  falhas ($F$ = com falha, $F^c$ = sem falha) na superfície e como
+  defeituosos ($D$ = defeituoso, $D^c$ = não defeituoso).
+  \begin{table}[!h]
+    \centering
+    \begin{tabular}{lcc}
+      \hline
+      \multirow{2}{*}{\textbf{Defeituoso}}
+      & \multicolumn{2}{l}{\textbf{Falhas}} \\
+      \cline{2-3}
+                & $F$         & $F^c$       \\
+      \hline
+      $D$      & 10           & 18           \\
+      $D^c$     & 30           & 342           \\
+      \hline
+    \end{tabular}
+  \end{table}
+  Calcule:
+  \begin{itemize}
+  \item $P(D)$
+  \item $P(D|F)$
+  \item $P(D|F^c)$
+  \end{itemize}
+\end{frame}
+
+\subsection{Regra da multiplicação}
+
+\begin{frame}[fragile]{Regra da multiplicação}
+  A regra da multiplicação é uma expressão derivada do conceito de
+  probabilidade condicional. Uma vez que
+  \begin{equation*}
+    P(A|B) = \frac{P(A\cap B)}{P(B)}
+  \end{equation*}
+  temos que
+  \begin{equation*}
+    P(A\cap B) = P(B) \cdot P(A|B)
+  \end{equation*}
+  Com isso podemos obter a probabilidade de uma interseção pelo produto
+  de uma probabilidade marginal com uma probabilidade condicional.
+  \begin{block}{Regra da multiplicação}
+    \begin{align*}
+      P(A\cap B) &= P(B) \cdot P(A|B) \\
+      &= P(A) \cdot P(B|A)
+    \end{align*}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Regra da multiplicação} % dantas pg 45
+  Essa expressão permite calcular probabilidades em espaços amostrais
+  que são realizados em sequência, onde a ocorrência da \textsl{segunda}
+  etapa \textbf{depende} da ocorrência da \textsl{primeira} etapa. \\~\\
+  \textbf{Exemplo:} Considere uma urna com 3 bolas brancas e 7 bolas
+  vermelhas. Duas bolas são retiradas da urna, uma após a outra,
+  \textbf{sem reposição}. Determine o espaço amostral e as
+  probabilidades associadas a cada ponto amostral.
+\end{frame}
+
+\begin{frame}[fragile]{Regra da multiplicação} % dantas pg 45
+  Probabilidade de sairem 2 bolas brancas $\{B_1B_2\}$ \\~\\
+  %% $P(B_1 \cap B_2) = P(B_2|B_1) \cdot P(B_1) = \frac{3}{10} \frac{2}{9}
+  %% = \frac{2}{30}$
+  \vspace{1em}
+  Probabilidade de sair branca e vermelha $\{B_1V_2\}$ \\~\\
+  %% $P(B_1 \cap V_2) = P(V_2|B_1) \cdot P(B_1) = \frac{3}{10} \frac{7}{9}
+  %% = \frac{7}{30}$ \\~\\
+    \vspace{1em}
+  Probabilidade de sair vermelha e branca $\{V_1B_2\}$ \\~\\
+  %% $P(V_1 \cap B_2) = P(B_2|V_1) \cdot P(V_1) = \frac{7}{10} \frac{3}{9}
+  %% = \frac{7}{30}$ \\~\\
+    \vspace{1em}
+    Probabilidade de sairem 2 bolas vermelhas $\{V_1V_2\}$ \\~\\
+  %% $P(V_1 \cap V_2) = P(V_2|V_1) \cdot P(V_1) = \frac{7}{10} \frac{6}{9}
+  %% = \frac{14}{30}$
+\end{frame}
+
+\begin{frame}[fragile]{Regra da multiplicação} % dantas pg 45
+  Probabilidade de sairem 2 bolas brancas $\{B_1B_2\}$ \\~\\
+  $P(B_1 \cap B_2) = P(B_1)P(B_2|B_1)  = \frac{3}{10} \frac{2}{9}
+  = \frac{2}{30}$ \\~\\
+  Probabilidade de sair branca e vermelha $\{B_1V_2\}$ \\~\\
+  $P(B_1 \cap V_2) = P(B_1)P(V_2|B_1)  = \frac{3}{10} \frac{7}{9}
+  = \frac{7}{30}$ \\~\\
+  Probabilidade de sair vermelha e branca $\{V_1B_2\}$ \\~\\
+  $P(V_1 \cap B_2) = P(V_1)P(B_2|V_1)  = \frac{7}{10} \frac{3}{9}
+  = \frac{7}{30}$ \\~\\
+    Probabilidade de sairem 2 bolas vermelhas $\{V_1V_2\}$ \\~\\
+  $P(V_1 \cap V_2) = P(V_1)P(V_2|V_1)  = \frac{7}{10} \frac{6}{9}
+  = \frac{14}{30}$
+\end{frame}
+
+%% Aqui eu resolvi dis exercicios do livro da Suzi. O 16 mostra a
+%% extensao da regra da multiplicacao para 3 eventos. O 8 mostra a ideia
+%% de independencia de eventos (começe pela letra b e depois faça a
+%% a). Este ultimo mostra que a probabilidade nao muda quando tem
+%% reposicao e portanto os eventos sao independentes. Ja da o gancho
+%% para o proximo topico...
+
+\begin{frame}{Exemplo}
+  \begin{enumerate}
+  \item Num lote de 12 peças, 4 são defeituosas. Três peças são
+    retiradas aleatoriamente, uma após a outra, sem reposição. Encontre
+    a probabilidade de todas essas três peças serem não-defeituosas.
+  \item Qual a probabilidade de se obter dois ases em seguida, quando se
+    extraem duas cartas de um baralho comum de 52 cartas, se:
+    \begin{enumerate}
+    \item A primeira carta extraída não é reposta antes da extração da
+      segunda carta.
+    \item A primeira carta é reposta no baralho antes da extração da
+      segunda carta.
+    \end{enumerate}
+  \end{enumerate}
+\end{frame}
+
+\subsection{Independência de eventos}
+
+\begin{frame}{Independência de eventos}
+  Vimos que para probabilidades condicionais, $P(A|B)$, saber que $B$
+  ocorreu nos dá uma informação ``extra'' sobre a ocorrência de $A$ \\~\\
+  Porém, existem algumas situações nas quais saber que o evento $B$
+  ocorreu, não tem qualquer interferência na ocorrência ou não de $A$\\~\\
+  Nestes casos, podemos dizer que os aventos $A$ e $B$ são
+  \textbf{independentes}
+\end{frame}
+
+\begin{frame}{Independência de eventos}
+  Os eventos A e B são \textbf{eventos independentes} se a ocorrência de
+  B não altera a probabilidade de ocorrência de A, ou seja, eventos A e
+  B são independentes se
+  \begin{equation*}
+    P(A|B) = P(A) \quad \text{e também que} \quad P(B|A) = P(B)
+  \end{equation*}
+  Com isso, e a regra da multiplicação, temos que
+  \begin{block}{}
+    \begin{align*}
+      P(A \cap B) &= P(B) \cdot P(A|B) = P(B) \cdot P(A) \\
+      P(A \cap B) &= P(A) \cdot P(B|A) = P(A) \cdot P(B)
+    \end{align*}
+  \end{block}
+  Isso significa que se dois eventos são independentes, a probabilidade
+  de ocorrência simultânea $P(A \cap B)$ é o produto das probabilidades
+  marginais, $P(A)$ e $P(B)$.
+\end{frame}
+
+\begin{frame}{Independência de eventos}
+  Dessa forma, podemos verificar se dois eventos são independentes de
+  duas formas: \\~\\
+  \begin{enumerate}
+  \item Pela definição intuitiva
+    \begin{align*}
+      P(A|B) &= P(A) \\
+      P(B|A) &= P(B)
+    \end{align*}
+    \textbf{Observação:} se o evento A é independente do evento B, então
+    nós esperamos que B também seja independente de A.
+    %% \textbf{Importante:} as duas condições precisam ser satisfeitas ao
+    %% mesmo tempo para que $A$ e $B$ sejam independentes (se apenas uma
+    %% for satisfeita, os eventos não são independentes)
+  \item Pela definição formal
+    \begin{align*}
+      P(A \cap B) = P(A) \cdot P(B)
+    \end{align*}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo}
+  \begin{block}{Lançamento de um dado}
+    Considere o lançamento de um dado e os seguintes eventos
+    \begin{center}
+      $A = \text{``resultado é um número par''}$\\
+      $B = \text{``resultado é um número menor ou igual a 4''}$
+    \end{center}
+    Os eventos $A$ e $B$ são independentes?
+  \end{block}
+  \begin{center}
+    \begin{tikzpicture}[scale=0.5]
+      % \draw[help lines] (0,0) grid (8,6);
+      \draw[thick] (0,0) rectangle +(8,6);
+      \fill[blue!20, draw=black, thick] (5,3) circle (1.75cm);
+      \draw[thick] (3,3) circle (1.75cm);
+      \node (p1) at (5,5) {$B$};  \node (p2) at (3,1) {$A$};
+      \fill[red] (5.5,3.5) circle (3pt) node [above, color=black] {$1$};
+      \fill[red] (5.5,2) circle (3pt) node [above, color=black] {$3$};
+      \fill[red] (2.5,3) circle (3pt) node [above, color=black] {$6$};
+      \fill[red] (4,2.2) circle (3pt) node [above, color=black] {$4$};
+      \fill[red] (4,3.5) circle (3pt) node [above, color=black] {$2$};
+      \fill[red] (3,5.2) circle (3pt) node [above, color=black] {$5$};
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Exemplo}
+  \textbf{Pela definição intuitiva}: \\~\\
+  $P(A) = 1/2$, \quad $P(A|B) = P(A\cap B)/P(B) = \frac{2/6}{4/6} =
+  1/2$ \\~\\
+  $P(B) = 2/3$, \quad $P(B|A) = P(B\cap A)/P(A) = \frac{2/6}{3/6} =
+  2/3$. \\~\\
+  Portanto: $P(A|B) = P(A)$ e $P(B|A) = P(B)$ \\~\\
+  \textbf{Pela definição formal:} \\~\\
+  $P(A \cap B) = P(A)P(B) = \frac{1}{2} \cdot \frac{2}{3} = 1/3$ \\~\\
+  $P(A \cap B) = \frac{2}{6} = 1/3$, assim $P(A \cap B) = P(A)P(B)$ \\~\\
+  Portanto, os eventos $A$ e $B$ são independentes. Saber que $A$
+  ocorreu não muda a probabilidade de $B$ ocorrer e vice-versa.
+\end{frame}
+
+\begin{frame}{Exemplo}
+  \begin{enumerate}
+  \item As probabilidades de um estudante ser aprovado em exames de
+    matemática, inglês, ou de ambos são
+    \begin{equation*}
+      P(M) = 0,7 \qquad P(I) = 0,8 \qquad P(M \cap I) = 0,56
+    \end{equation*}
+    Verifique se os eventos M e I são independentes.
+  \item As probabilidades de chover em determinada cidade nos
+    dias de natal (N), no dia de ano-novo (A), ou em ambos os dias são
+    \begin{equation*}
+      P(N) = 0,6 \qquad P(A) = 0,6 \qquad P(N \cap A) = 0,42
+    \end{equation*}
+    Verifique se os eventos N (``chover no natal'') e A (``chover no ano
+    novo'') são independentes.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Exemplo}
+  A tabela abaixo fornece um exemplo de 400 itens classificados por
+  falhas ($F$ = com falha, $F^c$ = sem falha) na superfície e como
+  defeituosos ($D$ = defeituoso, $D^c$ = não defeituoso).
+  \begin{table}[!h]
+    \centering
+    \begin{tabular}{lcc}
+      \hline
+      \multirow{2}{*}{\textbf{Defeituoso}}
+      & \multicolumn{2}{l}{\textbf{Falhas}} \\
+      \cline{2-3}
+                & $F$         & $F^c$       \\
+      \hline
+      $D$      & 2           & 18           \\
+      $D^c$     & 38           & 342           \\
+      \hline
+    \end{tabular}
+  \end{table}
+  Calcule:
+  \begin{itemize}
+  \item $P(D)$
+  \item $P(D|F)$
+  \item Compare estes resultados com aqueles do slide 51, e verifique,
+    em cada caso, se os eventos $D$ e $F$ são independentes.
+  \end{itemize}
+\end{frame}
+
+% \subsection{Exercícios}
+
+% \begin{frame}[fragile]{Exercícios}
+%   Exercícios 1--20, do capítulo 5 do livro (pgs. 135--141).
+%   \vspace{1em}
+%   \begin{itemize}
+%   \item[] Pinto, SS; Silva, CS. \textbf{Estatística, Vol I}. Rio Grande:
+%     Editora da FURG, 2010. [Cap. 5]
+%   \end{itemize}
+% \end{frame}
+
+\section{Referências}
+
+
+\begin{frame}{Referências}
+  \begin{itemize}
+  \item Bussab, WO; Morettin, PA. \textbf{Estatística básica}. São
+    Paulo: Saraiva, 2006. [Cap. 5]
+  \item Magalhães, MN; Lima, ACP. \textbf{Noções de Probabilidade e
+      Estatística}. São Paulo: EDUSP, 2008. [Cap. 2]
+  \item Montgomery, DC; Runger, GC. \textbf{Estatística aplicada e
+      probabilidade para engenheiros}. Rio de Janeiro: LTC Editora,
+    2012. [Cap. 2]
+  \end{itemize}
+\end{frame}
+
+\end{document}
