@@ -1,0 +1,757 @@
+\documentclass[a4paper,11pt,fleqn]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0, 0, 0}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.4,0.4,0.4}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+%%----------------------------------------------------------------------
+%% opções comuns
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+%\usepackage[margin=2cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{fancybox}
+%\usepackage[usenames,dvipsnames]{color}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{lscape}
+\usepackage{natbib}
+\setlength{\bibsep}{0.0pt}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage[final]{pdfpages}
+\usepackage{setspace}
+\usepackage{paralist} % enumitem, compactitem
+  \plitemsep=2pt
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% FLOATS: graficos e tabelas
+\usepackage{graphicx}
+\usepackage{float} % fornece a opção [H] para floats
+\usepackage{longtable}
+\usepackage{supertabular}
+%% captions e headings em sans-serif
+\usepackage[font={sf},labelfont={sf,bf}]{caption}
+\usepackage{subcaption}
+\renewcommand{\thesubfigure}{\Alph{subfigure}}
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries\sffamily}
+\titleformat*{\subsection}{\normalsize\bfseries\sffamily}
+\titleformat*{\subsubsection}{\normalsize\bfseries\sffamily}
+\titleformat*{\paragraph}{\normalsize\bfseries\sffamily}
+\titleformat*{\subparagraph}{\normalsize\bfseries\sffamily}
+\theoremstyle{definition}
+\newtheorem*{mydef}{Definição}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% definiçoes de hyperref e xcolor
+\usepackage{hyperref}
+\usepackage{xcolor}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% FONTES
+
+%% micro-tipografia
+\usepackage[protrusion=true,expansion=true]{microtype}
+%% Bitstream Charter with mathdesign
+\usepackage{lmodern} % sans-serif: Latin Modern
+\usepackage[charter]{mathdesign} % serif: Bitstream Charter
+\usepackage[scaled]{beramono} % truetype: Bistream Vera Sans Mono
+\usepackage[scaled]{helvet}
+%\usepackage{inconsolata}
+
+
+%\usepackage[sf]{titlesec}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% hifenização
+\usepackage[htt]{hyphenat} % permite hifenizar texttt. Ao inves disso
+% pode usar \allowbreak no ponto qu quiser quebrar dentro do texttt
+\hyphenation{con-si-de-ra-ção pes-que-i-ros pes-que-i-ra se-gui-do-ras
+  di-fe-ren-tes pla-ni-lha pla-ni-lhão re-fe-ren-te con-ta-gem
+  em-bar-ques qua-li-da-de a-le-a-to-ri-za-dos}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% comandos customizados
+\usepackage{xspace} % lida com os espaços depois dos comandos
+\providecommand{\eg}{\textit{e.g.}\xspace}
+\providecommand{\ie}{\textit{i.e.}\xspace}
+\providecommand{\R}{\textsf{R}\xspace}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\providecommand{\E}{\text{E}}
+\providecommand{\Var}{\text{Var}}
+\providecommand{\logit}{\text{logit}}
+%% Para alterar o titulo do thebibliography
+\addto\captionsbrazilian{%
+  \renewcommand{\refname}{Bibliografia}
+}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% Comandos para deixar o texto mais compacto
+\usepackage{marginnote}
+\usepackage[top=1cm, bottom=1cm, inner=1cm, outer=1cm,nohead, nofoot, heightrounded, marginparsep=.05cm]{geometry}
+\setlength{\parindent}{0pt}
+%%----------------------------------------------------------------------
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\reversemarginpar % para colocar a marginnote a esquerda
+
+
+
+
+
+\hrule
+\vspace{0.3cm}
+
+\begin{minipage}[c]{.85\textwidth}
+  Bioestatística --- CE001 \\
+  Prof. Fernando de Pol Mayer --- Departamento de Estatística --- DEST \\
+  Exercícios: probabilidade \\
+  Nome: GABARITO   \hfill GRR: \hspace{2cm}
+\end{minipage}\hfill
+\begin{minipage}[c]{.15\textwidth}
+\flushright
+\includegraphics[width=2.2cm]{../img/ufpr-logo.png}
+\end{minipage}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+%%----------------------------------------------------------------------
+
+\begin{compactenum} % Magalhaes, pg 40
+\item Para cada um dos eventos abaixo, escreva o espaço amostral
+  correspondente e conte seus elementos:
+  \begin{compactenum}
+  \item $\Omega = \{CC, CR, RC, RR\} \quad n(\Omega) = 4$
+  \item $\Omega = \{PP, PI, IP, II\} \quad n(\Omega) = 4$
+  \item $\Omega = \{AA, AV, VA, VV\} \quad n(\Omega) = 4$
+  \item $\Omega = \{2, 3, 4, \ldots, 12\} \quad n(\Omega) = 11$
+  \item $\Omega = \{MMM, MMF, MFM, FMM, FFM, FMF, MFF, FFF\} \quad
+  n(\Omega) = 8$
+  \item $\Omega = \{\omega : 0 \leq \omega \leq 20 \} \quad n(\Omega) =
+  21$
+  \item $\Omega = \{C, RC, RRC, RRRC, RRRRC, \ldots\} \quad n(\Omega) =
+    \infty$
+    % A partir daqui: Bussab, pg 108, cap 5
+  \item $\Omega = \{\omega : \omega > 0 \} = \mathbb{R}^{+} \quad
+    n(\Omega) = \infty$
+  \item $\Omega = \{3, 4, 5, \ldots, 10\} \quad n(\Omega) = 8$
+  \item $\Omega = \{1, 2, 3, \ldots\} \quad n(\Omega) = \infty$
+  \item $\Omega = \{AA, AB, AC, AD, AE, BA, BB, BC, BD, BE, CA, CB, CC,
+    CD, CE, DA, DB, DC, DD, DE, \\ EA, EB, EC, ED, EE\} \quad n(\Omega) =
+    25$
+  \item $\Omega = \{AB, AC, AD, AE, BA, BC, BD, BE, CA, CB,
+    CD, CE, DA, DB, DC, DE, EA, EB, EC, ED\} \quad n(\Omega) =
+    20$
+  \item $\Omega = \{AB, AC, AD, AE, BC, BD, BE,
+    CD, CE, DE\} \quad n(\Omega) = 10$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Bussab, pg 107, cap. 5
+\item $\Omega = \{BC, BR, VB, VV\}$
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Ross, pg 71
+\item
+  \begin{compactenum}
+  \item $\Omega = \{VV, VA, VB, AA, AV, AB, BB, BA, BV\}$
+  \item $\Omega = \{VA, VB, AV, AB, BA, BV\}$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 19, cap 2
+\item
+  \begin{compactenum}
+  \item $\Omega = \{x : x > 0\}$ \,
+  \item $A \cup B = \{x : x > 11 \}$ \,
+  \item $A \cap B = \{x : 11 < x \leq 15\}$ \,
+  \item $A^{c} = \{x : x \leq 11 \}$ \,
+  \item $A \cup B \cup C = \{x : x \geq 8\}$ \,
+  \item $(A \cup C)^{c} = \{x : x < 8\}$ \,
+  \item $A \cap B \cap C = \varnothing$ \,
+  \item $B^{c} \cap C = \varnothing$ \,
+  \item $A \cup (B \cap C) = \{x : x \geq 8\}$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 19, cap 2
+\item $\Omega = \{\omega : \omega \geq 0\}$
+  \begin{compactenum}
+  \item $A = \{\omega : 675 \leq \omega \leq 700 \}$
+  \item $B = \{\omega : 450 \leq \omega \leq 500 \}$ \,
+  \item $A \cap B = \varnothing$ \,
+  \item $A \cup B = \{\omega : 450 \leq \omega \leq 500 \cup 675 \leq
+    \omega \leq 700\}$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 19, cap 2
+\item $\Omega = \{PPP, PPN, PNP, NPP, PNN, NPN, NNP, NNN\}$
+  \begin{compactenum}
+  \item $A = \{PPP\}$
+  \item $B = \{NNN\}$
+  \item $A \cap B = \varnothing$ \,
+  \item $A \cup B = \{PPP, NNN\}$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\clearpage
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Bussab, pg 113, cap. 5
+\item
+  \begin{compactenum}
+  \item $A = \{(3,6), (4,5), (5,4), (6,3)\}$ e $B = \{(4,1), (4,2),
+    \ldots (6,6)\}$
+  \item $A \cup B = \{(3,6), (4,1), (4,2), \ldots (6,6)$,
+    $A \cap B = \{(4,5), (5,4), (6,3)\}$, e \\ $A^{c} = \{(1,1), (1,2),
+    \ldots (3,5), (4,1), \ldots, (4,4), (4,6), (5,1), \ldots, (5,3),
+    (5,5), (5,6), \ldots, (6,2), (6,4), (6,5), (6.6)\}$.
+  \item $P(A) = 0,11$, $P(B) = 0,5$, $P(A \cup B) = 0,53$, $P(A \cap B)
+    = 0,083$, $P(A^{c}) = 0,89$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Bussab, pg 126, cap. 5
+\item
+  \begin{inparaenum}
+  \item $0,0296$
+  \item $0,0298$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Bussab, pg 126, cap. 5
+\item
+  \begin{inparaenum}
+  \item 0,049
+  \item 0,463
+  \item 0,295
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Ross pg 71
+\item
+  \begin{inparaenum}
+  \item $0,8$
+  \item $0,3$
+  \item $0$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg. 26, cap 2
+\item
+    \begin{inparaenum}
+    \item $0,3$
+    \item $0,4$
+    \item $0,1$
+    \item $0,2$
+    \item $0,6$
+    \item $0,8$
+    \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg. 27, cap 2
+\item
+    \begin{inparaenum}
+    \item $0,9$
+    \item $0$
+    \item $0$
+    \item $0$
+    \item $0,1$
+    \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 19, cap 2
+\item
+  \begin{compactenum}
+  \item $A \cap B = 70$, $A^{c} = 14$, e $A \cup B = 95$.
+  \item
+    \begin{inparaenum}
+    \item $0,86$ \,
+    \item $0,79$ \,
+    \item $0,14$ \,
+    \item $0,7$ \,
+    \item $0,95$ \,
+    \item $0,84$ \,
+    \item $70/79$ \,
+    \item $70/86$
+    \end{inparaenum}
+  \item $0,7$
+  \item $0,95$
+  \item Não, pois $P(A \cap B) = 70/100$
+  \item Não, pois $P(A \cap B) \neq P(A)P(B)$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% magalhaes pg 41
+\item $0,4$
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 31, cap 2
+\item
+  \begin{inparaenum}
+  \item $20/100$
+  \item $19/99$
+  \item $0,038$
+  \item $0,2$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 21, cap 2
+\item
+  \begin{compactenum}
+  \item
+    \begin{inparaenum}
+    \item $36$ \,
+    \item $92$ \,
+    \item $148$ \,
+    \item $168$ \,
+    \item $56$
+    \end{inparaenum}
+  \item
+    \begin{inparaenum}
+    \item $0,2745$ \,
+    \item $0,4510$ \,
+    \item $0,7255$ \,
+    \item $0,8235$ \,
+    \item $0,2745$ \,
+    \item $0,7255$ \,
+    \item $0,6087$ \,
+    \item $0,3913$ \,
+    \item $0,5$ \,
+    \item $0,5$
+    \end{inparaenum}
+  \item Como $P(A) P(B) = (0.5490)(0.4510) = 0.2476 \neq 0.2745 = P(A \cap
+    B)$, não são independentes.
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery pg 33, cap 2
+\item
+  \begin{inparaenum}
+  \item $0,2$ \,
+  \item $0,3$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery pg 33, cap 2
+\item $0,22$
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+
+% Montgomery, pg 21, cap 2
+\item
+  \begin{compactenum}
+  \item
+    \begin{inparaenum}
+    \item $673$ \,
+    \item $1672$ \,
+    \item $6915$ \,
+    \item $8399$ \,
+    \item $1578$
+    \end{inparaenum}
+  \item
+    \begin{inparaenum}
+    \item $0,0792$ \,
+    \item $0,1969$ \,
+    \item $0,8142$ \,
+    \item $0,9889$ \,
+    \item $0,1858$ \,
+    \item $0,9208$ \,
+    \item $0,877$
+    \end{inparaenum}
+  \item $0,0987$
+  \item $0,0650$
+  \item Como $P(A)P(B) = (0.8031)(0.0903) = 0.0725 \neq 0.0792 = P(A
+    \cap B)$, não são independentes.
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 20, cap 2
+\item
+  \begin{inparaenum}
+  \item $A^{c} = \{x : x > 72,5\}$ \,
+  \item $B^{c} = \{x : x \leq 52,5\}$ \,
+  \item $A \cap B = \{x : 52,5 < x \leq 72,5\}$ \,
+  \item $A \cup B = \{x : x > 0\}$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 33, cap 2
+\item
+  \begin{inparaenum}
+  \item $0,0949$
+  \item $0,3828$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 20, cap 2
+\item
+  \begin{compactenum}
+  \item $\{ab, ac, ad, bc, bd, cd, ba, ca, da, cb, db, dc\}$
+  \item $\{ab, ac, ad, ae, af, ag, bc, bd, be, bf, bg, cd, ce, cf, cg,
+    ef, eg, fg, ba, ca, da, ea, fa, ga, cb, db, eb, \\ fb, gb, dc, ec, fc,
+    gc, fe, ge, gf\}$
+  \item $\Omega = \{BB, BD, DB, DD\}$
+  \item $\Omega = \{BB, BD, DB\}$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+\clearpage
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 22, cap 2
+\item
+  \begin{inparaenum}
+  \item $2/5$ \,
+  \item $3/5$ \,
+  \item $3/5$ \,
+  \item $1$ \,
+  \item $0$
+  \end{inparaenum}
+
+% Montgomery, pg 22, cap 2
+\item
+  \begin{inparaenum}
+  \item $0,4$ \,
+  \item $0,8$ \,
+  \item $0,6$ \,
+  \item $1$ \,
+  \item $0,2$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+
+% Montgomery, pg 20, cap 2
+\item
+  \begin{compactenum}
+  \item $\Omega = \{BB, BP, BG, PB, PP, PG, GB, GP, GG\}$
+  \item $\Omega = \{BB, BP, BG, PB, PP, PG, GB, GP\}$
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg. 24, cap. 2
+\item $\Omega = \{95, 96, \ldots, 104\}$
+  \begin{inparaenum}
+  \item $0,1$
+  \item $0,5$
+  \item $0,5$
+  \item
+    \begin{inparaenum}
+    \item $0,01$
+    \item $0,49$
+    \end{inparaenum}
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Ross pg 71
+\item $0,74$
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg. 24, cap. 2
+\item
+  \begin{inparaenum}
+  \item $0,83$
+  \item $0,85$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Magalhaes, pg 41
+\item Tabela de contingência \\
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{lcccc}
+      \hline
+      & \textbf{Economia} (E) & \textbf{Administração} (A) & \textbf{Outros} (O) &
+      \textbf{Total} \\
+      \hline
+      \textbf{Esportista} (Es) & 100 & 200 & 3700 & 4000 \\
+      \textbf{Não esportista} (Es$^c$) & 400 & 500 & 5100 & 6000 \\
+      \hline
+      \textbf{Total} & 500 & 700 & 8800 & 10000 \\
+      \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{inparaenum}
+  \item 4000/10000 = 2/5
+  \item 200/10000 = 1/50
+  \item 8800/10000 = 22/25
+  \item 5100/10000 = 51/100
+  \item 100/500 = 1/5
+  \item 500/6000 = 1/12
+  \item 5100/8800 = 51/88
+  \item 3700/4000 = 37/40
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Kazmier, pg 78
+\item
+  \begin{compactenum}
+  \item Sim, porque não é possível receber conceito A e B ao mesmo
+    tempo.
+  \item 0
+  \item $P(A \cap B) = 0 \neq 0,24 = P(A) \cdot P(B)$. São dependentes.
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% morettin, pg 23
+\item
+  \begin{inparaenum}
+  \item $0,4$
+  \item $0,5$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% morettin, pg 40
+\item
+  \begin{inparaenum}
+  \item $3/8$
+  \item $1/2$
+  \item $1/2$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% kazmier, pg 77
+\item
+  \begin{inparaenum}
+  \item
+  \item $0,5$
+  \item $0,3$
+  \item $0,5$
+  \item $P(C|E) = 0,5 \neq 0,3 = P(C)$. São dependentes.
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% kazmier, pg 78
+\item $0,064$
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 31, cap 2
+\item
+  \begin{compactenum}
+  \item $0,0736$
+  \item $0,1013$
+  \item Calcular todas as probabilidades condicionais de um nível para
+    outro. Fase madura da larva.
+  \end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 36, cap 2
+\item Não, pois $P(A|B) \neq P(A)$.
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 36, cap 2
+\item $P(A^{c}) = 1 - P(A) = 0.7$ e $P(A^{c}|B) = 1 - P(A|B) = 0.7$,
+  portanto são independentes.
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 36, cap 2
+\item Como $A$ e $B$ são mutuamente excludentes, então $P(A \cap B) = 0$
+  e $P(A)P(B) = 0.04$, portanto não são independentes.
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 36, cap 2
+\item
+  \begin{inparaenum}
+  \item $10^{-6}$
+  \item $0,002$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+% Montgomery, pg 44, cap 2
+\item
+  \begin{inparaenum}
+  \item $0,087$
+  \item $0,032$
+  \item $0,2$
+  \item $0,113$
+  \item $0,2207$
+  \item $0,005$
+  \end{inparaenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+
+\end{compactenum}
+
+\end{document}
