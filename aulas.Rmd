@@ -29,18 +29,26 @@ classe aplicadas.
 - **13/04**: Probabilidade: experimentos, eventos e conjuntos.
   Definições clássica e frequentista.
   [Slides](04_Probabilidade/04_Probabilidade.pdf)
+- **15/04**: Sem aula
+- **20/04**: Probabilidade: regra da adição e probabilidade condicional.
+  [Slides](04_Probabilidade/04_Probabilidade.pdf)
+- **22/04**: Sem aula (feriado)
+- **27/04**: Probabilidade: Regra da multiplicação e independência entre
+  eventos. [Slides](04_Probabilidade/04_Probabilidade.pdf)
+- **29/04**: Sabatina 3
 
 ## Exercícios
 
 - [Lista 1][]: amostragem e análise exploratória de dados. [Gabarito 1][].
 - [Lista 2][]: Medidas resumo. [Gabarito 2][].
-- [Lista 3][]: Probabilidade.
+- [Lista 3][]: Probabilidade. [Gabarito 3][]
 
 [Lista 1]: exercicios/01_Amostragem_e_Exploratoria.pdf
 [Gabarito 1]: exercicios/01_Amostragem_e_Exploratoria_GABARITO.pdf
 [Lista 2]: exercicios/03_Medidas_resumo.pdf
 [Gabarito 2]: exercicios/03_Medidas_resumo_GABARITO.pdf
 [Lista 3]: exercicios/04_Probabilidade.pdf
+[Gabarito 3]: exercicios/04_Probabilidade_GABARITO.pdf
 
 ## Scripts R
 
