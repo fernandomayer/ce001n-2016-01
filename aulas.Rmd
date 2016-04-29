@@ -52,7 +52,7 @@ classe aplicadas.
 
 ## Notas
 
-As notas estão disponíveis [nesta página](notas.html).
+As notas estão disponíveis [nesta página](notas.html)
 
 ## Scripts R
 
