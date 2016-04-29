@@ -11,7 +11,7 @@
 
 
 
-<title>CE001 - Bioestatística</title>
+<title>Notas</title>
 
 <script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <script src="libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
@@ -355,59 +355,255 @@ div.tocify {
 </div>
 
 
-<h1 class="title toc-ignore">CE001 - Bioestatística</h1>
+<h1 class="title toc-ignore">Notas</h1>
 
 </div>
 
 
-<p><a href="https://travis-ci.org/fernandomayer/ce001n-2016-01"><img src="https://travis-ci.org/fernandomayer/ce001n-2016-01.svg" alt="Build Status" /></a></p>
-<!-- <div class="alert alert-danger" role="alert"> **ATENÇÃO!** As aulas serão no -->
-<!-- **Anfieatro 14** do Setor de Ciências Biológicas </div> -->
-<div id="detalhes-da-oferta-da-disciplina" class="section level1">
-<h1>Detalhes da oferta da disciplina</h1>
-<ul>
-<li><strong>Curso:</strong> Biologia (N)</li>
-<li><strong>Período:</strong> primeiro semestre de 2016</li>
-<li><strong>Professor Responsável:</strong> <a href="http://www.leg.ufpr.br/~fernandomayer">Fernando de Pol Mayer</a>, (<a href="http://www.leg.ufpr.br">LEG</a>: Laboratório de Estatística e Geoinformação)</li>
-<li><strong>Horários e Locais:</strong>
-<ul>
-<li>Terça, 18:30 - 20:10h, <strong>Anf. 14</strong> (Setor de Ciências Biológicas)</li>
-<li>Quinta, 18:30 - 20:10h, <strong>Anf. 14</strong> (Setor de Ciências Biológicas)</li>
-</ul></li>
-<li><strong>Horários de atendimento do professor:</strong>
-<ul>
-<li>Terças e quintas, 14:00-18:00 (preferenciais). Outros horários podem ser agendados previamente por email.</li>
-</ul></li>
-<li><strong>Monitores de CE-001 do Depto. de Estatística:</strong>
-<ul>
-<li>Local: <strong>LABEST</strong> (Laboratório de Estatística)</li>
-<li>Horários de atendimento aos alunos: verificar no LABEST</li>
-</ul></li>
-<li><strong>Frequência</strong>: de acordo com as normas da Universidade, mínimo de 75%</li>
-<li><strong>Avaliação</strong>: sabatinas, aplicadas ao final de um módulo da disciplina
-<ul>
-<li>As sabatinas são provas menores, e com conteúdo específico</li>
-<li>O número de sabatinas em um semestre pode variar conforme o andamento da disciplina (geralmente entre 6 e 10)</li>
-<li>As datas das sabtinas serão definidas durante o semestre, e sempre será avisado com antecedência</li>
-<li>A média final será a média das 75% maiores notas (as 25% menores notas serão descartadas)</li>
-<li><strong>Importante</strong>: nas sabatinas não há segunda chamada. Ao perder uma sabatina, a nota é 0, e automaticamente estará dentro das 25% menores notas que serão excluídas para o cálculo da média final</li>
-</ul></li>
-<li><strong>Datas importantes:</strong> De acordo com a <a href="http://www.ufpr.br/soc/descarregar_arquivo.php?cod=1064">Resolução 49/15 - CEPE</a>:
-<ul>
-<li><strong>29/02</strong>: Início do semestre letivo</li>
-<li><strong>02/07</strong>: Final do semestre letivo</li>
-<li><strong>11/07-16/07</strong>: Período de exames</li>
-</ul></li>
-</ul>
+<div id="histograma-e-box-plot-geral-por-enquanto-apenas-s1" class="section level2">
+<h2>Histograma e box plot geral (por enquanto apenas S1)</h2>
+<pre class="r"><code>## Grafico geral das medias
+breaks &lt;- 0:10
+## table(cut(notas$S1, breaks = breaks,
+##           right = FALSE, include.lowest = TRUE))
+hist(notas$S1, breaks = breaks, right = FALSE, include.lowest = TRUE,
+     main = &quot;Notas gerais&quot;, xlab = &quot;Notas&quot;, ylab = &quot;Frequência absoluta&quot;)
+boxplot(notas$S1, horizontal = TRUE, ylim = c(0, 10),
+        col = &quot;lightgray&quot;, add = TRUE)</code></pre>
+<p><img src="figures/unnamed-chunk-2-1.png" title="" alt="" width="640" style="display: block; margin: auto;" /></p>
+<p>Resumo dos cinco números, média, desvio-padrão, e número de provas não realizadas (NA):</p>
+<pre class="r"><code>statm &lt;- c(fivenum(notas$S1),
+           mean(notas$S1, na.rm = TRUE),
+           sd(notas$S1, na.rm = TRUE),
+           sum(is.na(notas$S1)))
+names(statm) &lt;- c(&quot;Min&quot;, &quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Max&quot;, &quot;Média&quot;, &quot;s&quot;, &quot;NAs&quot;)
+round(statm, 2)</code></pre>
+<pre><code>  Min    Q1    Q2    Q3   Max Média     s   NAs 
+ 3.00  7.50  8.50  9.00 10.00  8.07  1.62  5.00 </code></pre>
 </div>
-<div id="programaobjetivos-da-disciplina" class="section level1">
-<h1>Programa/objetivos da disciplina</h1>
-<p>O objetivo desta disciplina é capacitar os alunos em conceitos básicos de estatística que permitam a interpretação de resultados de análises e procedimentos estatísticos, bem como a execução de procedimentos e análises estatística básicas. O curso compreende três grandes tópicos:</p>
-<ul>
-<li>Análise descritiva e exploratória de dados</li>
-<li>Noções de probabilidades e distribuições de probabilidades</li>
-<li>Introdução à procedimentos de inferência estatística</li>
-</ul>
+<div id="box-plot-da-s1" class="section level2">
+<h2>Box plot da S1</h2>
+<pre class="r"><code>## Boxplots comparando as notas entre sabatinas
+boxplot(notas$S1, ylim = c(0, 10), names = &quot;S1&quot;, ylab = &quot;Notas&quot;)</code></pre>
+<p><img src="figures/unnamed-chunk-4-1.png" title="" alt="" width="640" style="display: block; margin: auto;" /></p>
+</div>
+<div id="notas-individuais" class="section level2">
+<h2>Notas indivíduais</h2>
+<pre class="r"><code>kable(notas, align = c(&quot;c&quot;, &quot;c&quot;))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Matricula</th>
+<th align="center">S1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">20081784</td>
+<td align="center">6.0</td>
+</tr>
+<tr class="even">
+<td align="center">20095802</td>
+<td align="center">7.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20102715</td>
+<td align="center">7.5</td>
+</tr>
+<tr class="even">
+<td align="center">20104471</td>
+<td align="center">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">20110014</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="even">
+<td align="center">20111904</td>
+<td align="center">8.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20112119</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="even">
+<td align="center">20113413</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20113699</td>
+<td align="center">10.0</td>
+</tr>
+<tr class="even">
+<td align="center">20120643</td>
+<td align="center">4.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20122965</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="even">
+<td align="center">20127158</td>
+<td align="center">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">20127164</td>
+<td align="center">7.0</td>
+</tr>
+<tr class="even">
+<td align="center">20127187</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20127188</td>
+<td align="center">10.0</td>
+</tr>
+<tr class="even">
+<td align="center">20127193</td>
+<td align="center">7.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20127195</td>
+<td align="center">3.0</td>
+</tr>
+<tr class="even">
+<td align="center">20127199</td>
+<td align="center">7.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20127335</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="even">
+<td align="center">20130130</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20130438</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="even">
+<td align="center">20130617</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20130702</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="even">
+<td align="center">20130845</td>
+<td align="center">5.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20131405</td>
+<td align="center">8.8</td>
+</tr>
+<tr class="even">
+<td align="center">20131728</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20132175</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="even">
+<td align="center">20132334</td>
+<td align="center">5.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20132674</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center">20133917</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20134343</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="even">
+<td align="center">20134376</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20134627</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="even">
+<td align="center">20134720</td>
+<td align="center">6.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20134749</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="even">
+<td align="center">20135523</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20135660</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="even">
+<td align="center">20135661</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20135663</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="even">
+<td align="center">20135762</td>
+<td align="center">9.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20136482</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="even">
+<td align="center">20136617</td>
+<td align="center">5.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20137249</td>
+<td align="center">8.5</td>
+</tr>
+<tr class="even">
+<td align="center">20137377</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20137518</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center">20140179</td>
+<td align="center">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">20140223</td>
+<td align="center">6.0</td>
+</tr>
+<tr class="even">
+<td align="center">20142261</td>
+<td align="center">7.0</td>
+</tr>
+<tr class="odd">
+<td align="center">20142768</td>
+<td align="center">8.0</td>
+</tr>
+<tr class="even">
+<td align="center">20143033</td>
+<td align="center">7.5</td>
+</tr>
+<tr class="odd">
+<td align="center">20160023</td>
+<td align="center">10.0</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 <center>

@@ -1,0 +1,61 @@
+---
+title: "Notas"
+output:
+  html_document:
+    toc: false
+---
+
+```{r setup, include=FALSE}
+source("knitr_setup.R")
+```
+
+```{r pacotes, include=FALSE}
+library(knitr)
+```
+
+```{r, include=FALSE}
+## Importa
+notas <- read.csv("misc/notas.csv")
+## Converte matriculas para numero
+notas$Matricula <- as.numeric(gsub("GRR", "", notas$Matricula))
+notas <- notas[order(notas$Matricula), ]
+rownames(notas) <- 1:nrow(notas)
+```
+
+## Histograma e box plot geral (por enquanto apenas S1)
+
+```{r, fig.width=8, fig.height=6}
+## Grafico geral das medias
+breaks <- 0:10
+## table(cut(notas$S1, breaks = breaks,
+##           right = FALSE, include.lowest = TRUE))
+hist(notas$S1, breaks = breaks, right = FALSE, include.lowest = TRUE,
+     main = "Notas gerais", xlab = "Notas", ylab = "Frequência absoluta")
+boxplot(notas$S1, horizontal = TRUE, ylim = c(0, 10),
+        col = "lightgray", add = TRUE)
+```
+
+Resumo dos cinco números, média, desvio-padrão, e número de provas não
+realizadas (NA):
+
+```{r}
+statm <- c(fivenum(notas$S1),
+           mean(notas$S1, na.rm = TRUE),
+           sd(notas$S1, na.rm = TRUE),
+           sum(is.na(notas$S1)))
+names(statm) <- c("Min", "Q1", "Q2", "Q3", "Max", "Média", "s", "NAs")
+round(statm, 2)
+```
+
+## Box plot da S1
+
+```{r, fig.width=8, fig.height=6}
+## Boxplots comparando as notas entre sabatinas
+boxplot(notas$S1, ylim = c(0, 10), names = "S1", ylab = "Notas")
+```
+
+## Notas indivíduais
+
+```{r, results='asis'}
+kable(notas, align = c("c", "c"))
+```
