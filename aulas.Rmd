@@ -3,7 +3,6 @@ title: "Histórico das aulas do curso"
 output:
   html_document:
     toc: false
-    toc_float: false
 ---
 
 ```{r setup, include=FALSE}

@@ -3,7 +3,6 @@ title: "Recursos computacionais"
 output:
   html_document:
     toc: false
-    toc_float: false
 ---
 
 O curso não prevê conteúdo computacional. Entretanto todo o conteúdo
