@@ -3,6 +3,7 @@ title: "Referências Bibliográficas"
 output:
   html_document:
     toc: false
+    toc_float: false
 ---
 
 ## Referências básicas

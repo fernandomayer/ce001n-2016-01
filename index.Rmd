@@ -3,6 +3,7 @@ title: "CE001 - Bioestatística"
 output:
   html_document:
     toc: false
+    toc_float: false
 ---
 
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01)
