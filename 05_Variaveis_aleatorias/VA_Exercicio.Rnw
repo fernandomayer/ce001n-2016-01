@@ -1,0 +1,216 @@
+\documentclass[a4paper,11pt,fleqn]{article}
+
+%%----------------------------------------------------------------------
+%% opções comuns
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+%\usepackage[margin=2cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{fancybox}
+%\usepackage[usenames,dvipsnames]{color}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{lscape}
+\usepackage{natbib}
+\setlength{\bibsep}{0.0pt}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage[final]{pdfpages}
+\usepackage{setspace}
+\usepackage{paralist} % enumitem, compactitem
+  \plitemsep=2pt
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% FLOATS: graficos e tabelas
+\usepackage{graphicx}
+\usepackage{float} % fornece a opção [H] para floats
+\usepackage{longtable}
+\usepackage{supertabular}
+%% captions e headings em sans-serif
+\usepackage[font={sf},labelfont={sf,bf}]{caption}
+\usepackage{subcaption}
+\renewcommand{\thesubfigure}{\Alph{subfigure}}
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries\sffamily}
+\titleformat*{\subsection}{\normalsize\bfseries\sffamily}
+\titleformat*{\subsubsection}{\normalsize\bfseries\sffamily}
+\titleformat*{\paragraph}{\normalsize\bfseries\sffamily}
+\titleformat*{\subparagraph}{\normalsize\bfseries\sffamily}
+\theoremstyle{definition}
+\newtheorem*{mydef}{Definição}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% definiçoes de hyperref e xcolor
+\usepackage{hyperref}
+\usepackage{xcolor}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% FONTES
+
+%% micro-tipografia
+\usepackage[protrusion=true,expansion=true]{microtype}
+%% Bitstream Charter with mathdesign
+\usepackage{lmodern} % sans-serif: Latin Modern
+\usepackage[charter]{mathdesign} % serif: Bitstream Charter
+\usepackage[scaled]{beramono} % truetype: Bistream Vera Sans Mono
+\usepackage[scaled]{helvet}
+%\usepackage{inconsolata}
+
+
+%\usepackage[sf]{titlesec}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% hifenização
+\usepackage[htt]{hyphenat} % permite hifenizar texttt. Ao inves disso
+% pode usar \allowbreak no ponto qu quiser quebrar dentro do texttt
+\hyphenation{con-si-de-ra-ção pes-que-i-ros pes-que-i-ra se-gui-do-ras
+  di-fe-ren-tes pla-ni-lha pla-ni-lhão re-fe-ren-te con-ta-gem
+  em-bar-ques qua-li-da-de a-le-a-to-ri-za-dos}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% comandos customizados
+\usepackage{xspace} % lida com os espaços depois dos comandos
+\providecommand{\eg}{\textit{e.g.}\xspace}
+\providecommand{\ie}{\textit{i.e.}\xspace}
+\providecommand{\R}{\textsf{R}\xspace}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\providecommand{\E}{\text{E}}
+\providecommand{\Var}{\text{Var}}
+\providecommand{\logit}{\text{logit}}
+%% Para alterar o titulo do thebibliography
+\addto\captionsbrazilian{%
+  \renewcommand{\refname}{Bibliografia}
+}
+%%----------------------------------------------------------------------
+
+%%----------------------------------------------------------------------
+%% Comandos para deixar o texto mais compacto
+\usepackage{marginnote}
+\usepackage[top=1cm, bottom=1cm, inner=1cm, outer=1cm,nohead, nofoot, heightrounded, marginparsep=.05cm]{geometry}
+\setlength{\parindent}{0pt}
+%%----------------------------------------------------------------------
+
+\begin{document}
+
+\reversemarginpar % para colocar a marginnote a esquerda
+
+<<setup, include=FALSE, cache=FALSE>>=
+## Opcoes globais
+opts_chunk$set(size = "small",
+               prompt = FALSE,
+               comment = NA,
+               tidy = FALSE,
+               cache = TRUE,
+               fig.align = "center",
+               fig.width = 8,
+               fig.height = 6,
+               out.width=".6\\textwidth")
+thm <- knit_theme$get("print")
+knit_theme$set(thm)
+options(width = 80, digits = 7, continue = "  ") # 65
+## Use pdfcrop=TRUE nos chunks para reduzir a area do PDF
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+@
+
+<<pacotes, echo=FALSE>>=
+require(xtable, quietly = TRUE)
+@
+
+\hrule
+\vspace{0.3cm}
+
+\begin{minipage}[c]{.85\textwidth}
+  Biostatística --- CE001 \\
+  Prof. Fernando de Pol Mayer --- Departamento de Estatística --- DEST \\
+  Exercício: variáveis aleatórias \\
+  Nome:   \hfill GRR: \hspace{2cm}
+\end{minipage}\hfill
+\begin{minipage}[c]{.15\textwidth}
+\flushright
+\includegraphics[width=2.2cm]{../img/ufpr-logo.png}
+\end{minipage}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+%%----------------------------------------------------------------------
+
+%% Bussab e Morettin, Cap 6, pg 129
+
+\begin{compactenum}[1.]
+\item Um empresário pretende estabelecr uma firma para montagem de um
+  produto composto de uma esfera e um cilindro. As partes são adquiridas
+  em fábricas diferentes (A e B), e a montagem consistirá em juntar as
+  duas partes e pintá-las. O produto acabado deve ter o comprimento
+  (definido pelo cilindro), e a espessura (definido pela esfera) dentro
+  de certos limites, e isso só poderá ser verificado após a
+  montagem. Para estudar a viabilidade de seu empreendimento, o
+  empresário quer ter uma ideia da distribuição do lucro por peça
+  montada.
+
+  Sabe-se que cada componente pode ser classificado como bom, longo ou
+  curto, conforme sua medida esteja dentro de uma especificação, maior
+  ou menor que a especificada, respectivamente. Além disso, foram
+  obtidos dos fabricantes o preço de cada componente (R\$ 5,00), e as
+  probabilidades de produção de cada componente com as características
+  bom, longo e curto. Esses valores estão na tabela abaixo.
+
+  \begin{table}[htbp]
+    \begin{center}
+      \begin{tabular}{l|c|c}
+        \hline
+        \multicolumn{1}{c|}{Produto} & Fábrica A (Cilindro) & Fábrica B (Esfera) \\ \hline
+        Dentro das especificações … bom (B) & 0,8 & 0,7 \\
+        Maior que as especificações … longo (L) & 0,1 & 0,2 \\
+        Menor que as especificações … curto (C) & 0,1 & 0,1 \\ \hline
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+  O empresário assume, com base em produtos similares no mercado, que o
+  preço final de venda de cada unidade do produto (esfera e cilindro)
+  deve ser de R\$ 25,00. Se o produto final apresentar algum componente
+  com a característica C (curto), ele será irrecuperável e o conjunto
+  será vendido como sucata ao preço de R\$ 5,00. Cada componente longo
+  poderá ser recuperado a um custo adicional de R\$ 5,00. Com isso:
+  \begin{compactenum}
+  \item Defina o espaço amostral para a montagem dos conjuntos.
+  \item Obtenha as probabilidades associadas a cada ponto do espaço
+    amostral, ou seja, a probabilidade de se obter cada conjunto
+    possível.
+  \item Definindo a variável aleatória $X$ = ``lucro por conjunto
+    montado'', obtenha o lucro por montagem, considerando as informações
+    sobre preços dadas no enunciado.
+  \item Obtenha a distribuição de probabilidade da variável aleatória
+    $X$.
+  \item Se considerarmos a variável aleatória $Y$ = ``custo de
+    recuperação de cada conjunto produzido'', obtenha a distribuição de
+    probabilidade de $Y$.
+  \item Qual é o lucro médio por conjunto montado que o empresário
+    espera conseguir? Calcule também a variância e o desvio-padrão do
+    lucro.
+  \item Suponha que todos os preços determinados pelo empresário estão
+    errados. Na realidade, todos os valores deveriam ser duplicados,
+    isto é, custos e preços de venda. Com isso, temos uma nova variável
+    aleatória $Z = 2X$. Determine a média, a variância e o desvio-padrão
+    desta nova variável aleatória $Z$.
+  \end{compactenum}
+
+
+\end{compactenum}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.3cm}
+
+
+
+\end{document}
