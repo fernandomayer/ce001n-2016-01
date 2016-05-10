@@ -269,7 +269,7 @@ hist(notas.all, breaks = breaks, right = FALSE, include.lowest = TRUE,
      main = &quot;Notas gerais&quot;, xlab = &quot;Notas&quot;, ylab = &quot;Frequência absoluta&quot;)
 boxplot(notas.all, horizontal = TRUE, ylim = c(0, 10),
         col = &quot;lightgray&quot;, add = TRUE)</code></pre>
-<p><img src="figures/unnamed-chunk-2-1.png" title="" alt="" width="640" style="display: block; margin: auto;" /></p>
+<p><img src="figures/unnamed-chunk-2-1.png" width="640" style="display: block; margin: auto;" /></p>
 <p>Resumo dos cinco números, média, desvio-padrão, e número de provas não realizadas (NA):</p>
 <pre class="r"><code>statm &lt;- function(x){
     res &lt;- c(fivenum(x),
@@ -288,7 +288,7 @@ round(statm(notas.all), 2)</code></pre>
 <p>Box plot de cada prova</p>
 <pre class="r"><code>## Boxplots comparando as notas entre sabatinas
 boxplot(notas[, notas.col], ylim = c(0, 10), ylab = &quot;Notas&quot;)</code></pre>
-<p><img src="figures/unnamed-chunk-4-1.png" title="" alt="" width="640" style="display: block; margin: auto;" /></p>
+<p><img src="figures/unnamed-chunk-4-1.png" width="640" style="display: block; margin: auto;" /></p>
 <p>Resumo dos cinco números, média, desvio-padrão, e número de provas não realizadas (NA):</p>
 <pre class="r"><code>round(apply(notas[, notas.col], 2, statm), 2)</code></pre>
 <pre><code>         S1    S2

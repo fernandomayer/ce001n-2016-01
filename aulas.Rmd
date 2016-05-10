@@ -36,10 +36,14 @@ classe aplicadas.
 - **27/04**: Probabilidade: Regra da multiplicação e independência entre
   eventos. [Slides](04_Probabilidade/04_Probabilidade.pdf)
 - **29/04**: Sabatina 3
+- **04/04**: Correção das duas primeiras sabatinas
+- **06/04**: Variáveis aleatórias: definições e exemplos.
+- **11/04**: Variáveis aleatórias discretas: definições e propriedades
+  de esperança e variância. Modelo Bernoulli.
 
 ## Exercícios
 
-- [Lista 1][]: amostragem e análise exploratória de dados. [Gabarito 1][].
+- [Lista 1][]: Amostragem e análise exploratória de dados. [Gabarito 1][].
 - [Lista 2][]: Medidas resumo. [Gabarito 2][].
 - [Lista 3][]: Probabilidade. [Gabarito 3][]
 
