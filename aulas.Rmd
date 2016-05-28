@@ -44,6 +44,15 @@ classe aplicadas.
   [Slides](05_Variaveis_aleatorias/05_Variaveis_Aleatorias.pdf)
 - **13/05**: Variáveis aleatórias discretas: modelo binomial.
   [Slides](05_Variaveis_aleatorias/05_Variaveis_Aleatorias.pdf)
+- **18/05**: Variáveis aleatórias discretas: modelo Poisson.
+  [Slides](05_Variaveis_aleatorias/05_Variaveis_Aleatorias.pdf)
+- **20/05**: Variáveis aleatórias contínuas: definições, propriedades,
+  esperança, variância. Modelo normal.
+  [Slides](05_Variaveis_aleatorias/05_Variaveis_Aleatorias.pdf)
+- **25/05**: Não haverá aula (em função da [RBRAS 2016])
+- **27/05**: Sem aula (feriado)
+- **01/06**: Sabatina 4
+
 
 ## Exercícios
 
@@ -82,3 +91,5 @@ slides ou páginas correspondentes.
 [Script 1]: 01_introducao_e_amostragem/script_amostragem.R
 [Script 2]: 02_Analise_Exploratoria_de_Dados.R
 [Script 3]: 03_Medidas_resumo/03_Medidas_resumo.R
+
+[RBRAS 2016]: http://rbras2016.ufba.br/pt
