@@ -1,0 +1,588 @@
+\pdfminorversion=4
+\documentclass[10pt]{beamer}
+%% O comando acima foi necessario porque o PDF nao abria no acrobat do
+%% windows, dava o erro 131. Provavelmente devido as figuras em
+%% PDF. Agora ele gera um PDF versao 1.4, ao inves da versao 1.5
+
+\usetheme[compress]{PaloAlto}
+\usecolortheme{sidebartab} % crane
+
+\usepackage[brazilian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[scaled]{beramono} % truetype: Bistream Vera Sans Mono
+%\usepackage{inconsolata}
+\usepackage{amsmath}
+\usepackage{xfrac}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tikz}
+\usetikzlibrary{arrows, decorations.pathmorphing, backgrounds, fit,
+  positioning, calc, trees, plotmarks}
+
+\setbeamertemplate{footline}[frame number] % mostra o numero dos slides
+\setbeamertemplate{navigation symbols}{} % retira a barra de navegacao
+
+\usepackage{xspace}
+\providecommand{\eg}{\textit{e.g.}\xspace}
+\providecommand{\ie}{\textit{i.e.}\xspace}
+\providecommand{\R}{\textsf{R}\xspace}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\providecommand{\E}{\text{E}}
+\providecommand{\Var}{\text{Var}}
+\providecommand{\DP}{\text{DP}}
+\providecommand{\EP}{\text{EP}}
+\providecommand{\N}{\text{N}}
+\theoremstyle{definition}
+\newtheorem*{mydef}{Definição}
+\newtheorem*{mythm}{Teorema}
+
+\title{Estimação intervalar}
+\author[]{Fernando de Pol Mayer}
+\institute[UFPR]{Laboratório de Estatística e Geoinformação (LEG) \\
+  Departamento de Estatística (DEST) \\
+  Universidade Federal do Paraná (UFPR)}
+\date{}
+\logo{\includegraphics[width=1.6cm]{../img/ufpr-logo.png}}
+\titlegraphic{\includegraphics[width=1cm]{../img/CC_by-nc-sa_88x31.png}\\
+  \tiny
+  \href{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR}{Este
+    conteúdo está disponível por meio da Licença Creative Commons 4.0
+    (Atribuição/NãoComercial/PartilhaIgual)}}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Plano de aula}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}
+    \frametitle{Plano de aula}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+## Opcoes globais
+opts_chunk$set(size = "footnotesize",
+               prompt = FALSE,
+               comment = NA,
+               tidy = FALSE,
+               cache = TRUE,
+               fig.align = "center",
+               fig.width = 8,
+               fig.height = 6,
+               out.width="1\\textwidth")
+## thm <- knit_theme$get("beamer3")
+## knit_theme$set(thm)
+options(width = 65, digits = 5, continue = "  ")
+## Use pdfcrop=TRUE nos chunks para reduzir a area do PDF
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+@
+
+<<pacotes, echo=FALSE, warning=FALSE>>=
+require(xtable, quietly = TRUE)
+require(MASS, quietly = TRUE)
+require(plyr, quietly = TRUE)
+require(lattice, quietly = TRUE)
+require(latticeExtra, quietly = TRUE)
+library(TeachingDemos, quietly = TRUE)
+source("~/GitHub/Rutilities/funcoes_IC.R")
+@
+
+\begin{frame}
+\maketitle
+%\titlepage
+\end{frame}
+
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+\section{Introdução}
+
+\begin{frame}{Estimação}
+  Existem dois tipos de estimativas que podemos obter a partir de uma
+  \textbf{amostra aleatória}: \\~\\
+  \begin{block}{Estimativa pontual}
+    Fornecem como estimativa um único valor numérico para o parâmetro de
+    interesse
+  \end{block}
+  \begin{block}{Estimativa intervalar}
+    Fornece um intervalo de valores ``plausíveis'' para o parâmetro de
+    interesse
+  \end{block}
+\end{frame}
+
+\begin{frame}{Estimação}
+  Por serem \textbf{variáveis aleatórias}, os estimadores pontuais
+  possuem uma distribuição de probabilidade (distribuições amostrais)
+  \\~\\
+  Com isso, podemos apresentar uma estimativa mais informativa para o
+  parâmetro de interesse, que inclua uma medida de \textbf{precisão} do
+  valor obtido $\rightarrow$ \textbf{estimativa intervalar} ou
+  \textbf{intervalo de confiança} \\~\\
+  Os \textbf{intervalos de confiança} são obtidos a partir da
+  \textbf{distribuição amostral} de seus estimadores
+\end{frame}
+
+\section{Intervalos de confiança para a média: $\sigma$ conhecido}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  Suposições necessárias
+  \begin{itemize}
+  \item A amostra é uma \textbf{amostra aleatória simples}. (Todas as
+    amostras de mesmo tamanho tem a mesma probabilidade de serem selecionadas)
+  \item O valor do desvio-padrão populacionalm $\sigma$, é conhecido
+  \item Uma ou ambas das seguintes condições são satisfeitas:
+    \begin{itemize}
+    \item A população é normalmente distribuída
+    \item A amostra possui $n > 30$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  Quando coletamos uma \textbf{amostra aleatória} e calculamos uma
+  média, sabemos que o valor da média possui um desvio natural, em
+  relação ao verdadeiro valor da média populacional (\textbf{erro
+    amostral}), ou seja
+  \begin{equation*}
+    e = \bar{X} - \mu \quad \Rightarrow \quad \bar{X} = \mu + e
+  \end{equation*}
+  \vspace{1em}
+
+  Sabemos que a \textbf{distribuição amostral da média} é uma
+  distribuição normal, com média $\mu$ e variância
+  $\sigma^2/n$,
+  \begin{equation*}
+    \bar{X} \sim \text{N}\left(\mu, \frac{\sigma^2}{n}\right)
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  Usando a transformação
+  \begin{equation*}
+    Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} =
+    \frac{e}{\sigma/\sqrt{n}} \, \sim \, \text{N}(0,1)
+  \end{equation*}
+  podemos determinar o \textbf{erro máximo provável} que
+  assumimos para a média amostral que estamos calculando. \\~\\
+  O \textbf{erro máximo provável} ou \textbf{margem de erro} da média é
+  definido por
+  \begin{equation*}
+    e = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
+  \end{equation*}
+  onde $z_{\alpha/2}$ é chamado de \textbf{valor crítico}.
+\end{frame}
+
+\begin{frame}{Valores críticos}
+  O valor crítico $z_{\alpha/2}$ é o valor de $Z$ que separa uma área de
+  $\alpha/2$ da cauda da distribuição normal padrão
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{z_critico}
+  \end{figure}
+  Como estamos interessados nos valores \textbf{mais prováveis} da
+  média, então nosso interesse está no centro da distribuição $Z$, que
+  concentra uma área $\gamma = 1 - \alpha$, que determina o
+  \textbf{nível de confiança} do intervalo
+\end{frame}
+
+\begin{frame}{Valores críticos}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{areas}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Nível de confiança}
+  A área $\gamma = 1 - \alpha$ determina o \textbf{nível de confiança}
+  associado ao intervalo de confiança que estamos construindo \\~\\
+  O valor de $\alpha$ é o complemento do nível de confiança\\~\\
+  Exemplo:
+  \begin{itemize}
+  \item Para um nível de confiança de 0,95 (ou 95\%), $\alpha = 0,05$
+  \item Para um nível de confiança de 0,99 (ou 99\%), $\alpha = 0,01$
+  \end{itemize}
+  \begin{alertblock}{Importante!}
+    O \textbf{nível de confiança} é a probabilidade $1-\alpha$, que é a
+    proporção de vezes que o intervalo de confiança realmente contém o
+    parâmetro populacional, supondo que a amostragem pudesse ser
+    repetida um grande número de vezes
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Encontrando valores críticos}
+  Com a definição do \textbf{nível de confiança}, sabemos então o valor
+  de $\alpha$, e devemos encontrar o valor de $z_{\alpha/2}$. Usando
+  como exemplo $\gamma = 0,95 = 1 - 0,05 \Rightarrow \alpha = 0,05$:
+  \begin{itemize}
+  \item Temos que $\alpha/2 = 0,025$ é a área em cada cauda
+  \item Na tabela da distribuição normal padrão, procure a
+    \textbf{área}, no corpo da tabela, que corresponde a $0,5 - 0,025 =
+    0,475$
+  \item O valor de $z_{\alpha/2}$ será determinado pelos valores
+    correspondentes nas margens da tabela. Nesse caso, $z_{\alpha/2} =
+    1,96$ é o valor crítico procurado.
+  \end{itemize}
+  \begin{figure}[b]
+    \centering
+    \includegraphics[width=1\textwidth]{conf}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Encontrando valores críticos}
+  Encontre os valores críticos para os níveis de confiança
+  \begin{itemize}
+  \item $\gamma = 0,90 \Rightarrow \alpha = 0,10$
+  \item $\gamma = 0,99 \Rightarrow \alpha = 0,01$
+  \end{itemize}
+  \begin{table}[h]
+    \centering
+    \caption{Níveis de confiança e valores críticos mais comuns}
+    \begin{tabular}{ccc}
+      \hline
+      Nível de confiança $\gamma$ & $\alpha$ & Valor crítico
+      $z_{\alpha/2}$ \\
+      \hline
+      0,90 & 0,10 & 1,645 \\
+      0,95 & 0,05 & 1,96 \\
+      0,99 & 0,01 & 2,575 \\
+      \hline
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  Com estas definições, podemos construir um \textbf{intervalo de
+    confiança} para uma \textbf{estimativa amostral da média com
+    $\sigma$ conhecido} através de
+  \begin{equation*}
+    \bar{x} - e < \mu < \bar{x} + e
+  \end{equation*}
+  com
+  \begin{equation*}
+    e = z_{\alpha/2} \cdot \left(\frac{\sigma}{\sqrt{n}}\right)
+  \end{equation*}
+  Outras notações
+  \begin{equation*}
+    \bar{x} \pm e
+  \end{equation*}
+  \begin{equation*}
+    [\bar{x} - e; \bar{x} + e]
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  Porque podemos fazer isso? \\~\\
+  \begin{eqnarray*}
+    &&\Pr[-z_{\alpha/2} < Z < z_{\alpha/2}] = \gamma \\
+    &&\Pr[-z_{\alpha/2} < \frac{\bar{x} - \mu}{\sigma/\sqrt{n}} <
+    z_{\alpha/2}] = \gamma
+  \end{eqnarray*}
+  Isolando $\mu$ nessa inequação,
+  \begin{eqnarray*}
+    &&\Pr[\bar{x} - z_{\alpha/2} \cdot
+    \left(\frac{\sigma}{\sqrt{n}} \right) < \mu < \bar{x} + z_{\alpha/2}
+    \cdot \left(\frac{\sigma}{\sqrt{n}} \right)] = \gamma \\
+    &&\Pr[\bar{x} - e < \mu < \bar{x} + e] = \gamma \\
+  \end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  \textbf{Procedimentos gerais para a construção de intervalos de confiança}
+  \\~\\
+  \begin{enumerate}
+  \item Verifique se as suposições necessárias estão satisfeitas
+    \begin{itemize}
+    \item Temos uma AAS
+    \item $\sigma$ é conhecido
+    \item A população tem distribuição normal ou $n>30$
+    \end{itemize}
+  \item Determine o nível de confiança $\gamma$, e identifique $\alpha$
+  \item Com o valor de $\alpha$ definido, encontre o valor crítico de
+    $z_{\alpha/2}$
+  \item Calcule a margem de erro $e = z_{\alpha/2} \cdot (\sigma/\sqrt{n})$
+  \item Coloque em um dos formatos gerais para intervalo de confiança
+    \begin{itemize}
+    \item[] $\bar{x} - e < \mu < \bar{x} + e$
+    \item[] $\bar{x} \pm e$
+    \item[] $[\bar{x} - e; \bar{x} + e]$
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  \textbf{Interpretação de um intervalo de confiança} \\~\\
+  Suponha que obtivemos um intervalo de 95\% de confiança de $52 < \mu <
+  58$
+  \begin{block}{Interpretação 1}
+    Temos 95\% de confiança de que a verdadeira média populacional $\mu$
+    se encontra entre 52 e 58
+  \end{block}
+  \begin{block}{Interpretação 2}
+    Temos 95\% de confiança de que o intervalo entre 52 e 58 realmente
+    contém a verdadeira média populacional $\mu$
+  \end{block}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  \textbf{Interpretação de um intervalo de confiança} \\~\\
+  Suponha que obtivemos um intervalo de 95\% de confiança de $52 < \mu <
+  58$
+  \begin{alertblock}{Interpretação 1 --- ERRADA}
+    Temos 95\% de confiança de que a verdadeira média populacional $\mu$
+    se encontra entre 52 e 58
+  \end{alertblock}
+  \begin{block}{Interpretação 2 --- CERTA}
+    Temos 95\% de confiança de que o intervalo entre 52 e 58 realmente
+    contém a verdadeira média populacional $\mu$
+  \end{block}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  Como o intervalo de confiança é calculado a partir de uma
+  \textbf{amostra aleatória}, este intervalo \textbf{também é
+    aleatório}! \\~\\
+  Isso significa que para cada amostra aleatória que tivermos, um
+  intervalo \textbf{diferente} será calculado. \\~\\
+  Como o valor de $\mu$ é fixo, é o intervalo que deve conter o valor de
+  $\mu$, e não o contrário. \\~\\
+  Isso significa que se pudessemos obter 100 amostras diferentes, e
+  calcularmos um intervalo de confiança de 95\% para cada uma das 100
+  amostras, esperariamos que 5 destes intervalos \textbf{não} contenham
+  o verdadeiro valor da média populacional $\mu$.
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+<<echo=FALSE, pdfcrop=TRUE, out.width="1\\textwidth">>=
+set.seed(201409)
+ci.examp(reps = 100)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Intervalos de confiança para a média: $\sigma$ conhecido}
+  \textbf{Exemplo}: Uma empresa de computadores deseja estimar o tempo médio de
+  horas semanais que as pessoas utilizam o computador. Uma amostra
+  aleatória de 25 pessoas apresentou um tempo médio
+  de uso de 22,4 horas. Com base em estudos anteriores, a empresa assume
+  que $\sigma = 5,2$ horas, e que os tempos são normalmente
+  distribuídos.
+  \begin{itemize}
+  \item[a)] Verifique as suposições necessárias para o cálculo de
+    um intervalo de confiança
+  \item[b)] Para um nível de confiança de 95\%, encontre o valor crítico
+    $z_{\alpha/2}$
+  \item[c)] Calcule o erro máximo provável
+  \item[d)] Construa o intervalo de confiança
+  \item[e)] Escreva a interpretação do resultado
+  \end{itemize}
+<<echo=FALSE>>=
+x <- icz(alfa = 0.05, xbarra = 22.4, sigma = 5.2, n = 25, ic = 2)[3]
+x <- round(unname(unlist(x)), 3)
+cat(paste0("[", x[1], "; ", x[2], "]"), sep = "\n",
+    fill = TRUE, labels = "Resp.:")
+@
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  %% magalhaes, cap. 7, pg 230--231
+  A \textbf{amplitude} de um intervalo de confiança é dada pela
+  diferença entre o  limite superior e inferior, ou seja,
+  \begin{equation*}
+    \text{AMP}_{IC} =
+    \left[ \bar{x} + z_{\alpha/2} \cdot
+      \left( \frac{\sigma}{\sqrt{n}} \right) \right] -
+    \left[ \bar{x} - z_{\alpha/2} \cdot
+      \left( \frac{\sigma}{\sqrt{n}} \right) \right]
+    % = 2 \times z_{\alpha/2} \cdot (\sigma/\sqrt{n})
+  \end{equation*}
+  Note que, claramente, um intervalo de confiança depende conjuntamente
+  de três componentes:
+  \begin{itemize}
+  \item nível de confiança $\gamma$, expresso pelo valor crítico
+    $z_{\alpha/2}$
+  \item desvio-padrão populacional $\sigma$
+  \item tamanho da amostra $n$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ conhecido}
+  $z_{\alpha/2}$ Cada vez que aumentamos a confiança $\gamma$, o valor
+  de $z_{\alpha/2}$ fica maior, e consequentemente a amplitude do
+  intervalo aumenta.
+  \begin{itemize}
+  \item[] \small Intervalos maiores tem maior possibilidade de ``captura'' do
+    verdadeiro valor de $\mu$
+  \end{itemize}
+  \vspace{1em}
+  $\sigma$ Um grande desvio-padrão indica a possibilidade de um
+  considerável distanciamento dos valores amostrais em relação à média
+  populacional
+  \begin{itemize}
+  \item[] \small Ainda deve-se considerar que tanto $\bar{x}$ quanto
+    $\sigma$ podem ser influenciados pela presença de valores extremos
+  \end{itemize}
+  \vspace{1em}
+  $n$ Quanto maior for o tamanho da amostra, maior será a quantidade de
+  informação disponível. Com isso, valores maiores de $n$ produzem
+  intervalos mais informativos
+  \begin{itemize}
+  \item[] \small Para valores fixos de $\gamma$ e $\sigma$, valores
+    maiores de $n$ produzem intervalos menores
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Intervalos de confiança para a média: $\sigma$ conhecido}
+  % baseado em  magalhaes, cap 7, pg 238, ex. 18
+  \textbf{Exemplo:} Seja $X \sim \N(\mu, 36)$
+  \begin{itemize}
+  \item[a)] Para uma amostra de tamanho 50, obtivemos média amostral
+    18,5. Construa intervalos de confiança de
+    \begin{itemize}
+    \item[] (i) 90\% \quad (ii) 95\% \quad (iii) e 99\%
+    \end{itemize}
+  \item[b)] Calcule as amplitudes dos intervalos acima e explique a
+    diferença.
+  \item[c)] Para um nível de confiança de 95\%, construa intervalos de
+    confiança (admita a mesma média amostral 18,5) supondo tamanhos de
+    amostra
+    \begin{itemize}
+    \item[] (i) $n = 15$ \quad (ii) $n = 100$
+    \end{itemize}
+  \item[d)] Calcule as amplitudes dos intervalos acima e explique a
+    diferença.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Intervalos de confiança para a média: $\sigma$ conhecido}
+Respostas do exercício anterior:
+<<echo=c(1,8,10,17)>>=
+## a)
+alfas <- c(.1, .05, .01)
+a <- sapply(alfas, function(x){
+    icz(alfa = x, xbarra = 18.5, sigma = 6, n = 50, ic = 2)[3]
+})
+a <- sapply(a, round, 3)
+rownames(a) <- c("LI", "LS")
+colnames(a) <- c("(i)", "(ii)", "(iii)")
+a
+## b)
+apply(a, 2, diff)
+## c)
+ns <- c(15, 100)
+c <- sapply(ns, function(x){
+    icz(alfa = .05, xbarra = 18.5, sigma = 6, n = x, ic = 2)[3]
+})
+c <- sapply(c, round, 3)
+rownames(c) <- c("LI", "LS")
+colnames(c) <- c("(i)", "(ii)")
+c
+## d)
+apply(c, 2, diff)
+@
+
+\end{frame}
+
+\subsection{Determinação do tamanho amostral}
+
+\begin{frame}{Determinação do tamanho amostral}
+  Nosso objetivo é coletar dados para estimar a \textbf{média
+    populacional} $\mu$ \\~\\
+  A questão é:
+  \begin{center}
+    \textbf{Quantos elementos (itens, objetos, pessoas, \ldots) devemos
+      amostrar?}
+  \end{center}
+  \vspace{1em}
+  Já vimos que, de maneira (bem) geral, $n>30$ é um tamanho de amostra
+  mínimo para a maioria dos casos. \\~\\
+  Será que podemos ter uma estimativa melhor de quantos elementos
+  devem ser amostrados para estimarmos a média populacional com uma
+  precisão conhecida?
+\end{frame}
+
+\begin{frame}{Determinação do tamanho amostral}
+  A partir da equação do \textbf{erro máximo provável}
+  \begin{equation*}
+    e = z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}
+  \end{equation*}
+  podemos isolar $n$ e chegar na seguinte equação para a determinação do
+  tamanho amostral
+
+  \begin{equation*}
+    n = \left[ \frac{z_{\alpha/2} \cdot \sigma}{e} \right]^2
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Determinação do tamanho amostral}
+  Note que, em
+  \begin{equation*}
+    n = \left[ \frac{z_{\alpha/2} \cdot \sigma}{e} \right]^2
+  \end{equation*}
+  \begin{itemize}
+  \item O tamanho amostral $n$ \textbf{não} depende do tamanho
+    populacional $N$
+  \item O tamanho amostral depende
+    \begin{itemize}
+    \item do nível de confiança desejado (expresso pelo valor crítico
+      $z_{\alpha/2}$)
+    \item do erro máximo \textsl{desejado}
+    \item do desvio-padrão $\sigma$ (embora veremos que não é
+      estritamente necessário)
+    \end{itemize}
+  \item Como o tamanho amostral precisa ser um número inteiro,
+    arredondamos sempre o valor para o \textbf{maior} número inteiro
+    mais próximo
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Determinação do tamanho amostral}
+  \textbf{Exemplo}: Seja $X \sim \text{N}(\mu,36)$
+  \begin{itemize}
+  \item[a)] Calcule o tamanho da amostra, para que com 95\% de
+    probabilidade, a média amostral não difira da média populacional por
+    mais de
+    \begin{itemize}
+    \item[] (i) 0,5 unidades \quad (ii) 2 unidades
+    \end{itemize}
+  \item[b)] Qual o impacto do erro máximo assumido para o tamanho da
+    amostra?
+  \item[c)] Calcule o tamanho da amostra, para que a diferença da média
+    amostral para a média populacional (em valor absoluto) seja menor ou
+    igual a 2 unidades, com níveis de confiança de
+    \begin{itemize}
+    \item[] (i) 90\% \quad (ii) 95\%
+    \end{itemize}
+  \item[d)] Compare as estimativas do item anterior e analise o impacto
+    do nível de confiança para a determinação do tamanho amostral.
+  \end{itemize}
+\end{frame}
+
+\section{Referências}
+
+\begin{frame}{Referências}
+  \begin{itemize}
+  \item Bussab, WO; Morettin, PA. \textbf{Estatística básica}. São
+    Paulo: Saraiva, 2006. [Cap. 11]
+  \item Magalhães, MN; Lima, ACP. \textbf{Noções de Probabilidade e
+      Estatística}. São Paulo: EDUSP, 2008. [Cap. 7]
+  \item Montgomery, DC; Runger, GC. \textbf{Estatística aplicada e
+      probabilidade para engenheiros}. Rio de Janeiro: LTC Editora,
+    2012. [Cap. 8]
+  \end{itemize}
+\end{frame}
+
+\end{document}

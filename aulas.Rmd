@@ -52,6 +52,10 @@ classe aplicadas.
 - **25/05**: Não haverá aula (em função da [RBRAS 2016])
 - **27/05**: Sem aula (feriado)
 - **01/06**: Sabatina 4
+- **03/06**: Sem aula (saída de campo da Biologia)
+- **08/06**: Introdução à inferência estatística. Estimadores pontuais e
+  propriedades dos estimadores.
+  [Slides](06_Estimacao_pontual/06_Estimacao_pontual.pdf)
 
 
 ## Exercícios
