@@ -56,7 +56,10 @@ classe aplicadas.
 - **08/06**: Introdução à inferência estatística. Estimadores pontuais e
   propriedades dos estimadores.
   [Slides](06_Estimacao_pontual/06_Estimacao_pontual.pdf)
-
+- **10/06**: Erros amostrais e distribuição amostral da média (ver
+  slides e figuras:
+  [dist_amostral_idades.pdf](06_Estimacao_pontual/dist_amostral_idades.pdf)
+  e [dist_amostrais.pdf](06_Estimacao_pontual/dist_amostrais.pdf)).
 
 ## Exercícios
 
