@@ -60,7 +60,8 @@ classe aplicadas.
   slides e figuras:
   [dist_amostral_idades.pdf](06_Estimacao_pontual/dist_amostral_idades.pdf)
   e [dist_amostrais.pdf](06_Estimacao_pontual/dist_amostrais.pdf)).
-- **15/06**: Estimação intervalar. Intervalo de confiança para a média
+- **15/06**: Sem aula
+- **17/06**: Estimação intervalar. Intervalo de confiança para a média
   ($\sigma$ conhecido). Sabatina 5.
   [Slides](07_Estimacao_intervalar/07_Estimacao_intervalar.pdf)
 
