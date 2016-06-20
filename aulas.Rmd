@@ -64,6 +64,14 @@ classe aplicadas.
 - **17/06**: Estimação intervalar. Intervalo de confiança para a média
   ($\sigma$ conhecido). Sabatina 5.
   [Slides](07_Estimacao_intervalar/07_Estimacao_intervalar.pdf)
+- **22/06**: Não haverá aula.
+- **24/06**: Não haverá aula.
+- **29/06**: Intervalo de confiança para a média ($\sigma$
+  desconhecido) e tamanho amostral.
+  [Slides](07_Estimacao_intervalar/07_Estimacao_intervalar.pdf). Testes
+  de hipótese para a média.
+- **01/07**: Testes de hipótese para a média. Sabatina 6.
+
 
 ## Exercícios
 

@@ -7,8 +7,9 @@ output:
 
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01)
 
-<div class="alert alert-danger" role="alert"> **ATENÇÃO!** Hoje (15/06)
-não haverá aula. Na sexta-feira (17/06) a aula será até as 21:00 hs.
+<div class="alert alert-danger" role="alert"> **ATENÇÃO!** Quarta (22/06)
+e sexta-feira (24/06) não haverá aula. Na próxima semana, as aulas dos
+dias 29/06 e 01/07, serão até as 21:00.
 </div>
 
 # Detalhes da oferta da disciplina
