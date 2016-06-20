@@ -613,6 +613,668 @@ LS 21.536 19.676
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Determinação do tamanho amostral}
+Respostas do exercício anterior
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## a)}
+\hlcom{# (i)}
+\end{alltt}
+\begin{verbatim}
+[1] 554
+\end{verbatim}
+\begin{alltt}
+\hlcom{# (ii)}
+\end{alltt}
+\begin{verbatim}
+[1] 35
+\end{verbatim}
+\begin{alltt}
+\hlcom{## c)}
+\hlcom{# (i)}
+\end{alltt}
+\begin{verbatim}
+[1] 25
+\end{verbatim}
+\begin{alltt}
+\hlcom{# (ii)}
+\end{alltt}
+\begin{verbatim}
+[1] 35
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{frame}
+
+\section{Intervalos de confiança para a média: $\sigma$ desconhecido}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ desconhecido}
+  Na maioria das situações práticas, não sabemos o verdadeiro valor do
+  desvio-padrão populacional $\sigma$\\~\\
+  Se não conhecemos $\sigma$, então não podemos usar a distribuição
+  normal padrão ($Z$) para estimarmos a verdadeira média populacional
+  $\mu$ \\~\\
+  Nesse caso, usaremos a distribuição \textbf{$t$ de Student} que
+  permite o uso da estimativa do \textbf{desvio-padrão amostral $s$} no
+  lugar do valor desconhecido de $\sigma$.
+\end{frame}
+
+\begin{frame}{A distribuição $t$ de Student}
+  Se uma população tem distribuição normal, então a distribuição da
+  estatística
+
+  \begin{equation*}
+    t = \frac{\bar{x} - \mu}{s/\sqrt{n}} \, \sim \, t(n-1)
+  \end{equation*}
+
+  é uma \textbf{distribuição $t$ de Student} (ou simplesmente
+  distribuição $t$) com $n-1$ \textbf{graus de liberdade}.\\~\\
+\end{frame}
+
+\begin{frame}{A distribuição $t$ de Student}
+  Como não conhecemos $\sigma$, usamos o desvio-padrão amostral (não
+  viesado):
+  \begin{equation*}
+    s = \sqrt{\frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})^2}
+  \end{equation*}
+  mas isso introduz uma fonte de incerteza. \\~\\
+  Para manter o nível de confiança desejado $\gamma$, compensamos essa
+  incerteza calculando um intervalo de confiança um pouco maior: usando
+  os valores críticos da distribuição $t_{\alpha/2;n-1}$ (ou
+  simplesmente $t_{\alpha/2}$)
+\end{frame}
+
+\begin{frame}{A distribuição $t$ de Student}
+  Para acharmos os valores críticos de $t_{\alpha/2;n-1}$, precisamos
+  determinar o nível de confiança $\gamma = 1 - \alpha$ desejado e o
+  valor dos \textbf{graus de liberdade} que indexa a distribuição $t$
+  \begin{block}{Graus de liberdade (gl)}
+    É o número de valores amostrais que podem variar depois que certas
+    restrições tiverem sido impostas.
+    \begin{equation*}
+      gl = n-1
+    \end{equation*}
+  \end{block}
+  Dada uma média, apenas $n-1$ valores podem ser associados
+  \textbf{livremente}, antes que o último valor seja determinado.\\~\\
+  %% portal action
+  \textbf{Exemplo:} consideremos que 10 estudantes obtiveram média 8,0
+  em um teste. Assim, a soma das 10 notas deve ser 80
+  (restrição). Portanto, neste caso, temos $10-1=9$ graus de liberdade,
+  pois as nove primeiras notas podem ser escolhidas aleatoriamente,
+  contudo a 10$^{a}$ nota deve ser igual a [80 - (soma das 9 primeiras)].
+  % Exemplo: A soma da nota máxima de 5 estudantes é 500. Se soubermos o
+  % valor de notas de 4 deles, então a 5$^{a}$ nota estará
+  % determinada. Como as 4 notas iniciais podem variar
+  % \textbf{livremente}, dizemos que há 4 graus de liberdade
+  % disponíveis.
+\end{frame}
+
+\begin{frame}{A distribuição $t$ de Student}
+  Características da distribuição $t$
+  \begin{itemize}
+  \item É simétrica com média $t=0$ (assim como $z=0$)
+  \item É diferente para tamanhos de amostra diferentes
+  \item Possui maior área nas caudas e menor área no centro (quando
+    comparada com a distribuição normal) $\rightarrow$ para incorporar a
+    incerteza
+  \item O desvio-padrão da distribuição $t$ varia com o tamanho da
+    amostra (ao contrário da distribuição $z$ onde $\sigma=1$)
+    \begin{itemize}
+    \item $n$ $\downarrow$ \quad $\sigma$ $\uparrow$
+    \item $n$ $\uparrow$ \quad $\sigma$ $\downarrow$
+    \end{itemize}
+  \item Á medida que o $n$ amostral aumenta, a distribuição $t$ se
+    aproxima cada vez mais de uma distribuição normal padrão $Z$
+    \begin{itemize}
+    \item Por isso, para amostras grandes ($n>30$) o resultado das duas
+      é similar
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{A distribuição $t$ de Student}
+  %% \begin{figure}[p]
+  %%   \centering
+  %%   \includegraphics[width=.9\textwidth]{dist_t-crop}
+  %% \end{figure}
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=1\textwidth]{figure/unnamed-chunk-5-1} 
+
+}
+
+
+
+\end{knitrout}
+\end{frame}
+
+\begin{frame}{Encontrando valores críticos de $t$}
+  Com a definição do \textbf{nível de confiança} e sabendo o tamanho da
+  amostra $n$, sabemos então o valor de $\alpha$ e dos gl, e devemos
+  encontrar o valor de $t_{\alpha/2;n-1}$. Usando
+  como exemplo $\gamma = 0,95 = 1 - 0,05 \Rightarrow \alpha = 0,05$ ou
+  5\% e uma amostra de $n=7$
+  \vspace{1em}
+  \begin{itemize}
+  \item Temos que $n=7 \Rightarrow gl = n-1 = 6$
+  \item Na tabela da distribuição $t$ de Student procure a linha
+    correspondente aos gl, e à coluna correspondente ao valor de
+    $\alpha$
+  \item O valor de $t_{\alpha/2;n-1}$ será determinado pelos valores
+    correspondentes \textbf{no corpo da tabela}. Nesse caso,
+    $t_{\alpha/2;n-1} = 2,447$ é o valor crítico procurado.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Encontrando valores críticos de $t$}
+  %% Ex 6.10, pg 202 do Spiegel
+  Sabemos que o valor crítico de 95\% de confiança para a distribuição
+  normal padrão é $z_{\alpha/2} = 1,96$. Quais são os valores críticos
+  correspondentes para a distribuição $t$, se o $n$ amostral for
+  \begin{itemize}
+  \item $n=10$
+  \item $n=21$
+  \item $n=30$
+  \item $n=61$
+  \item $n=100$
+  \item $n=1000$
+  \end{itemize}
+  Verifique também os 4 primeiros valores para $\gamma = 0,9$ e $\gamma
+  = 0,99$
+  % \begin{table}[h]
+  %   \centering
+  %   \begin{tabular}{ccc}
+  %     \hline
+  %     Nível de confiança $\gamma$ & $\alpha$ & Valor crítico
+  %     $z_{\alpha/2}$ \\
+  %     \hline
+  %     0,90 & 0,10 & 1,645 \\
+  %     0,95 & 0,05 & 1,96 \\
+  %     0,99 & 0,01 & 2,575 \\
+  %     \hline
+  %   \end{tabular}
+  % \end{table}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ desconhecido}
+  Com estas definições, podemos construir um intervalo de confiança para
+  uma estimativa da média amostral com $\sigma$ desconhecido através de
+  \begin{equation*}
+    \bar{x} - e < \mu < \bar{x} + e
+  \end{equation*}
+  com
+  \begin{equation*}
+    e = t_{\alpha/2} \cdot \left(\frac{s}{\sqrt{n}}\right)
+  \end{equation*}
+  Outras notações
+  \begin{equation*}
+    \bar{x} \pm e
+  \end{equation*}
+  \begin{equation*}
+    [\bar{x} - e; \bar{x} + e]
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ desconhecido}
+  \textbf{Procedimentos gerais para a construção de intervalos de
+    confiança com $\sigma$ desconhecido}
+  \\~\\
+  \begin{enumerate}
+  \item Verifique se as suposições necessárias estão satisfeitas
+    \begin{itemize}
+    \item Temos uma AAS
+    \item Temos uma estimativa de $s$
+    \item \textsl{A população tem distribuição normal ou $n>30$}
+      $\leftarrow$ este requisito não é mandatório, pois a distribuição
+      $t$ irá se ``ajustar'' para acomodar a incerteza de amostras
+      pequenas
+    \end{itemize}
+  \item Determine o nível de confiança $\gamma$, e identifique $\alpha$
+  \item Com o valor de $\alpha$ definido, e o valor dos \textbf{graus de
+    liberdade} $gl=n-1$, encontre o valor crítico de $t_{\alpha/2;n-1}$
+  \item Calcule a margem de erro $e = t_{\alpha/2} \cdot (s/\sqrt{n})$
+  \item Coloque em um dos formatos gerais para intervalo de confiança
+    \begin{itemize}
+    \item[] $\bar{x} - e < \mu < \bar{x} + e$
+    \item[] $\bar{x} \pm e$
+    \item[] $[\bar{x} - e; \bar{x} + e]$
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Intervalos de confiança para a média: $\sigma$ desconhecido}
+  %% Triola pg 291
+  Exemplo: Em um teste da eficácia do alho na dieta para a redução do
+  colesterol, 49 pessoas foram avaliadas e seus níveis de colesterol
+  foram medidos antes e depois do tratamento. As \textbf{mudanças} nos
+  níveis de colesterol apresentaram média de 0,4 e desvio-padrão de
+  21.
+
+  \begin{itemize}
+  \item[a)] Verifique as suposições necessárias para o cálculo do intervalo
+    de confiança
+  \item[b)] Para um nível de confiança de 95\%, encontre o valor crítico
+    $t_{\alpha/2;n-1}$
+  \item[c)] Calcule o erro máximo provável
+  \item[d)] Construa o intervalo de confiança
+  \item[e)] Escreva a interpretação do resultado
+  \item[f)] O que o intervalo de confiança sugere sobre a eficácia do uso do
+    alho na dieta para a redução do colesterol?
+  \end{itemize}
+  Resolva o mesmo exemplo supondo que o $\sigma = s$ é conhecido (ou
+  seja, usando a distribuição $Z$). Compare os dois métodos.
+\end{frame}
+
+\begin{frame}[fragile]{Intervalos de confiança para a média: $\sigma$ desconhecido}
+Respostas do exercício anterior:
+\begin{itemize}
+\item Usando a distribuição $t$
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+$`valor critico`
+[1] 2.0086
+
+$`margem de erro`
+[1] 5.9063
+
+$`intervalo de confiança`
+[1] -5.5063  6.3063
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item Usando a distribuição $z$
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+$`valor critico`
+[1] 1.96
+
+$`margem de erro`
+[1] 5.8799
+
+$`intervalo de confiança`
+[1] -5.4799  6.2799
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Diferenças entre $z$ e $t$}
+  Para o mesmo exemplo anterior, assuma que foram avaliadas apenas 8
+  pessoas. Calcule intervalos de confiança para a média, $\bar{x} = 0,4$
+  usando
+  \begin{itemize}
+  \item a distribuição $t$ (ou seja, assumindo $\sigma$ desconhecido,
+  portanto $s = 21$)
+\item a distribuição $Z$ (ou seja, assumindo $\sigma$ conhecido,
+  portanto $\sigma = 21$)
+  \end{itemize}
+  Qual a sua conclusão referente à diferença observada entre os dois
+  intervalos de confiança? Por que ocorre essa diferença?
+\end{frame}
+
+\begin{frame}[fragile]{Intervalos de confiança para a média: $\sigma$ desconhecido}
+Respostas do exercício anterior:
+\begin{itemize}
+\item Usando a distribuição $t$
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+$`valor critico`
+[1] 2.3646
+
+$`margem de erro`
+[1] 17.556
+
+$`intervalo de confiança`
+[1] -17.156  17.956
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item Usando a distribuição $z$
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+$`valor critico`
+[1] 1.96
+
+$`margem de erro`
+[1] 14.552
+
+$`intervalo de confiança`
+[1] -14.152  14.952
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Escolha entre $z$ e $t$}
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{lp{6cm}}
+      \hline
+      \textbf{Método} & \textbf{Condições} \\
+      \hline
+      Distribuição normal ($Z$) & $\sigma$ conhecido e população
+      normalmente distribuída \\
+                                & ou \\
+                                & $\sigma$ conhecido e $n>30$ \\
+     \hline
+     Distribuição $t$ & $\sigma$ desconhecido e população normalmente
+     distribuída \\
+                     & ou \\
+                     & $\sigma$ desconhecido e $n>30$ \\
+    \hline
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{Escolha entre $z$ e $t$}
+  Nos exemplos abaixo, indique se é mais apropriado usar o valor crítico
+  de $z_{\alpha/2}$ (da distribuição normal), de $t_{\alpha/2}$ (da
+  distribuição $t$), ou nenhum deles
+  \begin{itemize}
+  \item[a)] $n=9,\, \bar{x}=75,\, s=15$, população com distribuição
+    normal
+  \item[b)] $n=5,\, \bar{x}=20,\, s=2$, população com distribuição
+    muito assimétrica
+  \item[c)] $n=12,\, \bar{x}=98,6,\, \sigma=0,6$, população com
+    distribuição normal
+  \item[d)] $n=75,\, \bar{x}=98,6,\, \sigma=0,6$, população com
+    distribuição assimétrica
+  \item[e)] $n=75,\, \bar{x}=98,6,\, s=0,6$, população com
+    distribuição assimétrica
+  \end{itemize}
+\end{frame}
+
+\subsection{Determinação do tamanho amostral}
+
+\begin{frame}{Determinação do tamanho amostral}
+  Se $\sigma$ for desconhecido?\\~\\
+  \begin{enumerate}
+  \item Estime o valor de $\sigma$ com base em algum estudo feito
+    anteriormente
+  \item Faça uma amostra piloto e estime o desvio-padrão amostra $s$, e
+    use-o como uma aproximação para o desvio-padrão populacional $\sigma$
+  \item Use a \textbf{regra empírica} da amplitude para dados com
+    distribuição (aproximadamente) normal
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Determinação do tamanho amostral}
+  Regra empírica para uma distribuição (aproximadamente) normal
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\textwidth]{empirica}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Determinação do tamanho amostral}
+  Regra empírica para uma distribuição (aproximadamente) normal\\~\\
+  Define-se \textbf{valores usuais} aqueles que são típicos e não muito
+  extremos. \\~\\
+  Como sabemos que em uma distribuição (aproximadamente) normal, 95\%
+  dos dados encontram-se a 2 desvios-padrões acima e abaixo da média,
+  temos que
+  \begin{eqnarray*}
+    4\sigma &=& (\max - \min) \\
+    \sigma &=& \frac{(\max - \min)}{4}
+  \end{eqnarray*}
+\end{frame}
+
+\begin{frame}[fragile]{Determinação do tamanho amostral}
+  Exemplo: Um professor deseja estimar o salário médio de professores
+  do ensino médio de uma cidade. Quantos professores devem ser
+  selecionados para termos 90\% de confiança que a média amostral esteja
+  a menos de R\$30,00 da média populacional? Sabe-se apenas que os
+  salários variam entre R\$800,00 e R\$1.200,00.\\~\\
+  Use
+  \begin{equation*}
+    n = \left[ \frac{z_{\alpha/2} \cdot \sigma}{e} \right]^2
+  \end{equation*}
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## Estimativa de sigma pela regra empírica}
+\end{alltt}
+\begin{verbatim}
+[1] 100
+\end{verbatim}
+\begin{alltt}
+\hlcom{## Tamanho da amostra}
+\end{alltt}
+\begin{verbatim}
+[1] 31
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{frame}
+
+\section{Intervalo de confiança para a proporção $p$}
+
+\begin{frame}{Intervalo de confiança para a proporção $p$}
+  Em muitas situações, estamos interessados em estudar uma
+  \textbf{proporção}, ao invés da média \\~\\
+  Por exemplo:
+  \begin{itemize}
+  \item a proporção de eleitores de um determinado candidato
+  \item a proporção de peças defeituosas em um processo industrial
+  \item a proporção de alunos reprovados na disciplina de estatística
+  \end{itemize}
+  \vspace{1em}
+  Nestes casos, a \textbf{distribuição binomial} deve ser utilizada no
+  processo de inferência.
+\end{frame}
+
+\begin{frame}{Intervalo de confiança para a proporção $p$}
+  A proporção amostral
+  \begin{equation*}
+    \hat{p} = \frac{x}{n} = \frac{\text{número de sucessos}}{\text{total de
+        tentativas}}
+  \end{equation*}
+  é a ``melhor estimativa'' para a proporção populacional $p$ \\~\\
+  Exemplo: em 5 lançamentos de uma moeda considere que o evento ``cara''
+  (Ca) seja o sucesso (``sucesso'' = 1; ``fracasso'' = 0). Um possível
+  resultado seria o conjunto $\{Ca, Ca, Co, Co, Ca\}$. A proporção
+  amostral seria
+  \begin{equation*}
+    \hat{p} = \frac{\text{número de sucessos}}{\text{total de
+        tentativas}} = \frac{3}{5} = 0,6
+  \end{equation*}
+  % \begin{table}[h]
+  %   \centering
+  %   \begin{tabular}{ll}
+  %     Realização & $X$ \\
+  %     Ca & 1 \\
+  %     Ca & 1 \\
+  %     Co & 0 \\
+  %     Co & 0 \\
+  %     Ca & 1 \\
+  %   \end{tabular}
+  % \end{table}
+\end{frame}
+
+\begin{frame}{Distribuição amostral de uma proporção}
+Através do estudo da distribuição amostral da proporção, chegamos aos
+seguintes resultados
+\begin{itemize}
+\item $\E(\hat{p}) = \mu_{\hat{p}} = p$
+\item $\Var(\hat{p}) = \sigma^{2}_{\hat{p}} = \frac{p(1-p)}{n}$
+\end{itemize}
+Ou seja,
+\begin{equation*}
+  p \sim \N \left( p, \frac{p(1-p)}{n} \right)
+\end{equation*}
+Ainda podemos mostrar que a quantidade
+\begin{equation*}
+  Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \, \sim \, \N(0,1)
+\end{equation*}
+Quando não conhecemos $p$, usamos $\hat{p}=x/n$ como estimativa
+%% \begin{enumerate}
+%% \item A proporção amostral $p$ \textbf{tende} para o valor da proporção
+%%   populacional $\pi$
+%% \item A distribuição das proporções amostrais tende a ser uma
+%%   \textbf{distribuição normal}
+%% \end{enumerate}
+\end{frame}
+
+\begin{frame}{Intervalo de confiança para a proporção $p$}
+  Com estas definições, podemos construir um intervalo de confiança para
+  uma estimativa da proporção amostral $p$ através de
+  \begin{equation*}
+    \hat{p} - e < p < \hat{p} + e
+  \end{equation*}
+  com
+  \begin{equation*}
+    e = z_{\alpha/2} \cdot \sqrt{\frac{p(1-p)}{n}}
+  \end{equation*}
+  Outras notações
+  \begin{equation*}
+    \hat{p} \pm e
+  \end{equation*}
+  \begin{equation*}
+    [\hat{p} - e; \hat{p} + e]
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Intervalo de confiança para a proporção $p$}
+  \textbf{Procedimentos gerais para a construção de intervalos de
+    confiança para a proporção $p$}
+  \\~\\
+  \begin{enumerate}
+  \item Verifique se as suposições necessárias estão satisfeitas
+    \begin{itemize}
+    \item Temos uma AAS
+    \item As condições para a distribuição binomial são satisfeitas
+      \begin{itemize}
+      \item as tentativas são independentes
+      \item há duas categorias de resultado (``sucesso'', ``fracasso'')
+      \item a probabilidade de sucesso $p$ permanece constante
+      \end{itemize}
+    \item A distribuição normal pode ser usada como aproximação para a
+      distribuição binomial, ou seja, $np \geq 5$ e $n(1-p) \geq 5$
+    \end{itemize}
+  \item Determine o nível de confiança $\gamma$, e identifique $\alpha$
+  \item Com o valor de $\alpha$ definido, encontre o valor crítico de
+    $z_{\alpha/2}$
+  \item Calcule a margem de erro $e = z_{\alpha/2} \cdot
+    \sqrt{\frac{p(1-p)}{n}}$
+  \item Coloque em um dos formatos gerais para intervalo de confiança
+    \begin{itemize}
+    \item[] $\hat{p} - e < \pi < \hat{p} + e$
+    \item[] $\hat{p} \pm e$
+    \item[] $[\hat{p} - e; \hat{p} + e]$
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Intervalo de confiança para a proporção $p$}
+  Exemplo: em uma pesquisa realizada por um instituto de pesquisa
+  Norte-Americano, 1500 adultos foram selecionados aleatoriamente para
+  responder à pergunta se acreditam ou não no aquecimento global. 1050
+  entrevistados respoderam que sim. Com isso:
+  \begin{itemize}
+  \item[a)] Verifique as suposições para o cálculo do intervalo de confiança
+  \item[b)] Para um nível de confiança de 95\%, encontre o valor crítico
+    de $z_{\alpha/2}$
+  \item[c)] Calcule o erro máximo provável
+  \item[d)] Construa o intervalo de confiança para $p$
+  \item[e)] Escreva a interpretação do resultado
+  \item[f)] Com base nesse resultado, podemos concluir que a maioria dos
+    adultos acredita no aquecimento global?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Intervalo de confiança para a proporção $p$}
+Resposta do exercício anterior:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+$`valor critico`
+[1] 1.96
+
+$`margem de erro`
+[1] 0.023191
+
+$`intervalo de confiança`
+[1] 0.67681 0.72319
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{frame}
+
+\subsection{Determinação do tamanho amostral}
+
+\begin{frame}{Determinação do tamanho amostral}
+  A partir da equação do erro máximo provável
+  \begin{equation*}
+    e = z_{\alpha/2} \cdot \sqrt{\frac{p(1-p)}{n}}
+  \end{equation*}
+  podemos isolar $n$ e chegar na seguinte equação para a determinação do
+  tamanho amostral para uma proporção populacional
+
+  \begin{equation*}
+    n = \left( \frac{z_{\alpha/2}}{e} \right)^2 \cdot p(1-p)
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Determinação do tamanho amostral}
+  Quando conhecemos a verdadeira proporção populacional $p$, podemos
+  usá-la para calcular o $n$ a partir da expressão acima. \\~\\
+  Quando \textbf{não conhecemos} a proporção poppulacional $p$, usamos
+  como estimativa $p=0,5$ porque
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{ccc}
+      \hline
+      $p$ & $(1-p)$ & $p(1-p)$ \\
+      \hline
+      0,1 & 0,9 & 0,09 \\
+      0,3 & 0,7 & 0,21 \\
+      0,5 & 0,5 & \textbf{0,25} \\
+      0,6 & 0,4 & 0,24 \\
+      0,8 & 0,2 & 0,16 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  Quando $p=0,5$ teremos o maior tamanho de amostra possível.
+\end{frame}
+
+\begin{frame}[fragile]{Determinação do tamanho amostral}
+  Exemplo: um fabricante de peças deseja estimar a verdadeira
+  proporção de peças defeituosas no processo de fabricação, com um erro
+  máximo de 3\% e nível de confiança de 99\%. Calcule o tamanho da
+  amostra necessário para se estimar esta proporção se:
+  \begin{itemize}
+  \item[a)] O fabricante acredita que aproximadamente 10\% de seus produtos
+    são defeituosos.
+  \item[b)] O fabricante não tem nenhuma informação prévia sobre a proporção
+    de peças defeituosas.
+  \end{itemize}
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## a)}
+\end{alltt}
+\begin{verbatim}
+[1] 664
+\end{verbatim}
+\begin{alltt}
+\hlcom{## b)}
+\end{alltt}
+\begin{verbatim}
+[1] 1844
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{frame}
+
 \section{Referências}
 
 \begin{frame}{Referências}
