@@ -69,8 +69,10 @@ classe aplicadas.
 - **29/06**: Intervalo de confiança para a média ($\sigma$
   desconhecido) e tamanho amostral.
   [Slides](07_Estimacao_intervalar/07_Estimacao_intervalar.pdf). Testes
-  de hipótese para a média.
-- **01/07**: Testes de hipótese para a média. Sabatina 6.
+  de hipótese para a média. ($\sigma$ conhecido).
+  [Slides](08_Teste_de_hipotese/08_Teste_de_hipotese.pdf)
+- **01/07**: Testes de hipótese para a média ($\sigma$ desconhecido).
+  [Slides](08_Teste_de_hipotese/08_Teste_de_hipotese.pdf). Sabatina 6.
 
 
 ## Exercícios
