@@ -7,8 +7,8 @@ output:
 
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01)
 
-<div class="alert alert-danger" role="alert"> **ATENÇÃO!** A aula de
-hoje (01/07) será até as 21:00 no LABEST (Laboratório de Estatística).
+<div class="alert alert-danger" role="alert"> **ATENÇÃO!** O exame final
+será dia 13/07 (quarta-feira) no horário normal de aula.
 </div>
 
 # Detalhes da oferta da disciplina
