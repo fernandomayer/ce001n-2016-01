@@ -77,7 +77,8 @@ round(apply(notas[, notas.col], 2, statm), 2)
 
 ## Notas individuais
 
-Veja na seção abaixo as médias finais!
+**Aqui estão apenas as notas individuais de cada sabatina. Veja na seção
+abaixo as médias finais calculadas!**
 
 ```{r, results='asis'}
 if("Freq" %in% names(notas)){
@@ -168,6 +169,10 @@ cima** nos seguintes casos:
 - Médias finais maiores ou iguais a 3,5 e menores do que 4,0 foram
   arredondadas para 4,0, SE a frequência do aluno foi maior ou igual a
   75%.
+
+**Observação**: a frequência só foi utilizada aqui para critério de
+arredondamento de nota. Mesmo que o aluno tenha frequência abaixo de
+75%, é permitido fazer o exame.
 
 A coluna de situação (`S`) indica se o aluno foi aprovado (`Ap`), ficou
 em exame (`Ex`), ou foi reprovado (`Re`).

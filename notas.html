@@ -313,7 +313,7 @@ NAs    5.00  9.00  8.00 14.00 11.00 11.00</code></pre>
 </div>
 <div id="notas-individuais" class="section level2">
 <h2>Notas individuais</h2>
-<p>Veja na seção abaixo as médias finais!</p>
+<p><strong>Aqui estão apenas as notas individuais de cada sabatina. Veja na seção abaixo as médias finais calculadas!</strong></p>
 <pre class="r"><code>if(&quot;Freq&quot; %in% names(notas)){
     kable(notas[-which(names(notas) %in% &quot;Freq&quot;)], align = &quot;c&quot;)
 } else{
@@ -802,6 +802,7 @@ NAs    5.00  9.00  8.00 14.00 11.00 11.00</code></pre>
 <li>Médias finais maiores ou iguais a 6,5 e menores do que 7,0 foram arredondadas para 7,0, SE a frequência do aluno foi maior ou igual a 75%.</li>
 <li>Médias finais maiores ou iguais a 3,5 e menores do que 4,0 foram arredondadas para 4,0, SE a frequência do aluno foi maior ou igual a 75%.</li>
 </ul>
+<p><strong>Observação</strong>: a frequência só foi utilizada aqui para critério de arredondamento de nota. Mesmo que o aluno tenha frequência abaixo de 75%, é permitido fazer o exame.</p>
 <p>A coluna de situação (<code>S</code>) indica se o aluno foi aprovado (<code>Ap</code>), ficou em exame (<code>Ex</code>), ou foi reprovado (<code>Re</code>).</p>
 <pre class="r"><code>##----------------------------------------------------------------------
 ## Tabela com as notas finais
