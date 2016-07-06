@@ -20,7 +20,13 @@ notas <- read.csv("misc/notas.csv")
 notas$Matricula <- as.numeric(gsub("GRR", "", notas$Matricula))
 notas <- notas[order(notas$Matricula), ]
 rownames(notas) <- 1:nrow(notas)
-notas.col <- 2:ncol(notas)
+## Verifica se existe a coluna 'Freq' com as frequencias. Se houver,
+## remove ela para calcular as notas
+if("Freq" %in% names(notas)){
+    notas.col <- 2:(ncol(notas) - 1)
+} else{
+        notas.col <- 2:ncol(notas)
+    }
 ```
 
 ## Histograma e box plot geral
@@ -71,6 +77,170 @@ round(apply(notas[, notas.col], 2, statm), 2)
 
 ## Notas individuais
 
+Veja na seção abaixo as médias finais!
+
 ```{r, results='asis'}
-kable(notas, align = c("c", "c"))
+if("Freq" %in% names(notas)){
+    kable(notas[-which(names(notas) %in% "Freq")], align = "c")
+} else{
+    kable(notas, align = "c")
+    }
+```
+
+## Resultados finais
+
+```{r, include=FALSE}
+##----------------------------------------------------------------------
+## Numero de aulas e frequencias
+
+## Numero de aulas geral no semestre
+## Datas iniciais e finais por dia da semana
+sini1 <- as.Date("2016-03-02")
+sini2 <- as.Date("2016-03-04")
+sfim1 <- as.Date("2016-06-29")
+sfim2 <- as.Date("2016-07-01")
+
+## Numero de aulas nos dias 1 e 2
+d1 <- length(seq(sini1, sfim1, by = "week"))
+d2 <- length(seq(sini2, sfim2, by = "week"))
+aulas <- d1 + d2
+
+## Desconto de dias
+## Dias iniciais
+desc1 <- 1
+## Feriados (quando realmente nao deveria ter aula e as presencas nao
+## deveriam ser computadas)
+feri <- 3
+## Outros dias sem aula
+out <- 6
+## Numero efetivo de aulas
+aulas.eff <- aulas - desc1 - feri - out
+
+## Numero de dias em que foi passada a chamada
+dcham <- 19
+
+## Numero de dias em que nao foi passada a chamada
+dscham <- aulas.eff - dcham
+
+## As frequencias na planilha correspondem ao numero de dias em que foi
+## passada a chamada. Para completar a frequencia com o numero de aulas
+## total (incluindo aqueles dias em que nao foi passada a chamada), sera
+## feita a soma do numero de dias em que nao foi passada a chamada (i.e.
+## sera dada presenca para todo mundo). No entanto, se a frequencia for
+## zero, ela sera mantida assim (pois sao desistencias)
+notas$Freq2 <- 0
+notas$Freq2[notas$Freq != 0] <- notas$Freq[notas$Freq != 0] + dscham
+
+## Frequencia relativa
+notas$Freq.rel <- notas$Freq2/aulas.eff
+
+## Arredonda para duas casas decimais a frequencia relativa
+notas$Freq.rel <- round(notas$Freq.rel, 2)
+
+## Funcao para obter as diferencas entre um valor e um objetivo
+difer <- function(x, obj){
+    obj - x
+}
+
+##----------------------------------------------------------------------
+## Regras para arredondar a frequencia relativa
+## 1) Se 0.7 <= Freq.rel < 0.75 entao SOMA difer
+
+## Cria uma nova coluna e a condicao
+notas$Freq.rel2 <- notas$Freq.rel
+cond.freq <- notas$Freq.rel >= 0.7 & notas$Freq.rel < 0.75
+
+## Soma as diferencas
+notas$Freq.rel2[cond.freq] <- notas$Freq.rel2[cond.freq] +
+    difer(notas$Freq.rel2[cond.freq], 0.75)
+```
+
+Na tabela abaixo estão as notas consideradas para o cálculo da média
+final. Das 6 sabatinas, foram consideradas apenas as 4 com maiores notas
+(`N1`, `N2`, `N3`, `N4`). A frequência (`F`) é o percentual de presença.
+
+A média (`M`) foi calculada com estas 4 notas, e já **arredondada para
+cima** nos seguintes casos:
+
+- Médias finais maiores ou iguais a 6,5 e menores do que 7,0 foram
+  arredondadas para 7,0, SE a frequência do aluno foi maior ou igual a
+  75%.
+- Médias finais maiores ou iguais a 3,5 e menores do que 4,0 foram
+  arredondadas para 4,0, SE a frequência do aluno foi maior ou igual a
+  75%.
+
+A coluna de situação (`S`) indica se o aluno foi aprovado (`Ap`), ficou
+em exame (`Ex`), ou foi reprovado (`Re`).
+
+```{r}
+##----------------------------------------------------------------------
+## Tabela com as notas finais
+
+## Ordena pelas maiores notas
+notas2 <- apply(notas[, notas.col], 1, sort,
+                decreasing = TRUE, na.last = TRUE)
+
+## Numero de provas consideradas
+np <- 4
+
+## Tabela com as np maiores notas
+notas2 <- t(notas2[1:np, ])
+
+## Calcula a media
+notas2 <- cbind(notas2,
+                apply(notas2, 1, function(x) sum(x, na.rm = TRUE)/np))
+
+## Insere o GRR
+notas2 <- as.data.frame(cbind(notas$Matricula, notas2))
+names(notas2) <- c("Matricula", paste0("N", 1:np), "Media")
+
+## Insere a frequencia (Freq.rel2 de notas)
+notas2$Freq.rel <- ceiling(notas$Freq.rel2*100)
+
+## Arredonda a media para duas casa decimais
+notas2$Media <- round(notas2$Media, 2)
+
+## Regras para ser aprovado
+## 1) Se 6.5 <= MF < 7.0 E Freq >= 75 entao SOMA difer
+
+## Cria nova coluna e condicoes
+notas2$Media2 <- notas2$Media
+cond.nota1 <- notas2$Media >=6.5 & notas2$Media < 7
+cond.nota2 <- notas2$Freq.rel >= 75
+
+## Soma as diferencas
+notas2$Media2[cond.nota1 & cond.nota2] <-
+    notas2$Media2[cond.nota1 & cond.nota2] +
+    difer(notas2$Media2[cond.nota1 & cond.nota2], 7)
+
+## Regras para ir para exame
+## 1) Se 3.5 <= MF < 4.0 E Freq >= 75 entao SOMA difer
+
+## Cria condicoes
+cond.exam1 <- notas2$Media >=3.5 & notas2$Media < 4
+
+## Soma as diferencas
+notas2$Media2[cond.exam1 & cond.nota2] <-
+    notas2$Media2[cond.exam1 & cond.nota2] +
+    difer(notas2$Media2[cond.exam1 & cond.nota2], 4)
+
+##----------------------------------------------------------------------
+## Tabela final
+notas.fim <- notas2[, 1:5]
+notas.fim$M <- notas2$Media2
+notas.fim$F <- notas2$Freq.rel
+## Cria a coluna Situacao
+notas.fim$S <- "Ap"
+notas.fim$S[notas.fim$M >= 4 & notas.fim$M < 7] <- "Ex"
+notas.fim$S[notas.fim$M < 4] <- "Re"
+
+## Mostra tabela
+kable(notas.fim, align = "c")
+```
+
+Gráfico de barras com os percentuais por situação:
+
+```{r}
+barplot(prop.table(table(notas.fim$S))*100,
+        xlab = "Situação", ylab = "Frequência (%)")
 ```
