@@ -1393,10 +1393,15 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 </tr>
 </tbody>
 </table>
+<p>Número de alunos em cada situação:</p>
+<pre class="r"><code>addmargins(table(notas.fim$S))</code></pre>
+<pre><code>
+ Ap  Ex  Re Sum 
+ 32  12   7  51 </code></pre>
 <p>Gráfico de barras com os percentuais por situação:</p>
 <pre class="r"><code>barplot(prop.table(table(notas.fim$S))*100,
         xlab = &quot;Situação&quot;, ylab = &quot;Frequência (%)&quot;)</code></pre>
-<p><img src="figures/unnamed-chunk-9-1.png" width="800" style="display: block; margin: auto;" /></p>
+<p><img src="figures/unnamed-chunk-10-1.png" width="800" style="display: block; margin: auto;" /></p>
 </div>
 
 <center>

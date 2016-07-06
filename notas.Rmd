@@ -243,6 +243,12 @@ notas.fim$S[notas.fim$M < 4] <- "Re"
 kable(notas.fim, align = "c")
 ```
 
+Número de alunos em cada situação:
+
+```{r}
+addmargins(table(notas.fim$S))
+```
+
 Gráfico de barras com os percentuais por situação:
 
 ```{r}
