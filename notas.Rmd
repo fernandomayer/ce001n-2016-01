@@ -20,13 +20,9 @@ notas <- read.csv("misc/notas.csv")
 notas$Matricula <- as.numeric(gsub("GRR", "", notas$Matricula))
 notas <- notas[order(notas$Matricula), ]
 rownames(notas) <- 1:nrow(notas)
-## Verifica se existe a coluna 'Freq' com as frequencias. Se houver,
-## remove ela para calcular as notas
-if("Freq" %in% names(notas)){
-    notas.col <- 2:(ncol(notas) - 1)
-} else{
-        notas.col <- 2:ncol(notas)
-    }
+## Seleciona apenas as colunas com as notas de sabatinas (S*)
+notas.col <- which(names(notas) %in%
+                   names(notas)[grep("^S", names(notas))])
 ```
 
 ## Histograma e box plot geral
@@ -81,11 +77,7 @@ round(apply(notas[, notas.col], 2, statm), 2)
 abaixo as médias finais calculadas!**
 
 ```{r, results='asis'}
-if("Freq" %in% names(notas)){
-    kable(notas[-which(names(notas) %in% "Freq")], align = "c")
-} else{
-    kable(notas, align = "c")
-    }
+kable(notas[, c(1, notas.col)], align = "c")
 ```
 
 ## Resultados finais
@@ -230,14 +222,75 @@ notas2$Media2[cond.exam1 & cond.nota2] <-
     difer(notas2$Media2[cond.exam1 & cond.nota2], 4)
 
 ##----------------------------------------------------------------------
+## BONUS: aqui tem uma aluna que acertou uma questao bonus e ficou com
+## uma prova com nota '12'. Portanto, deveria distribuir essa nota entre
+## as outras provas dela. Como as outras tambem eram quase 10, vou
+## atribuir 10 para todas as provas dela.
+## grr <- 20154966
+## notas2[notas2$Matricula == grr, ]
+## Como ja esta com 10 nas 4 maiores nao precisa fazer isso.
+##----------------------------------------------------------------------
+
+##----------------------------------------------------------------------
 ## Tabela final
 notas.fim <- notas2[, 1:5]
 notas.fim$M <- notas2$Media2
 notas.fim$F <- notas2$Freq.rel
+```
+
+```{r}
+##----------------------------------------------------------------------
+## Antes do exame (Ex)
+
 ## Cria a coluna Situacao
 notas.fim$S <- "Ap"
 notas.fim$S[notas.fim$M >= 4 & notas.fim$M < 7] <- "Ex"
 notas.fim$S[notas.fim$M < 4] <- "Re"
+
+## Mostra tabela
+## kable(notas.fim, align = "c")
+```
+
+<!-- Número de alunos em cada situação: -->
+
+```{r, include=FALSE}
+## addmargins(table(notas.fim$S))
+```
+
+<!-- Gráfico de barras com os percentuais por situação: -->
+
+```{r, include=FALSE}
+## barplot(prop.table(table(notas.fim$S))*100,
+##         xlab = "Situação", ylab = "Frequência (%)")
+```
+
+**Após o exame**: as notas dos exames estão na coluna `E`. A média final
+(`MF`) é a mesma para quem não fez exame, e é a média entre a média
+final (`M`) e a nota do exame (`E`) para quem fez exame. A média final
+arredondada (`MFA`) é a nota que será lançada no sistema. A coluna `SF`
+mostra a situação final dos alunos após o exame.
+
+```{r}
+##----------------------------------------------------------------------
+## Após exame (Ex)
+
+## Insere notas do exame
+notas.fim$E <- notas$Ex
+
+## Calcula média final (MF), que é média da nota final com a nota do
+## exame (apenas para os que ficaram de exame)
+notas.fim$MF <- notas.fim$M
+notas.fim$MF[notas.fim$S == "Ex"] <- (notas.fim$M[notas.fim$S == "Ex"] +
+    notas.fim$E[notas.fim$S == "Ex"])/2
+notas.fim$MF <- round(notas.fim$MF, 2)
+
+## Calcula a média final arredonadada (MFA), que é a média multiplicada por
+## 10 e arredondada para cima (é como será lançada no sistema)
+notas.fim$MFA <- ceiling(notas.fim$MF*10)
+
+## Cria a coluna Situacao final (SF), que indica a situação após exame
+notas.fim$SF <- "Ap"
+notas.fim$SF[notas.fim$MFA < 50] <- "Re"
 
 ## Mostra tabela
 kable(notas.fim, align = "c")
@@ -245,13 +298,24 @@ kable(notas.fim, align = "c")
 
 Número de alunos em cada situação:
 
+- Antes do exame
 ```{r}
 addmargins(table(notas.fim$S))
+```
+- Após o exame
+```{r}
+addmargins(table(notas.fim$SF))
 ```
 
 Gráfico de barras com os percentuais por situação:
 
 ```{r}
+par(mfrow = c(1, 2))
 barplot(prop.table(table(notas.fim$S))*100,
-        xlab = "Situação", ylab = "Frequência (%)")
+        xlab = "Situação", ylab = "Frequência (%)",
+        main = "Antes do exame")
+barplot(prop.table(table(notas.fim$SF))*100,
+        xlab = "Situação", ylab = "Frequência (%)",
+        main = "Após o exame")
+par(mfrow = c(1, 1))
 ```

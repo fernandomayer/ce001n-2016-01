@@ -314,11 +314,7 @@ NAs    5.00  9.00  8.00 14.00 11.00 11.00</code></pre>
 <div id="notas-individuais" class="section level2">
 <h2>Notas individuais</h2>
 <p><strong>Aqui estão apenas as notas individuais de cada sabatina. Veja na seção abaixo as médias finais calculadas!</strong></p>
-<pre class="r"><code>if(&quot;Freq&quot; %in% names(notas)){
-    kable(notas[-which(names(notas) %in% &quot;Freq&quot;)], align = &quot;c&quot;)
-} else{
-    kable(notas, align = &quot;c&quot;)
-    }</code></pre>
+<pre class="r"><code>kable(notas[, c(1, notas.col)], align = &quot;c&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -856,14 +852,53 @@ notas2$Media2[cond.exam1 &amp; cond.nota2] &lt;-
     difer(notas2$Media2[cond.exam1 &amp; cond.nota2], 4)
 
 ##----------------------------------------------------------------------
+## BONUS: aqui tem uma aluna que acertou uma questao bonus e ficou com
+## uma prova com nota &#39;12&#39;. Portanto, deveria distribuir essa nota entre
+## as outras provas dela. Como as outras tambem eram quase 10, vou
+## atribuir 10 para todas as provas dela.
+## grr &lt;- 20154966
+## notas2[notas2$Matricula == grr, ]
+## Como ja esta com 10 nas 4 maiores nao precisa fazer isso.
+##----------------------------------------------------------------------
+
+##----------------------------------------------------------------------
 ## Tabela final
 notas.fim &lt;- notas2[, 1:5]
 notas.fim$M &lt;- notas2$Media2
-notas.fim$F &lt;- notas2$Freq.rel
+notas.fim$F &lt;- notas2$Freq.rel</code></pre>
+<pre class="r"><code>##----------------------------------------------------------------------
+## Antes do exame (Ex)
+
 ## Cria a coluna Situacao
 notas.fim$S &lt;- &quot;Ap&quot;
 notas.fim$S[notas.fim$M &gt;= 4 &amp; notas.fim$M &lt; 7] &lt;- &quot;Ex&quot;
 notas.fim$S[notas.fim$M &lt; 4] &lt;- &quot;Re&quot;
+
+## Mostra tabela
+## kable(notas.fim, align = &quot;c&quot;)</code></pre>
+<!-- Número de alunos em cada situação: -->
+<!-- Gráfico de barras com os percentuais por situação: -->
+<p><strong>Após o exame</strong>: as notas dos exames estão na coluna <code>E</code>. A média final (<code>MF</code>) é a mesma para quem não fez exame, e é a média entre a média final (<code>M</code>) e a nota do exame (<code>E</code>) para quem fez exame. A média final arredondada (<code>MFA</code>) é a nota que será lançada no sistema. A coluna <code>SF</code> mostra a situação final dos alunos após o exame.</p>
+<pre class="r"><code>##----------------------------------------------------------------------
+## Após exame (Ex)
+
+## Insere notas do exame
+notas.fim$E &lt;- notas$Ex
+
+## Calcula média final (MF), que é média da nota final com a nota do
+## exame (apenas para os que ficaram de exame)
+notas.fim$MF &lt;- notas.fim$M
+notas.fim$MF[notas.fim$S == &quot;Ex&quot;] &lt;- (notas.fim$M[notas.fim$S == &quot;Ex&quot;] +
+    notas.fim$E[notas.fim$S == &quot;Ex&quot;])/2
+notas.fim$MF &lt;- round(notas.fim$MF, 2)
+
+## Calcula a média final arredonadada (MFA), que é a média multiplicada por
+## 10 e arredondada para cima (é como será lançada no sistema)
+notas.fim$MFA &lt;- ceiling(notas.fim$MF*10)
+
+## Cria a coluna Situacao final (SF), que indica a situação após exame
+notas.fim$SF &lt;- &quot;Ap&quot;
+notas.fim$SF[notas.fim$MFA &lt; 50] &lt;- &quot;Re&quot;
 
 ## Mostra tabela
 kable(notas.fim, align = &quot;c&quot;)</code></pre>
@@ -878,6 +913,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <th align="center">M</th>
 <th align="center">F</th>
 <th align="center">S</th>
+<th align="center">E</th>
+<th align="center">MF</th>
+<th align="center">MFA</th>
+<th align="center">SF</th>
 </tr>
 </thead>
 <tbody>
@@ -890,6 +929,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">4.00</td>
 <td align="center">85</td>
 <td align="center">Ex</td>
+<td align="center">4.5</td>
+<td align="center">4.25</td>
+<td align="center">43</td>
+<td align="center">Re</td>
 </tr>
 <tr class="even">
 <td align="center">20095802</td>
@@ -899,6 +942,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.0</td>
 <td align="center">7.00</td>
 <td align="center">85</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.00</td>
+<td align="center">70</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -910,6 +957,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.38</td>
 <td align="center">69</td>
 <td align="center">Ex</td>
+<td align="center">1.5</td>
+<td align="center">3.44</td>
+<td align="center">35</td>
+<td align="center">Re</td>
 </tr>
 <tr class="even">
 <td align="center">20104471</td>
@@ -920,6 +971,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">4.12</td>
 <td align="center">50</td>
 <td align="center">Ex</td>
+<td align="center">3.0</td>
+<td align="center">3.56</td>
+<td align="center">36</td>
+<td align="center">Re</td>
 </tr>
 <tr class="odd">
 <td align="center">20110014</td>
@@ -930,6 +985,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.38</td>
 <td align="center">92</td>
 <td align="center">Ex</td>
+<td align="center">5.0</td>
+<td align="center">5.19</td>
+<td align="center">52</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20111904</td>
@@ -939,6 +998,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.5</td>
 <td align="center">7.12</td>
 <td align="center">100</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.12</td>
+<td align="center">72</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -950,6 +1013,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.88</td>
 <td align="center">85</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.88</td>
+<td align="center">89</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20113413</td>
@@ -959,6 +1026,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">6.0</td>
 <td align="center">7.75</td>
 <td align="center">92</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.75</td>
+<td align="center">78</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -970,6 +1041,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.75</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.75</td>
+<td align="center">88</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20120643</td>
@@ -979,6 +1054,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">NA</td>
 <td align="center">2.05</td>
 <td align="center">65</td>
+<td align="center">Re</td>
+<td align="center">NA</td>
+<td align="center">2.05</td>
+<td align="center">21</td>
 <td align="center">Re</td>
 </tr>
 <tr class="odd">
@@ -990,6 +1069,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.65</td>
 <td align="center">100</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.65</td>
+<td align="center">87</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20127158</td>
@@ -1000,6 +1083,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">4.00</td>
 <td align="center">75</td>
 <td align="center">Ex</td>
+<td align="center">6.0</td>
+<td align="center">5.00</td>
+<td align="center">50</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20127164</td>
@@ -1010,6 +1097,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.12</td>
 <td align="center">100</td>
 <td align="center">Ex</td>
+<td align="center">3.0</td>
+<td align="center">4.06</td>
+<td align="center">41</td>
+<td align="center">Re</td>
 </tr>
 <tr class="even">
 <td align="center">20127187</td>
@@ -1019,6 +1110,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">6.5</td>
 <td align="center">7.45</td>
 <td align="center">96</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.45</td>
+<td align="center">75</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -1030,6 +1125,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.43</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.43</td>
+<td align="center">85</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20127193</td>
@@ -1039,6 +1138,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.5</td>
 <td align="center">7.38</td>
 <td align="center">69</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.38</td>
+<td align="center">74</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -1050,6 +1153,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">4.67</td>
 <td align="center">88</td>
 <td align="center">Ex</td>
+<td align="center">3.5</td>
+<td align="center">4.08</td>
+<td align="center">41</td>
+<td align="center">Re</td>
 </tr>
 <tr class="even">
 <td align="center">20127199</td>
@@ -1059,6 +1166,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.5</td>
 <td align="center">7.75</td>
 <td align="center">100</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.75</td>
+<td align="center">78</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -1070,6 +1181,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.00</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.00</td>
+<td align="center">70</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20130130</td>
@@ -1079,6 +1194,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.5</td>
 <td align="center">9.20</td>
 <td align="center">85</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">9.20</td>
+<td align="center">92</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -1090,6 +1209,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.75</td>
 <td align="center">92</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.75</td>
+<td align="center">88</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20130617</td>
@@ -1099,6 +1222,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">NA</td>
 <td align="center">3.62</td>
 <td align="center">46</td>
+<td align="center">Re</td>
+<td align="center">NA</td>
+<td align="center">3.62</td>
+<td align="center">37</td>
 <td align="center">Re</td>
 </tr>
 <tr class="odd">
@@ -1110,6 +1237,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.50</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.50</td>
+<td align="center">75</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20130845</td>
@@ -1119,6 +1250,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">NA</td>
 <td align="center">1.75</td>
 <td align="center">42</td>
+<td align="center">Re</td>
+<td align="center">NA</td>
+<td align="center">1.75</td>
+<td align="center">18</td>
 <td align="center">Re</td>
 </tr>
 <tr class="odd">
@@ -1130,6 +1265,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.95</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.95</td>
+<td align="center">90</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20131728</td>
@@ -1140,6 +1279,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.88</td>
 <td align="center">58</td>
 <td align="center">Ex</td>
+<td align="center">3.5</td>
+<td align="center">4.69</td>
+<td align="center">47</td>
+<td align="center">Re</td>
 </tr>
 <tr class="odd">
 <td align="center">20132175</td>
@@ -1149,6 +1292,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">6.0</td>
 <td align="center">7.25</td>
 <td align="center">65</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.25</td>
+<td align="center">73</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1160,12 +1307,20 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">1.62</td>
 <td align="center">46</td>
 <td align="center">Re</td>
+<td align="center">NA</td>
+<td align="center">1.62</td>
+<td align="center">17</td>
+<td align="center">Re</td>
 </tr>
 <tr class="odd">
 <td align="center">20132674</td>
 <td align="center">NA</td>
 <td align="center">NA</td>
 <td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">0.00</td>
+<td align="center">0</td>
+<td align="center">Re</td>
 <td align="center">NA</td>
 <td align="center">0.00</td>
 <td align="center">0</td>
@@ -1180,6 +1335,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.50</td>
 <td align="center">100</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.50</td>
+<td align="center">85</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20134343</td>
@@ -1189,6 +1348,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.0</td>
 <td align="center">8.25</td>
 <td align="center">88</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.25</td>
+<td align="center">83</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1200,6 +1363,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.75</td>
 <td align="center">77</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.75</td>
+<td align="center">88</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20134627</td>
@@ -1209,6 +1376,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">4.5</td>
 <td align="center">7.00</td>
 <td align="center">96</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.00</td>
+<td align="center">70</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1220,6 +1391,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.62</td>
 <td align="center">77</td>
 <td align="center">Ex</td>
+<td align="center">3.0</td>
+<td align="center">4.31</td>
+<td align="center">44</td>
+<td align="center">Re</td>
 </tr>
 <tr class="odd">
 <td align="center">20134749</td>
@@ -1229,6 +1404,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">9.3</td>
 <td align="center">9.57</td>
 <td align="center">92</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">9.57</td>
+<td align="center">96</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1240,6 +1419,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">9.62</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">9.62</td>
+<td align="center">97</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20135660</td>
@@ -1249,6 +1432,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">6.0</td>
 <td align="center">7.00</td>
 <td align="center">88</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.00</td>
+<td align="center">70</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1260,6 +1447,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.75</td>
 <td align="center">85</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.75</td>
+<td align="center">78</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20135663</td>
@@ -1269,6 +1460,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.0</td>
 <td align="center">7.00</td>
 <td align="center">85</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.00</td>
+<td align="center">70</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1280,6 +1475,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.83</td>
 <td align="center">92</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.83</td>
+<td align="center">79</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20136482</td>
@@ -1289,6 +1488,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">6.0</td>
 <td align="center">7.62</td>
 <td align="center">88</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.62</td>
+<td align="center">77</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1300,6 +1503,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.82</td>
 <td align="center">92</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.82</td>
+<td align="center">89</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20137249</td>
@@ -1309,6 +1516,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.0</td>
 <td align="center">8.25</td>
 <td align="center">58</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.25</td>
+<td align="center">83</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="even">
@@ -1320,12 +1531,20 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">8.88</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">8.88</td>
+<td align="center">89</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20137518</td>
 <td align="center">NA</td>
 <td align="center">NA</td>
 <td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">0.00</td>
+<td align="center">0</td>
+<td align="center">Re</td>
 <td align="center">NA</td>
 <td align="center">0.00</td>
 <td align="center">0</td>
@@ -1340,6 +1559,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">0.00</td>
 <td align="center">42</td>
 <td align="center">Re</td>
+<td align="center">NA</td>
+<td align="center">0.00</td>
+<td align="center">0</td>
+<td align="center">Re</td>
 </tr>
 <tr class="odd">
 <td align="center">20140223</td>
@@ -1350,6 +1573,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.75</td>
 <td align="center">77</td>
 <td align="center">Ex</td>
+<td align="center">0.0</td>
+<td align="center">2.88</td>
+<td align="center">29</td>
+<td align="center">Re</td>
 </tr>
 <tr class="even">
 <td align="center">20142261</td>
@@ -1359,6 +1586,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.5</td>
 <td align="center">7.12</td>
 <td align="center">92</td>
+<td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.12</td>
+<td align="center">72</td>
 <td align="center">Ap</td>
 </tr>
 <tr class="odd">
@@ -1370,6 +1601,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">7.60</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">7.60</td>
+<td align="center">76</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="even">
 <td align="center">20143033</td>
@@ -1380,6 +1615,10 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">5.50</td>
 <td align="center">77</td>
 <td align="center">Ex</td>
+<td align="center">4.5</td>
+<td align="center">5.00</td>
+<td align="center">50</td>
+<td align="center">Ap</td>
 </tr>
 <tr class="odd">
 <td align="center">20160023</td>
@@ -1390,18 +1629,38 @@ kable(notas.fim, align = &quot;c&quot;)</code></pre>
 <td align="center">9.25</td>
 <td align="center">96</td>
 <td align="center">Ap</td>
+<td align="center">NA</td>
+<td align="center">9.25</td>
+<td align="center">93</td>
+<td align="center">Ap</td>
 </tr>
 </tbody>
 </table>
 <p>Número de alunos em cada situação:</p>
+<ul>
+<li>Antes do exame</li>
+</ul>
 <pre class="r"><code>addmargins(table(notas.fim$S))</code></pre>
 <pre><code>
  Ap  Ex  Re Sum 
  33  11   7  51 </code></pre>
+<ul>
+<li>Após o exame</li>
+</ul>
+<pre class="r"><code>addmargins(table(notas.fim$SF))</code></pre>
+<pre><code>
+ Ap  Re Sum 
+ 36  15  51 </code></pre>
 <p>Gráfico de barras com os percentuais por situação:</p>
-<pre class="r"><code>barplot(prop.table(table(notas.fim$S))*100,
-        xlab = &quot;Situação&quot;, ylab = &quot;Frequência (%)&quot;)</code></pre>
-<p><img src="figures/unnamed-chunk-10-1.png" width="800" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 2))
+barplot(prop.table(table(notas.fim$S))*100,
+        xlab = &quot;Situação&quot;, ylab = &quot;Frequência (%)&quot;,
+        main = &quot;Antes do exame&quot;)
+barplot(prop.table(table(notas.fim$SF))*100,
+        xlab = &quot;Situação&quot;, ylab = &quot;Frequência (%)&quot;,
+        main = &quot;Após o exame&quot;)</code></pre>
+<p><img src="figures/unnamed-chunk-15-1.png" width="800" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 </div>
 
 <center>
