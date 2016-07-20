@@ -320,7 +320,7 @@ barplot(prop.table(table(notas.fim$SF))*100,
 par(mfrow = c(1, 1))
 ```
 
-```{r, echo=FALSE, include=FALSE}
+```{r, echo=FALSE, include=FALSE, eval=FALSE}
 ##----------------------------------------------------------------------
 ## Monta a tabela final com as informacoes necessarias para digitar as
 ## notas no sistema
