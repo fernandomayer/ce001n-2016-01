@@ -319,3 +319,48 @@ barplot(prop.table(table(notas.fim$SF))*100,
         main = "Após o exame")
 par(mfrow = c(1, 1))
 ```
+
+```{r, echo=FALSE, include=FALSE}
+##----------------------------------------------------------------------
+## Monta a tabela final com as informacoes necessarias para digitar as
+## notas no sistema
+
+## Importa nomes
+nomes <- read.csv("~/Dropbox/UFPR/disciplinas/CE-001-N/nomes_ce001n-2016-01.csv")
+nomes$Matricula <- as.numeric(gsub("GRR", "", nomes$Matricula))
+
+## Faz o merge dos nomes com as notas
+notas.sis <- merge(nomes, notas.fim[, c("Matricula", "MFA")],
+                   by = "Matricula", sort = FALSE)
+
+## Faz o merge da coluna Freq2 de notas (que e o numero de presencas)
+notas.sis <- merge(notas.sis, notas[, c("Matricula", "Freq2")],
+                   by = "Matricula", sort = FALSE)
+
+## De acordo com o sistema, as faltas sao contadas em HORAS da carga
+## horaria semestral que é de 60 horas. Portanto, como são permitidos
+## 25% de faltas, isso corresponde a 15 horas das 60
+faltas.max <- 15 # max de faltas (de acordo com o sistema)
+## Considerando que cada aula tem 2 horas-aula, entao seriam 30 aulas no
+## semestre. Como a minha frequencia esta em numero de aulas (e nao em
+## horas), vou converter para horas. Antes é necessário expandir as
+## presenças  para 30 aulas
+notas.sis$Freq3 <- notas.sis$Freq2 + (30 - aulas.eff)
+## E agora calcula o numero de horas-aula de presença
+notas.sis$Freq4 <- notas.sis$Freq3 * 2
+## Finalmente calcula o numero de faltas em horas-aula
+notas.sis$Faltas <- 60 - notas.sis$Freq4
+
+## Cria uma coluna com a situação
+notas.sis$S <- "Ap"
+notas.sis$S[notas.sis$MFA < 50] <- "Re"
+
+## Mantem apenas as coluna de interesse
+col.sis <- c("Matricula", "Curso", "Nome", "Faltas", "MFA", "S")
+
+## Exporta tabela final
+write.table(notas.sis[, col.sis],
+            "~/Dropbox/UFPR/disciplinas/CE-001-N/final_ce001n-2016-01.csv",
+            sep = ",", dec = ".", col.names = TRUE, row.names = FALSE)
+
+```
