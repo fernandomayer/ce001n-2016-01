@@ -1,5 +1,7 @@
 # CE001N - 2016-01
 
+[![Join the chat at https://gitter.im/fernandomayer/ce001n-2016-01](https://badges.gitter.im/fernandomayer/ce001n-2016-01.svg)](https://gitter.im/fernandomayer/ce001n-2016-01?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/fernandomayer/ce001n-2016-01.svg)](https://travis-ci.org/fernandomayer/ce001n-2016-01)
 
 ## CE001 - Bioestatística
